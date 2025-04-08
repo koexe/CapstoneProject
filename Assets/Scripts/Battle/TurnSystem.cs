@@ -11,12 +11,24 @@ public class TurnSystem
 
     public void Initialization()
     {
-        this.turn = new Queue<TurnSequence>(); 
+        this.turn = new Queue<TurnSequence>();
     }
     public void SequenceAction()
     {
+        if (this.currentSequence != null)
+            this.currentSequence.ExecuteAfterAction();
+
+
         this.currentSequence = turn.Dequeue();
+        this.currentSequence.ExecuteBeforeAction();
+
+
         this.currentSequence.SequenceAction();
+    }
+
+    public void UpdateTurn()
+    {
+        this.currentSequence.SequenceUpdate();
     }
 
     public void InitializeTurnSystem()

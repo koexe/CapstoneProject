@@ -11,23 +11,21 @@ public class TurnSequence
     protected BattleManager battleManager;
 
     [SerializeField] SequenceState currentState = SequenceState.Initialize;
-    public TurnSequence(BattleManager battleManager)
+    public TurnSequence(BattleManager _battleManager, Action _beforeAction = null, Action _afterAction = null)
     {
         this.BeforeSequence = null;
         this.AfterSequence = null;
 
         this.currentState = SequenceState.BeforeAction;
-        this.battleManager = battleManager;
-    }
+        this.battleManager = _battleManager;
 
-    public void AddBeforeSequence(Action _action)
-    {
-        BeforeSequence += _action;
-    }
+        this.BeforeSequence += _beforeAction;
+        this.AfterSequence += _afterAction;
 
-    public void AddAfterSequence(Action _action)
+    }
+    public virtual void SequenceUpdate()
     {
-        AfterSequence += _action;
+
     }
 
     public virtual void SequenceAction()
@@ -60,7 +58,7 @@ public class TurnSequence
 
 public class InitializeSequence : TurnSequence
 {
-    public InitializeSequence(BattleManager battleManager) : base(battleManager)
+    public InitializeSequence(BattleManager _battleManager, Action _beforeAction = null, Action _afterAction = null) : base(_battleManager, _beforeAction, _afterAction)
     {
 
     }
@@ -76,9 +74,28 @@ public class InitializeSequence : TurnSequence
 
 public class ChooseSequence : TurnSequence
 {
-    public ChooseSequence(BattleManager battleManager) : base(battleManager)
+    BattleCharacterBase[] players;
+    int currentIndex;
+    public ChooseSequence(BattleManager _battleManager, BattleCharacterBase[] _players, Action _beforeAction = null, Action _afterAction = null) : base(_battleManager, _beforeAction, _afterAction)
     {
+        this.players = _players;
+    }
 
+    public override void SequenceUpdate()
+    {
+        base.SequenceUpdate();
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            currentIndex += 1;
+            if (currentIndex >= players.Length) currentIndex = 0;
+            GameStatics.instance.CameraController.SetTarget(players[currentIndex].transform);
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            currentIndex -= 1;
+            if (currentIndex < 0) currentIndex = 1;
+            GameStatics.instance.CameraController.SetTarget(players[currentIndex].transform);
+        }
     }
 
     public override void SequenceAction()
@@ -91,7 +108,7 @@ public class ChooseSequence : TurnSequence
 
 public class ExecuteSequence : TurnSequence
 {
-    public ExecuteSequence(BattleManager battleManager) : base(battleManager)
+    public ExecuteSequence(BattleManager _battleManager, List<BattleCharacterBase> _battleCharacters, Action _beforeAction = null, Action _afterAction = null) : base(_battleManager, _beforeAction, _afterAction)
     {
 
     }
