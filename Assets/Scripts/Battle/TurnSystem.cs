@@ -13,34 +13,34 @@ public class TurnSystem
     {
         this.turn = new Queue<TurnSequence>();
     }
-    public void SequenceAction()
+    public bool SequenceAction()
     {
         if (this.currentSequence != null)
             this.currentSequence.ExecuteAfterAction();
 
+        if(this.turn.Count != 0)
+        {
+            this.currentSequence = turn.Dequeue();
 
-        this.currentSequence = turn.Dequeue();
-        this.currentSequence.ExecuteBeforeAction();
+            this.currentSequence.ExecuteBeforeAction();
 
+            this.currentSequence.SequenceAction();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
 
-        this.currentSequence.SequenceAction();
     }
 
     public void UpdateTurn()
     {
         this.currentSequence.SequenceUpdate();
     }
-
-    public void InitializeTurnSystem()
-    {
-
-    }
-
     public void AddSequence(TurnSequence turnSequence)
     {
         this.turn.Enqueue(turnSequence);
         return;
     }
-
-
 }

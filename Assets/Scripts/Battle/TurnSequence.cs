@@ -10,7 +10,7 @@ public class TurnSequence
     protected Action AfterSequence;
     protected BattleManager battleManager;
 
-    [SerializeField] SequenceState currentState = SequenceState.Initialize;
+    public SequenceState currentState = SequenceState.Initialize;
     public TurnSequence(BattleManager _battleManager, Action _beforeAction = null, Action _afterAction = null)
     {
         this.BeforeSequence = null;
@@ -45,7 +45,7 @@ public class TurnSequence
         this.currentState = SequenceState.Done;
     }
 
-    enum SequenceState
+    public enum SequenceState
     {
         Initialize,
         BeforeAction,
@@ -74,8 +74,12 @@ public class InitializeSequence : TurnSequence
 
 public class ChooseSequence : TurnSequence
 {
+    enum ChooseState
+    {
+
+    }
     BattleCharacterBase[] players;
-    int currentIndex;
+    int currentPlayerIndex;
     public ChooseSequence(BattleManager _battleManager, BattleCharacterBase[] _players, Action _beforeAction = null, Action _afterAction = null) : base(_battleManager, _beforeAction, _afterAction)
     {
         this.players = _players;
@@ -84,39 +88,65 @@ public class ChooseSequence : TurnSequence
     public override void SequenceUpdate()
     {
         base.SequenceUpdate();
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            currentIndex += 1;
-            if (currentIndex >= players.Length) currentIndex = 0;
-            GameStatics.instance.CameraController.SetTarget(players[currentIndex].transform);
+            this.currentPlayerIndex += 1;
+            if (this.currentPlayerIndex >= this.players.Length) this.currentPlayerIndex = 0;
+            GameStatics.instance.CameraController.SetTarget(this.players[currentPlayerIndex].transform);
+            this.battleManager.SetSelectedCharacter(this.players[currentPlayerIndex]);
+
         }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            currentIndex -= 1;
-            if (currentIndex < 0) currentIndex = 1;
-            GameStatics.instance.CameraController.SetTarget(players[currentIndex].transform);
+            this.currentPlayerIndex -= 1;
+            if (this.currentPlayerIndex < 0) this.currentPlayerIndex = 1;
+            GameStatics.instance.CameraController.SetTarget(this.players[currentPlayerIndex].transform);
+            this.battleManager.SetSelectedCharacter(this.players[currentPlayerIndex]);
+        }
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            this.battleManager.HidePlayerAction();
         }
     }
+
+
+    public BattleCharacterBase GetSelectedPlayer() => this.players[this.currentPlayerIndex];
+
 
     public override void SequenceAction()
     {
         base.SequenceAction();
         this.battleManager.ShowText("플레이어 행동 선택");
-
     }
 }
 
 public class ExecuteSequence : TurnSequence
 {
+    List<BattleCharacterBase> battleCharacters;
     public ExecuteSequence(BattleManager _battleManager, List<BattleCharacterBase> _battleCharacters, Action _beforeAction = null, Action _afterAction = null) : base(_battleManager, _beforeAction, _afterAction)
     {
+        this.battleCharacters = _battleCharacters;
 
     }
-
     public override void SequenceAction()
     {
         base.SequenceAction();
-        this.battleManager.ShowText("각 행동 실행");
+        this.battleManager.StartCoroutine(ActionCoroutine());
+    }
+    IEnumerator ActionCoroutine()
+    {
+        foreach(var t_battleCharacter in battleCharacters)
+        {
+            t_battleCharacter.StartAction();
+            while(!t_battleCharacter.IsActionDone())
+            {
+                yield return CoroutineUtil.WaitForFixedUpdate;
+            }
 
+        }
+
+        battleManager.NextSequence();
+
+        yield break;
     }
 }

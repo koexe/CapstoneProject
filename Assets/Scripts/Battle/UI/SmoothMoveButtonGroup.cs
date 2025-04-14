@@ -17,7 +17,6 @@ public class SmoothMoveButtonGroup : MonoBehaviour
     void Start()
     {
         InitButtonPositions();
-        SetupButtonListeners();
         UpdateButtonScales();
     }
 
@@ -53,25 +52,25 @@ public class SmoothMoveButtonGroup : MonoBehaviour
         }
     }
 
-    void SetupButtonListeners()
-    {
-        for (int i = 0; i < buttons.Count; i++)
-        {
-            int index = i; // 지역 변수 캡쳐
-            buttons[i].onClick.AddListener(() =>
-            {
-                if (index != currentIndex)
-                {
-                    MoveToIndex(index);
-                }
-                else
-                {
-                    // 현재 선택된 버튼 클릭 시 → 실행
-                    buttons[index].onClick.Invoke(); // 선택 확정
-                }
-            });
-        }
-    }
+    //void SetupButtonListeners()
+    //{
+    //    for (int i = 0; i < buttons.Count; i++)
+    //    {
+    //        int index = i; // 지역 변수 캡쳐
+    //        buttons[i].onClick.AddListener(() =>
+    //        {
+    //            if (index != currentIndex)
+    //            {
+    //                MoveToIndex(index);
+    //            }
+    //            else
+    //            {
+    //                // 현재 선택된 버튼 클릭 시 → 실행
+    //                buttons[index].onClick.Invoke(); // 선택 확정
+    //            }
+    //        });
+    //    }
+    //}
 
     void MoveToIndex(int newIndex)
     {
