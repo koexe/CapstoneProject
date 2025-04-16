@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class TurnSystem
 {
     Queue<TurnSequence> turn;
-    TurnSequence currentSequence;
+    [SerializeField]TurnSequence currentSequence;
 
 
     public void Initialization()
@@ -31,8 +32,9 @@ public class TurnSystem
         {
             return false;
         }
-
     }
+
+    public TurnSequence GetCurrentSequence() => this.currentSequence;
 
     public void UpdateTurn()
     {

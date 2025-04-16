@@ -25,10 +25,27 @@ public class BattleCharacterBase : MonoBehaviour
         this.battleManager = _battleManager;
         return;
     }
-    public void SetSelectedSkill(SkillBase _skill)
+    public void SetSelectedSkill(SkillBase _skill , BattleCharacterBase[] _target)
     {
         this.selectedSkill = Instantiate(_skill);
+        this.selectedSkill.target = _target;
     }
+    public void ResetSelectedSkill()
+    {
+        if (this.selectedSkill != null)
+        {
+            Destroy(this.selectedSkill);
+            this.selectedSkill = null;
+        }
+    }
+
+    public bool IsReadySkill()
+    {
+        if (this.selectedSkill == null) return false;
+        else if (this.selectedSkill.target == null) return false;
+        else return true;
+    }
+
     public SkillBase GetSelectedSkill()
     {
         return this.selectedSkill;
@@ -37,6 +54,7 @@ public class BattleCharacterBase : MonoBehaviour
     public void StartAction()
     {
         this.selectedSkill.Execute(this);
+        this.battleManager.ShowText($"{this.name} Used {selectedSkill.skillName}");
         Invoke("SetActionDone", 3.0f);
     }
     

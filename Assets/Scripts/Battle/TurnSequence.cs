@@ -1,14 +1,26 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+
 
 [System.Serializable]
 public class TurnSequence
 {
+    public enum BattleSequenceType
+    {
+        InitializeSequence,
+        ChooseSequence,
+        ExecuteSequence,
+    }
+
     protected Action BeforeSequence;
     protected Action AfterSequence;
     protected BattleManager battleManager;
+    protected BattleSequenceType sequenceType;
+
+
 
     public SequenceState currentState = SequenceState.Initialize;
     public TurnSequence(BattleManager _battleManager, Action _beforeAction = null, Action _afterAction = null)
@@ -55,12 +67,15 @@ public class TurnSequence
     }
 }
 
-
+[System.Serializable]
 public class InitializeSequence : TurnSequence
 {
+
     public InitializeSequence(BattleManager _battleManager, Action _beforeAction = null, Action _afterAction = null) : base(_battleManager, _beforeAction, _afterAction)
     {
+        this.sequenceType = BattleSequenceType.InitializeSequence;
 
+        this.battleManager.SetCurrentSequenceType(this.sequenceType);
     }
 
     public override void SequenceAction()
@@ -71,47 +86,135 @@ public class InitializeSequence : TurnSequence
     }
 }
 
-
+[System.Serializable]
 public class ChooseSequence : TurnSequence
 {
-    enum ChooseState
+    public enum ChooseState
     {
-
+        SelectSkill,
+        SelectEnemy,
+        None,
     }
     BattleCharacterBase[] players;
+    BattleCharacterBase[] enemys;
+
+    public ChooseState state;
+
     int currentPlayerIndex;
-    public ChooseSequence(BattleManager _battleManager, BattleCharacterBase[] _players, Action _beforeAction = null, Action _afterAction = null) : base(_battleManager, _beforeAction, _afterAction)
+
+    int currentEnemyIndex;
+    public ChooseSequence(BattleManager _battleManager, BattleCharacterBase[] _players, BattleCharacterBase[] _enemys, Action _beforeAction = null, Action _afterAction = null) : base(_battleManager, _beforeAction, _afterAction)
     {
         this.players = _players;
+        this.sequenceType = BattleSequenceType.ChooseSequence;
+        this.state = ChooseState.None;
+        this.enemys = _enemys;
+        this.battleManager.SetCurrentSequenceType(this.sequenceType);
+
     }
 
     public override void SequenceUpdate()
     {
         base.SequenceUpdate();
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (this.state == ChooseState.None)
         {
-            this.currentPlayerIndex += 1;
-            if (this.currentPlayerIndex >= this.players.Length) this.currentPlayerIndex = 0;
-            GameStatics.instance.CameraController.SetTarget(this.players[currentPlayerIndex].transform);
-            this.battleManager.SetSelectedCharacter(this.players[currentPlayerIndex]);
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                this.currentPlayerIndex += 1;
+                if (this.currentPlayerIndex >= this.players.Length) this.currentPlayerIndex = 0;
+                GameStatics.instance.CameraController.SetTarget(this.players[this.currentPlayerIndex].transform);
+                this.battleManager.SetSelectedCharacter(this.players[this.currentPlayerIndex]);
 
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                this.currentPlayerIndex -= 1;
+                if (this.currentPlayerIndex < 0) this.currentPlayerIndex = 1;
+                GameStatics.instance.CameraController.SetTarget(this.players[this.currentPlayerIndex].transform);
+                this.battleManager.SetSelectedCharacter(this.players[this.currentPlayerIndex]);
+            }
+
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast(mouseWorldPos, Vector2.zero);
+
+                if (hit.collider != null)
+                {
+                    if(hit.transform.TryGetComponent<BattleCharacterBase>(out var t_character))
+                    {
+                        if(this.players.Contains(t_character))
+                        {
+                            this.currentPlayerIndex = System.Array.IndexOf(this.players, t_character);
+                            GameStatics.instance.CameraController.SetTarget(hit.transform);
+                            this.battleManager.SetSelectedCharacter(t_character);
+  
+                        }
+
+                    }
+                }
+            }
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (this.state == ChooseState.SelectSkill)
         {
-            this.currentPlayerIndex -= 1;
-            if (this.currentPlayerIndex < 0) this.currentPlayerIndex = 1;
-            GameStatics.instance.CameraController.SetTarget(this.players[currentPlayerIndex].transform);
-            this.battleManager.SetSelectedCharacter(this.players[currentPlayerIndex]);
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                this.battleManager.HidePlayerAction();
+                this.state = ChooseState.None;
+            }
         }
-        if(Input.GetKeyDown(KeyCode.Escape))
+        else if (this.state == ChooseState.SelectEnemy)
         {
-            this.battleManager.HidePlayerAction();
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                this.currentEnemyIndex += 1;
+                if (this.currentEnemyIndex >= this.enemys.Length) this.currentEnemyIndex = 0;
+                GameStatics.instance.CameraController.SetTarget(this.enemys[this.currentEnemyIndex].transform);
+                this.battleManager.SetSelectedCharacter(this.enemys[this.currentEnemyIndex]);
+
+            }
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                this.currentEnemyIndex -= 1;
+                if (this.currentEnemyIndex < 0) this.currentEnemyIndex = this.enemys.Length - 1;
+                GameStatics.instance.CameraController.SetTarget(this.enemys[this.currentEnemyIndex].transform);
+                this.battleManager.SetSelectedCharacter(this.enemys[this.currentEnemyIndex]);
+            }
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                this.players[this.currentPlayerIndex].GetSelectedSkill().target = new BattleCharacterBase[] { this.enemys[this.currentEnemyIndex] };
+                GameStatics.instance.CameraController.SetTarget(null);
+                this.state = ChooseState.None;
+                this.battleManager.CheckAllReady();
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast(mouseWorldPos, Vector2.zero);
+
+                if (hit.collider != null)
+                {
+                    if (hit.transform.TryGetComponent<BattleCharacterBase>(out var t_character))
+                    {
+                        if (this.enemys.Contains(t_character))
+                        {
+                            GameStatics.instance.CameraController.SetTarget(hit.transform);
+                          
+                            this.currentEnemyIndex = System.Array.IndexOf(this.players, t_character);
+
+                            this.players[this.currentPlayerIndex].GetSelectedSkill().target = new BattleCharacterBase[] { t_character };
+                            GameStatics.instance.CameraController.SetTarget(null);
+                            this.state = ChooseState.None;
+                            this.battleManager.CheckAllReady();
+                        }
+
+                    }
+                }
+            }
         }
+
     }
-
-
-    public BattleCharacterBase GetSelectedPlayer() => this.players[this.currentPlayerIndex];
-
 
     public override void SequenceAction()
     {
@@ -119,14 +222,16 @@ public class ChooseSequence : TurnSequence
         this.battleManager.ShowText("플레이어 행동 선택");
     }
 }
-
+[System.Serializable]
 public class ExecuteSequence : TurnSequence
 {
     List<BattleCharacterBase> battleCharacters;
     public ExecuteSequence(BattleManager _battleManager, List<BattleCharacterBase> _battleCharacters, Action _beforeAction = null, Action _afterAction = null) : base(_battleManager, _beforeAction, _afterAction)
     {
         this.battleCharacters = _battleCharacters;
+        this.sequenceType = BattleSequenceType.ChooseSequence;
 
+        this.battleManager.SetCurrentSequenceType(this.sequenceType);
     }
     public override void SequenceAction()
     {
@@ -135,10 +240,10 @@ public class ExecuteSequence : TurnSequence
     }
     IEnumerator ActionCoroutine()
     {
-        foreach(var t_battleCharacter in battleCharacters)
+        foreach (var t_battleCharacter in battleCharacters)
         {
             t_battleCharacter.StartAction();
-            while(!t_battleCharacter.IsActionDone())
+            while (!t_battleCharacter.IsActionDone())
             {
                 yield return CoroutineUtil.WaitForFixedUpdate;
             }

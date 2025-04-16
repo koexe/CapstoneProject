@@ -12,5 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c08f13a8f30b414c83ddf87f3f1e501, type: 3}
   m_Name: SKill_Base2
   m_EditorClassIdentifier: 
-  skillName: "\uB808\uC774\uC800"
+  character: {fileID: 0}
+  target: []
+  skillName: "\uC804\uCCB4"
   skillIcon: {fileID: 21300000, guid: b802666c82ff41142a293f5808a3222c, type: 3}
+  attackRange: 0

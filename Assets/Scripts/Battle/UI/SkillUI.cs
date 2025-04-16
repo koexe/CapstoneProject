@@ -16,6 +16,7 @@ public class SkillUI : MonoBehaviour
     {
         this.skillName.text = _skill.skillName;
         this.skillIcon.sprite = _skill.skillIcon;
+        this.skillButton.onClick.RemoveAllListeners();
         this.skillButton.onClick.AddListener(() => _action.Invoke(_character, _skill));
 
     }

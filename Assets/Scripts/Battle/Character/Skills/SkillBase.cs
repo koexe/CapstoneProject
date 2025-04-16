@@ -7,7 +7,7 @@ using UnityEngine;
 public class SkillBase : ScriptableObject
 {
     public BattleCharacterBase character;
-    public BattleCharacterBase target;
+    public BattleCharacterBase[] target;
     public string skillName;
     public Sprite skillIcon;
     public AttackRangeType attackRange;

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Spine.Unity.Examples;
 using TMPro;
 using UnityEngine;
@@ -7,7 +8,7 @@ using UnityEngine;
 public class BattleManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI battleText;
-    TurnSystem turnSystem;
+    [SerializeField] TurnSystem turnSystem;
 
     [SerializeField] BattleCharacterBase[] allyCharacters;
     [SerializeField] BattleCharacterBase[] enemyCharacters;
@@ -16,14 +17,13 @@ public class BattleManager : MonoBehaviour
 
     [SerializeField] BattleCharacterBase currentSelectedCharacter;
 
+    [SerializeField] GameObject nextButton;
+
+    [SerializeField] TurnSequence.BattleSequenceType currentSequenceType;
+
+    public void SetCurrentSequenceType(TurnSequence.BattleSequenceType _type) => this.currentSequenceType = _type;
+
     public void SetSelectedCharacter(BattleCharacterBase _character) => this.currentSelectedCharacter = _character;
-    public enum PlayerActionType
-    {
-        Attack,
-        Talk,
-        Item,
-        Run,
-    }
 
     private void Awake()
     {
@@ -42,10 +42,6 @@ public class BattleManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            NextSequence();
-        }
         this.turnSystem.UpdateTurn();
     }
 
@@ -70,11 +66,17 @@ public class BattleManager : MonoBehaviour
 
     void NewTurn()
     {
-        this.turnSystem.AddSequence(new InitializeSequence(this));
-        this.turnSystem.AddSequence(new ChooseSequence(this, this.allyCharacters,
+        this.turnSystem.AddSequence(new InitializeSequence(this, _beforeAction: () => {
+            foreach (var t_character in this.allyCharacters)
+                t_character.ResetSelectedSkill();
+            foreach(var t_character in this.enemyCharacters)
+                t_character.ResetSelectedSkill();
+                }));
+        this.turnSystem.AddSequence(new ChooseSequence(this, this.allyCharacters, this.enemyCharacters,
             () =>
             {
                 ActiveSelectButtonGroup(true);
+                this.nextButton.SetActive(false);
                 this.currentSelectedCharacter = this.allyCharacters[0];
                 GameStatics.instance.CameraController.SetTarget(this.currentSelectedCharacter.transform);
             },
@@ -100,8 +102,82 @@ public class BattleManager : MonoBehaviour
         UIManager.instance.HideUI("BattleSkillUI");
     }
 
+
+    public void StartAction(List<BattleCharacterBase> battleCharacters, int index)
+    {
+        if (index >= battleCharacters.Count)
+            return;
+        battleCharacters[index].StartAction();
+
+    }
+    #endregion
+
+    void EnemyAttackSelect()
+    {
+        foreach (var t_character in this.enemyCharacters)
+        {
+            //t_character.SetSelectedSkill(t_character.GetSkills()[Random.Range(0, t_character.GetSkills().Length)]);
+            t_character.SetSelectedSkill(t_character.GetSkills()[0], GetRandomElementAsArray<BattleCharacterBase>(this.allyCharacters));
+        }
+    }
+
+    List<BattleCharacterBase> TurnCheck()
+    {
+        List<BattleCharacterBase> t_BattleOrder = new List<BattleCharacterBase>();
+
+        foreach (var t_character in this.allyCharacters)
+        {
+            t_BattleOrder.Add(t_character);
+        }
+        foreach (var t_character in enemyCharacters)
+        {
+            t_BattleOrder.Add(t_character);
+        }
+        t_BattleOrder.Sort((a, b) => b.speed.CompareTo(a.speed));
+        return t_BattleOrder;
+    }
+
+    public T[] GetRandomElementAsArray<T>(T[] sourceArray)
+    {
+        if (sourceArray == null || sourceArray.Length == 0)
+            return new T[0]; // 빈 배열 반환
+
+        int randomIndex = Random.Range(0, sourceArray.Length); // UnityEngine.Random
+        return new T[] { sourceArray[randomIndex] };
+    }
+
+    #region ChooseSequence
+    public void CheckAllReady()
+    {
+        bool t_isAllReady = true;
+        foreach (var t_character in this.allyCharacters)
+        {
+            if (t_character.IsReadySkill() == false)
+            {
+                t_isAllReady = false;
+                break;
+            }
+        }
+
+        if (t_isAllReady == true)
+        {
+            EnemyAttackSelect();
+            this.nextButton.SetActive(true);
+        }
+        else
+        {
+            return;
+        }
+    }
+
     public void SelectPlayerAction(int _type)
     {
+        var t_Sequence = this.turnSystem.GetCurrentSequence() as ChooseSequence;
+        if (t_Sequence != null)
+        {
+            t_Sequence.state = ChooseSequence.ChooseState.SelectSkill;
+        }
+
         switch ((PlayerActionType)_type)
         {
             case PlayerActionType.Attack:
@@ -122,77 +198,54 @@ public class BattleManager : MonoBehaviour
     }
     void UISelectSkill(BattleCharacterBase _character, SkillBase _skill)
     {
-        _character.SetSelectedSkill(_skill);
         UIManager.instance.HideUI("BattleSkillUI");
-        CheckAllReady();
-        switch(_skill.attackRange)
+
+
+        switch (_skill.attackRange)
         {
             case SkillBase.AttackRangeType.All:
+                _character.SetSelectedSkill(_skill, enemyCharacters);
+                SetChooseSequenceState(ChooseSequence.ChooseState.None);
+                CheckAllReady();
+                break;
             case SkillBase.AttackRangeType.Random:
+                _character.SetSelectedSkill(_skill, GetRandomElementAsArray<BattleCharacterBase>(this.enemyCharacters));
+                SetChooseSequenceState(ChooseSequence.ChooseState.None);
+                CheckAllReady();
                 break;
             case SkillBase.AttackRangeType.Select:
+                GameStatics.instance.CameraController.SetTarget(null);
+                _character.SetSelectedSkill(_skill, null);
                 ShowText("적 선택");
-                
+                SetChooseSequenceState(ChooseSequence.ChooseState.SelectEnemy);
                 break;
             case SkillBase.AttackRangeType.Ally:
+                ShowText("아군 선택");
                 break;
         }
+
+        CheckAllReady();
     }
 
-    public void CheckAllReady()
+
+    void SetChooseSequenceState(ChooseSequence.ChooseState _state)
     {
-        bool t_isAllReady = true;
-        foreach (var t_character in this.allyCharacters)
+        var t_Sequence = this.turnSystem.GetCurrentSequence() as ChooseSequence;
+        if (t_Sequence != null)
         {
-            if (t_character.GetSelectedSkill() == null)
-            {
-                t_isAllReady = false;
-                break;
-            }
+            t_Sequence.state = _state;
         }
-
-        if (t_isAllReady == true)
-        {
-            EnemyAttackSelect();
-        }
-        else
-        {
-            return;
-        }
-    }
-
-    public void StartAction(List<BattleCharacterBase> battleCharacters, int index)
-    {
-        if (index >= battleCharacters.Count)
-            return;
-        battleCharacters[index].StartAction();
-
     }
     #endregion
-
-    void EnemyAttackSelect()
-    {
-        foreach (var t_character in this.enemyCharacters)
-        {
-            //t_character.SetSelectedSkill(t_character.GetSkills()[Random.Range(0, t_character.GetSkills().Length)]);
-            t_character.SetSelectedSkill(t_character.GetSkills()[0]);
-        }
-    }
-
-    List<BattleCharacterBase> TurnCheck()
-    {
-        List<BattleCharacterBase> t_BattleOrder = new List<BattleCharacterBase>();
-
-        foreach (var t_character in this.allyCharacters)
-        {
-            t_BattleOrder.Add(t_character);
-        }
-        foreach (var t_character in enemyCharacters)
-        {
-            t_BattleOrder.Add(t_character);
-        }
-        t_BattleOrder.Sort((a, b) => b.speed.CompareTo(a.speed));
-        return t_BattleOrder;
-    }
     #endregion
+
+
+
+    public enum PlayerActionType
+    {
+        Attack,
+        Talk,
+        Item,
+        Run,
+    }
 }
