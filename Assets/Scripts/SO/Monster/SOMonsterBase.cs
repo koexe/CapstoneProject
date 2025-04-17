@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Monster_Base", menuName = "Monster/Monster_Base")]
 public class SOMonsterBase : ScriptableObject
 {
-    public int monsterIndentifier;
+    public int identifier;
     public SOSkillBase[] skills;
     //스파인 데이터 추가?
 }

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39d23e215f5d2414c9f6f64acba50299, type: 3}
   m_Name: Monster_Base
   m_EditorClassIdentifier: 
-  monsterIndentifier: 0
+  identifier: 1
   skills: []

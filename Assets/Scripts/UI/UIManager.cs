@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
 {
     { typeof(UIBase), "InventoryKey" },
     { typeof(SkillSelectUI), "SkillSelectUI" },
+        {typeof(InventoryUI),"" },
 
 };
 
