@@ -8,6 +8,8 @@ public class GameStatics : MonoBehaviour
 
     public CameraController CameraController;
 
+    
+
     private void Awake()
     {
         if(instance == null)
@@ -20,5 +22,10 @@ public class GameStatics : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public class BattleData
+    {
+        
     }
 }

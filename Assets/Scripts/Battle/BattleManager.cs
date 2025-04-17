@@ -196,30 +196,30 @@ public class BattleManager : MonoBehaviour
                 break;
         }
     }
-    void UISelectSkill(BattleCharacterBase _character, SkillBase _skill)
+    void UISelectSkill(BattleCharacterBase _character, SOSkillBase _skill)
     {
         UIManager.instance.HideUI("BattleSkillUI");
 
 
         switch (_skill.attackRange)
         {
-            case SkillBase.AttackRangeType.All:
+            case SOSkillBase.AttackRangeType.All:
                 _character.SetSelectedSkill(_skill, enemyCharacters);
                 SetChooseSequenceState(ChooseSequence.ChooseState.None);
                 CheckAllReady();
                 break;
-            case SkillBase.AttackRangeType.Random:
+            case SOSkillBase.AttackRangeType.Random:
                 _character.SetSelectedSkill(_skill, GetRandomElementAsArray<BattleCharacterBase>(this.enemyCharacters));
                 SetChooseSequenceState(ChooseSequence.ChooseState.None);
                 CheckAllReady();
                 break;
-            case SkillBase.AttackRangeType.Select:
+            case SOSkillBase.AttackRangeType.Select:
                 GameStatics.instance.CameraController.SetTarget(null);
                 _character.SetSelectedSkill(_skill, null);
                 ShowText("적 선택");
                 SetChooseSequenceState(ChooseSequence.ChooseState.SelectEnemy);
                 break;
-            case SkillBase.AttackRangeType.Ally:
+            case SOSkillBase.AttackRangeType.Ally:
                 ShowText("아군 선택");
                 break;
         }

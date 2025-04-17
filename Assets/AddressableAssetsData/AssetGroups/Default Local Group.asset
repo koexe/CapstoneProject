@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: b3f7586259ee1ab4197a7e41e9dd353b
+  m_SerializeEntries:
+  - m_GUID: af02215f0b9575543a2d6fabe26a2478
+    m_Address: Assets/SO/Monster/Monster_Base.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MonsterSO
+  - m_GUID: f870ef9e49d4d654cbc07bc7c4a037be
+    m_Address: Assets/SO/Monster/Monster_Base 12.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MonsterSO
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 1d8283150300edf4295b100b3e9d0185, type: 2}
+    - {fileID: 11400000, guid: f8f2e6d7751638c47845edc964eb2afa, type: 2}

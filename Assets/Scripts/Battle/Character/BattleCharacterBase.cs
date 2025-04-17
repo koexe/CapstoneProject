@@ -9,8 +9,8 @@ public class BattleCharacterBase : MonoBehaviour
     [SerializeField] BattleManager battleManager;
     [SerializeField] SpriteRenderer skin;
     [SerializeField] Animator animator;
-    [SerializeField] SkillBase[] skills;
-    [SerializeField] SkillBase selectedSkill;
+    [SerializeField] SOSkillBase[] skills;
+    [SerializeField] SOSkillBase selectedSkill;
 
     [SerializeField] bool isActionDone = false;
 
@@ -19,13 +19,13 @@ public class BattleCharacterBase : MonoBehaviour
     public void SetActionDone() => this.isActionDone = true;
 
     public bool IsActionDone() => this.isActionDone;
-    public SkillBase[] GetSkills() => this.skills;
+    public SOSkillBase[] GetSkills() => this.skills;
     public void Initialization(BattleManager _battleManager)
     {
         this.battleManager = _battleManager;
         return;
     }
-    public void SetSelectedSkill(SkillBase _skill , BattleCharacterBase[] _target)
+    public void SetSelectedSkill(SOSkillBase _skill , BattleCharacterBase[] _target)
     {
         this.selectedSkill = Instantiate(_skill);
         this.selectedSkill.target = _target;
@@ -46,7 +46,7 @@ public class BattleCharacterBase : MonoBehaviour
         else return true;
     }
 
-    public SkillBase GetSelectedSkill()
+    public SOSkillBase GetSelectedSkill()
     {
         return this.selectedSkill;
     }
