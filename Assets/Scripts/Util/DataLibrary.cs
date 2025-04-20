@@ -8,7 +8,11 @@ public class DataLibrary : MonoBehaviour
 {
     public static DataLibrary instance;
 
+    CSVReader csvReader;
+
     Dictionary<int, SOMonsterBase> monsterDictionary = new Dictionary<int, SOMonsterBase>();
+
+    Dictionary<int, BattleConversationData> battleConversationData = new Dictionary<int, BattleConversationData>();
 
 
     private void Awake()
@@ -21,10 +25,12 @@ public class DataLibrary : MonoBehaviour
 
     private void Start()
     {
-        LoadAllDataByLabel("MonsterSO");
+        this.csvReader = new CSVReader();
+        LoadAllMonsterBase("MonsterSO");
+        LoadAllTextData("TextAsset");
     }
 
-    public void LoadAllDataByLabel(string label)
+    public void LoadAllMonsterBase(string label)
     {
         Addressables.LoadAssetsAsync<SOMonsterBase>(label, so =>
         {
@@ -35,7 +41,14 @@ public class DataLibrary : MonoBehaviour
             }
         }).Completed += OnLoadComplete;
     }
+    public void LoadAllTextData(string label)
+    {
+        Addressables.LoadAssetsAsync<TextAsset>(label, t_data =>
+        {
+            this.battleConversationData = CSVReader.ReadConversationTable(t_data);
 
+        }).Completed += OnLoadComplete;
+    }
     private void OnLoadComplete<T> (AsyncOperationHandle<IList<T>> handle)
     {
         if (handle.Status == AsyncOperationStatus.Succeeded)
@@ -54,4 +67,12 @@ public class DataLibrary : MonoBehaviour
         return monsterDictionary.TryGetValue(key, out var so) ? so : null;
     }
 
+}
+
+public class BattleConversationData
+{
+   public int index;
+   public string dialog;
+   public string[] choices;
+   public string[] result;
 }
