@@ -171,11 +171,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
+  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -191,8 +191,8 @@ Canvas:
   m_GameObject: {fileID: 45604921}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 519420031}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -259,7 +259,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -27, y: 171}
+  m_AnchoredPosition: {x: 5, y: 419}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &54045937
@@ -874,7 +874,7 @@ MonoBehaviour:
   skin: {fileID: 0}
   animator: {fileID: 0}
   skills:
-  - {fileID: 11400000, guid: 54c81be1569442247af97e78e93a79b6, type: 2}
+  - {fileID: 11400000, guid: 36fbae4e65cfcef4882e09ff16a27030, type: 2}
   selectedSkill: {fileID: 0}
   isActionDone: 0
 --- !u!61 &339549033
@@ -1126,7 +1126,7 @@ MonoBehaviour:
   skin: {fileID: 0}
   animator: {fileID: 0}
   skills:
-  - {fileID: 11400000, guid: 54c81be1569442247af97e78e93a79b6, type: 2}
+  - {fileID: 11400000, guid: 36fbae4e65cfcef4882e09ff16a27030, type: 2}
   selectedSkill: {fileID: 0}
   isActionDone: 0
 --- !u!61 &596861882
@@ -1191,7 +1191,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -6.4, y: -234.8}
+  m_AnchoredPosition: {x: -13, y: -428}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &658839689
@@ -1777,7 +1777,7 @@ MonoBehaviour:
   skin: {fileID: 0}
   animator: {fileID: 0}
   skills:
-  - {fileID: 11400000, guid: 54c81be1569442247af97e78e93a79b6, type: 2}
+  - {fileID: 11400000, guid: 36fbae4e65cfcef4882e09ff16a27030, type: 2}
   selectedSkill: {fileID: 0}
   isActionDone: 0
 --- !u!61 &850612808
@@ -2766,8 +2766,8 @@ MonoBehaviour:
   skin: {fileID: 0}
   animator: {fileID: 0}
   skills:
+  - {fileID: 11400000, guid: 36fbae4e65cfcef4882e09ff16a27030, type: 2}
   - {fileID: 11400000, guid: 422e972f0b9b2c3469d6a4e065c88ac3, type: 2}
-  - {fileID: 11400000, guid: 54c81be1569442247af97e78e93a79b6, type: 2}
   selectedSkill: {fileID: 0}
   isActionDone: 0
 --- !u!61 &1522718177
@@ -2861,6 +2861,49 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1611174013
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1611174015}
+  - component: {fileID: 1611174014}
+  m_Layer: 0
+  m_Name: DataAssetManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1611174014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611174013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63f3fd52605e07f4482b8cb066537368, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1611174015
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1611174013}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1655970523
 GameObject:
@@ -3152,5 +3195,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8620806760606421823, guid: 9e7a0ec6532af0e4bacdc5d1f48384c5, type: 3}
+      propertyPath: skills.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8620806760606421823, guid: 9e7a0ec6532af0e4bacdc5d1f48384c5, type: 3}
+      propertyPath: skills.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 36fbae4e65cfcef4882e09ff16a27030, type: 2}
+    - target: {fileID: 8620806760606421823, guid: 9e7a0ec6532af0e4bacdc5d1f48384c5, type: 3}
+      propertyPath: skills.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: 422e972f0b9b2c3469d6a4e065c88ac3, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9e7a0ec6532af0e4bacdc5d1f48384c5, type: 3}

@@ -27,8 +27,13 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - MonsterSO
+  - m_GUID: 090d65e2657c7ee448e93c5be9f96367
+    m_Address: Assets/TextAssets/DialogDataTable.csv
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - TextAsset
   - m_GUID: d9bb2a10cded6024394707138e1e0a50
-    m_Address: ConversationData
+    m_Address: Assets/TextAssets/ConversationData.csv
     m_ReadOnly: 0
     m_SerializedLabels:
     - TextAsset

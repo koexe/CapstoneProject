@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -14,6 +15,8 @@ public class DataLibrary : MonoBehaviour
 
     Dictionary<int, BattleConversationData> battleConversationData = new Dictionary<int, BattleConversationData>();
 
+    Dictionary<int, DialogData> dialogData = new Dictionary<int, DialogData>();
+
 
     private void Awake()
     {
@@ -27,7 +30,8 @@ public class DataLibrary : MonoBehaviour
     {
         this.csvReader = new CSVReader();
         LoadAllMonsterBase("MonsterSO");
-        LoadAllTextData("TextAsset");
+        LoadConversation();
+        LoadDialog();
     }
 
     public void LoadAllMonsterBase(string label)
@@ -41,14 +45,24 @@ public class DataLibrary : MonoBehaviour
             }
         }).Completed += OnLoadComplete;
     }
-    public void LoadAllTextData(string label)
+    public void LoadConversation()
     {
-        Addressables.LoadAssetsAsync<TextAsset>(label, t_data =>
+        Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/ConversationData.csv").Completed += handle =>
         {
-            this.battleConversationData = CSVReader.ReadConversationTable(t_data);
-
-        }).Completed += OnLoadComplete;
+            var asset = handle.Result;
+            this.battleConversationData = CSVReader.ReadConversationTable(asset);
+        };
     }
+
+    public void LoadDialog()
+    {
+        Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/DialogDataTable.csv").Completed += handle =>
+        {
+            var asset = handle.Result;
+            this.dialogData = CSVReader.ReadDialogData(asset);
+        };
+    }
+
     private void OnLoadComplete<T> (AsyncOperationHandle<IList<T>> handle)
     {
         if (handle.Status == AsyncOperationStatus.Succeeded)
@@ -75,4 +89,24 @@ public class BattleConversationData
    public string dialog;
    public string[] choices;
    public string[] result;
+}
+
+public class DialogData
+{
+    public int index;
+
+    /// <summary>
+    /// Character / Character Emotion Index / Dialog text
+    /// </summary>
+    public (string, int, string)[] dialogs;
+
+    /// <summary>
+    /// Condition Dialog / Is / Faild Text / Succesed 
+    /// </summary>
+    public (int, bool, string , int) condition;
+    
+    /// <summary>
+    /// Choice Text / Choice Link Dialog
+    /// </summary>
+    public (string, int)[] choices;
 }
