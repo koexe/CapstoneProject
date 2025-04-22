@@ -81,6 +81,7 @@ MonoBehaviour:
     - default
     - MonsterSO
     - TextAsset
+    - Portraits
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 95a13367e4e061942b8180a9fb15d5e5, type: 2}

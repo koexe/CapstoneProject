@@ -20,11 +20,11 @@ public class MoveModule : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            t_currentPosition.y -= Time.deltaTime * speed;
+            t_currentPosition.z -= Time.deltaTime * speed; 
         }
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            t_currentPosition.y += Time.deltaTime * speed;
+            t_currentPosition.z += Time.deltaTime * speed;
         }
         this.transform.localPosition = t_currentPosition;
         

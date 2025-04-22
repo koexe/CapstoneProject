@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -47,22 +48,37 @@ public class CSVReader
             DialogData t_data = new DialogData();
             t_data.index = int.Parse(values[0]);
             var t_dialogData = Regex.Split(values[1], "/");
-            (string, int, string)[] t_dialogs = new (string, int, string)[t_dialogData.Length];
+            string talkingCharacter = string.Empty;
+            (string, string)[] t_dialogs = new (string, string)[t_dialogData.Length];
+            (string, int)[][] t_characters = new (string, int)[t_dialogData.Length][];
 
             for (int j = 0; j < t_dialogData.Length; j++)
             {
                 var t_dialogDetail = Regex.Split(t_dialogData[j], "\\*");
+
                 if (t_dialogDetail.Length == 1)
                 {
-                    t_dialogs[j] = (null, 0, t_dialogDetail[0]);
+                    t_characters[j] = null;
                 }
                 else
                 {
-                    t_dialogs[j] = (t_dialogDetail[0], int.Parse(t_dialogDetail[1]), t_dialogDetail[2]);
+                    var t_temp = Regex.Split(t_dialogDetail[0], "\\#");
+
+                    var t_characterDetail = Regex.Split(t_temp[0], "\\,");
+                    t_characters[j] = new (string, int)[t_characterDetail.Length];
+
+                    for (int t_index = 0; t_index < t_characterDetail.Length; t_index++)
+                    {
+                        var t_character = Regex.Split(t_characterDetail[t_index].Trim().Trim('"'), "_");
+                        t_characters[j][t_index] = (t_character[0].Trim(), int.Parse(t_character[1]));
+                    }
+                    talkingCharacter = t_temp[1];
+
                 }
+                t_dialogs[j] = (talkingCharacter, t_dialogDetail[t_dialogDetail.Length - 1]);
             }
             t_data.dialogs = t_dialogs;
-
+            t_data.characters = t_characters;
 
             if (values[2] == "NONE")
             {

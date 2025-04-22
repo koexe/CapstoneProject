@@ -37,6 +37,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - TextAsset
+  - m_GUID: f23ea175e16178c4b983b39bb2e761c5
+    m_Address: "Assets/Images/DialogCharacters/temp/MongYo/\uBABD\uC694_001.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
+  - m_GUID: 7c5410e0b088be94d84ef3df73dafd69
+    m_Address: "Assets/Images/DialogCharacters/temp/Na/\uB098_001.png"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
   m_SchemaSet:

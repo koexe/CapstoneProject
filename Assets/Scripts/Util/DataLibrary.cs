@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.UIElements;
 
 public class DataLibrary : MonoBehaviour
 {
@@ -16,6 +18,8 @@ public class DataLibrary : MonoBehaviour
     Dictionary<int, BattleConversationData> battleConversationData = new Dictionary<int, BattleConversationData>();
 
     Dictionary<int, DialogData> dialogData = new Dictionary<int, DialogData>();
+
+    Dictionary<string, Dictionary<int, Sprite>> dialogPortraits = new Dictionary<string, Dictionary<int, Sprite>>();
 
 
     private void Awake()
@@ -32,6 +36,20 @@ public class DataLibrary : MonoBehaviour
         LoadAllMonsterBase("MonsterSO");
         LoadConversation();
         LoadDialog();
+        LoadAllPortraits();
+
+
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UIManager.instance.ShowUI<DialogUI>(new DialogUIData()
+            {
+                identifier = "DialogUI",
+                data = this.dialogData[0]
+            });
+        }
     }
 
     public void LoadAllMonsterBase(string label)
@@ -63,7 +81,26 @@ public class DataLibrary : MonoBehaviour
         };
     }
 
-    private void OnLoadComplete<T> (AsyncOperationHandle<IList<T>> handle)
+    public void LoadAllPortraits()
+    {
+        Addressables.LoadAssetsAsync<Sprite>("Portraits", t_sprite =>
+        {
+            var t_name = Regex.Split(t_sprite.name, "_");
+            if (!dialogPortraits.ContainsKey(t_name[0]))
+            {
+                dialogPortraits.Add(t_name[0], new Dictionary<int, Sprite>());
+                this.dialogPortraits[t_name[0]].Add(int.Parse(t_name[1]), t_sprite);
+                Debug.Log($"로드된: {t_sprite.name}");
+            }
+            else
+            {
+                dialogPortraits[t_name[0]].Add(int.Parse(t_name[1]), t_sprite);
+                Debug.Log($"로드된: {t_sprite.name}");
+            }
+        }).Completed += OnLoadComplete;
+    }
+
+    private void OnLoadComplete<T>(AsyncOperationHandle<IList<T>> handle)
     {
         if (handle.Status == AsyncOperationStatus.Succeeded)
         {
@@ -81,14 +118,36 @@ public class DataLibrary : MonoBehaviour
         return monsterDictionary.TryGetValue(key, out var so) ? so : null;
     }
 
+    public Sprite GetPortrait(string _key, int _emotion)
+    {
+        Debug.Log($"{_key}");
+        if (this.dialogPortraits.TryGetValue(_key, out var t_dic))
+        {
+            if (t_dic.TryGetValue(_emotion, out var t_portrait))
+            {
+                return t_portrait;
+            }
+            else
+            {
+                Debug.Log($"No Such Portrait Emotion !!!! {_key}  {_emotion}");
+                return null;
+            }
+
+        }
+        else
+        {
+            Debug.Log($"No Such Portrait Name!!!! {_key}");
+            return null;
+        }
+    }
 }
 
 public class BattleConversationData
 {
-   public int index;
-   public string dialog;
-   public string[] choices;
-   public string[] result;
+    public int index;
+    public string dialog;
+    public string[] choices;
+    public string[] result;
 }
 
 public class DialogData
@@ -98,13 +157,15 @@ public class DialogData
     /// <summary>
     /// Character / Character Emotion Index / Dialog text
     /// </summary>
-    public (string, int, string)[] dialogs;
+    public (string, string)[] dialogs;
 
     /// <summary>
     /// Condition Dialog / Is / Faild Text / Succesed 
     /// </summary>
-    public (int, bool, string , int) condition;
-    
+    public (int, bool, string, int) condition;
+
+    public (string, int)[][] characters;
+
     /// <summary>
     /// Choice Text / Choice Link Dialog
     /// </summary>
