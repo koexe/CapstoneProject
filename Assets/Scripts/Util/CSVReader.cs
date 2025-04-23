@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class CSVReader
@@ -114,10 +115,81 @@ public class CSVReader
             }
             else
             {
-                Debug.LogWarning($"�ߺ��� ��� index: {key}, �ǳʶ�");
+                Debug.LogWarning($"�ߺ��� ��� index: {key}, �ǳʶ�");
             }
         }
         return list;
+    }
+
+
+    public static Dictionary<StatusEffectID, StatusEffectInfo> ReadEffectData(TextAsset _asset)
+    {
+        Dictionary<StatusEffectID, StatusEffectInfo> effectDict = new Dictionary<StatusEffectID, StatusEffectInfo>();
+        var lines = Regex.Split(_asset.text, LINE_SPLIT_RE);
+
+        if (lines.Length <= 1)
+            return effectDict;
+
+        for (int i = 1; i < lines.Length; i++) // skip header
+        {
+            var values = Regex.Split(lines[i], SPLIT_RE);
+            if (values.Length < 7)
+                continue;
+
+            var effect = new StatusEffectInfo();
+            effect.id = ParseEffectID(values[0]);
+            effect.category = ParseCategory(values[1]);
+            effect.description = values[2].Trim();
+            effect.duration = ParseInt(values[3]);
+            effect.activationChance = ParseInt(values[4]);
+            effect.maxStack = ParseStack(values[5]);
+            effect.isStackable = effect.maxStack != -1 ? true : false;
+
+            if (!effectDict.ContainsKey(effect.id))
+                effectDict.Add(effect.id, effect);
+        }
+
+        return effectDict;
+    }
+    static StatusEffectID ParseEffectID(string raw)
+    {
+        try
+        {
+            // 공백 제거하고 PascalCase로 정리
+            string cleaned = raw.Trim().Replace(" ", "");
+            return (StatusEffectID)System.Enum.Parse(typeof(StatusEffectID), cleaned, true);
+        }
+        catch
+        {
+            Debug.LogWarning($"Unknown StatusEffectID: {raw}");
+            return StatusEffectID.Bleed; // 기본값
+        }
+    }
+    static StatusCategory ParseCategory(string raw)
+    {
+        raw = raw.Trim();
+        return raw switch
+        {
+            "Debuff" => StatusCategory.Debuff,
+            "Restriction" => StatusCategory.Restriction,
+            "SpecialEffect" => StatusCategory.SpecialEffect,
+            _ => StatusCategory.Debuff
+        };
+    }
+
+    static int ParseStack(string raw)
+    {
+        return raw.Trim() == "-" ? -1 : ParseInt(raw);
+    }
+
+    static bool ParseBool(string raw)
+    {
+        return raw.Trim().Equals("TRUE", System.StringComparison.OrdinalIgnoreCase);
+    }
+
+    static int ParseInt(string raw)
+    {
+        return int.TryParse(raw.Trim(), out int val) ? val : 0;
     }
 }
 

@@ -10,7 +10,8 @@ public class SOSkillBase : ScriptableObject
     public string skillName;
     public Sprite skillIcon;
     public AttackRangeType attackRange;
-    
+    public StatusEffectID statusEffect;
+
     public enum AttackRangeType
     {
         All,

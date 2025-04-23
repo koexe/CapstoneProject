@@ -21,6 +21,8 @@ public class DataLibrary : MonoBehaviour
 
     Dictionary<string, Dictionary<int, Sprite>> dialogPortraits = new Dictionary<string, Dictionary<int, Sprite>>();
 
+    Dictionary<StatusEffectID, StatusEffectInfo> effectTable;
+
 
     private void Awake()
     {
@@ -37,7 +39,7 @@ public class DataLibrary : MonoBehaviour
         LoadConversation();
         LoadDialog();
         LoadAllPortraits();
-
+        LoadEffect();
 
     }
     private void Update()
@@ -52,6 +54,7 @@ public class DataLibrary : MonoBehaviour
         }
     }
 
+    #region Load
     public void LoadAllMonsterBase(string label)
     {
         Addressables.LoadAssetsAsync<SOMonsterBase>(label, so =>
@@ -78,6 +81,15 @@ public class DataLibrary : MonoBehaviour
         {
             var asset = handle.Result;
             this.dialogData = CSVReader.ReadDialogData(asset);
+        };
+    }
+
+    public void LoadEffect()
+    {
+        Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/StatusTable.csv").Completed += handle =>
+        {
+            var asset = handle.Result;
+            this.effectTable = CSVReader.ReadEffectData(asset);
         };
     }
 
@@ -113,6 +125,8 @@ public class DataLibrary : MonoBehaviour
         }
     }
 
+    #endregion
+    #region Get
     public SOMonsterBase GetSOMonster(int key)
     {
         return monsterDictionary.TryGetValue(key, out var so) ? so : null;
@@ -140,6 +154,20 @@ public class DataLibrary : MonoBehaviour
             return null;
         }
     }
+
+    public StatusEffectInfo GetStateInfo(StatusEffectID _id)
+    {
+        if(this.effectTable.TryGetValue(_id,out var t_value))
+        {
+            return t_value;
+        }
+        else
+        {
+            Debug.Log($"no Such State!  {_id}");
+            return null;
+        }
+    }
+    #endregion
 }
 
 public class BattleConversationData
@@ -170,4 +198,47 @@ public class DialogData
     /// Choice Text / Choice Link Dialog
     /// </summary>
     public (string, int)[] choices;
+}
+
+public enum StatusCategory
+{
+    Debuff,
+    Restriction,
+    SpecialEffect
+}
+
+public class StatusEffectInfo
+{
+    public StatusEffectID id;
+    public StatusCategory category;
+    public string description;
+    public int duration;
+    public bool isStackable;
+    public int activationChance;
+    public int maxStack; // -1이면 스택 불가능
+}
+public enum StatusEffectID
+{
+    None = 0,
+    Bleed = 1,
+    Corrosion = 2,
+    Poison = 3,
+    Blind = 4,
+    DEFDown = 5,
+    ATKDown = 6,
+    Frail = 7,
+    HealBlock = 8,
+    SensoryLoss = 9,
+    Decay = 10,
+    HealDisable = 11,
+    FocusLoss = 12,
+    Bind = 13,
+    Confusion = 14,
+    MentalBreak = 15,
+    Lethargy = 16,
+    Stun = 17,
+    WeakResistance = 18,
+    Split = 19,
+    SelfHarm = 20,
+    MarkOfDoom = 21
 }

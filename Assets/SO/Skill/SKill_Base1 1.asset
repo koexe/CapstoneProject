@@ -17,3 +17,4 @@ MonoBehaviour:
   skillName: "\uC804\uCCB4"
   skillIcon: {fileID: 21300000, guid: f42cf05351ae0d8458562155c2a28388, type: 3}
   attackRange: 0
+  statusEffect: -1

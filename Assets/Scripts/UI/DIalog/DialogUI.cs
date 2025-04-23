@@ -7,14 +7,13 @@ using UnityEngine.UI;
 
 public class DialogUI : UIBase
 {
-    [SerializeField] TextMeshProUGUI dialogText;
-    [SerializeField] TextMeshProUGUI nameText;
-    [SerializeField] Image[] portraits;
+    [SerializeField] private TextMeshProUGUI dialogText;
+    [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private Image[] portraits;
 
-    [SerializeField] GameObject nameBox;
+    [SerializeField] private GameObject nameBox;
 
-    DialogData dialogData;
-
+    private DialogData dialogData;
     private int currentLineIndex = 0;
     private Coroutine typingCoroutine;
 
@@ -22,22 +21,21 @@ public class DialogUI : UIBase
     private string fullText = "";
 
     public float typingSpeed = 0.05f;
+
     public override void Hide()
     {
 
     }
 
-    public override void Initialization(UIData data)
+    public override void Initialization(UIData _data)
     {
-        DialogUIData t_dialogUIData = data as DialogUIData;
+        DialogUIData t_dialogUIData = _data as DialogUIData;
         if (t_dialogUIData == null)
         {
             Debug.Log("Invalid DataType in DialogUI");
             return;
         }
         this.dialogData = t_dialogUIData.data;
-
-
     }
 
     public override void Show(UIData _data)
@@ -47,83 +45,82 @@ public class DialogUI : UIBase
 
     void ShowCurrentLine()
     {
-        if (dialogData == null || currentLineIndex >= dialogData.dialogs.Length)
+        if (this.dialogData == null || this.currentLineIndex >= this.dialogData.dialogs.Length)
         {
-            Debug.Log("¥ÎªÁ ¡æ∑·");
+            Debug.Log("Îã§Ïù¥ÏñºÎ°úÍ∑∏ Ï¢ÖÎ£å");
             return;
         }
-        ShowPortraits(dialogData.characters[currentLineIndex]);
-        var (speaker, line) = dialogData.dialogs[currentLineIndex];
+        ShowPortraits(this.dialogData.characters[this.currentLineIndex]);
+        var (t_speaker, t_line) = this.dialogData.dialogs[this.currentLineIndex];
 
-        if (string.IsNullOrEmpty(speaker))
+        if (string.IsNullOrEmpty(t_speaker))
         {
-            nameBox.SetActive(false);
+            this.nameBox.SetActive(false);
         }
         else
         {
-            nameBox.SetActive(true);
-            nameText.text = speaker;
+            this.nameBox.SetActive(true);
+            this.nameText.text = t_speaker;
         }
 
-        if (typingCoroutine != null)
-            StopCoroutine(typingCoroutine);
+        if (this.typingCoroutine != null)
+            StopCoroutine(this.typingCoroutine);
 
-        typingCoroutine = StartCoroutine(TypeLine(line));
+        this.typingCoroutine = StartCoroutine(TypeLine(t_line));
     }
 
-    IEnumerator TypeLine(string line)
+    IEnumerator TypeLine(string _line)
     {
-        isTyping = true;
-        fullText = line;
-        dialogText.text = "";
+        this.isTyping = true;
+        this.fullText = _line;
+        this.dialogText.text = "";
 
-        for (int i = 0; i < line.Length; i++)
+        for (int t_i = 0; t_i < _line.Length; t_i++)
         {
-            dialogText.text += line[i];
-            yield return new WaitForSeconds(typingSpeed);
+            this.dialogText.text += _line[t_i];
+            yield return new WaitForSeconds(this.typingSpeed);
         }
 
-        isTyping = false;
+        this.isTyping = false;
     }
 
     public void OnClickNext()
     {
-        if (isTyping)
+        if (this.isTyping)
         {
-            // ≈∏¿Ã«Œ ¡ﬂ °Ê ¿¸√º √‚∑¬
-            StopCoroutine(typingCoroutine);
-            dialogText.text = fullText;
-            isTyping = false;
+            StopCoroutine(this.typingCoroutine);
+            this.dialogText.text = this.fullText;
+            this.isTyping = false;
         }
         else
         {
-            // ¥Ÿ¿Ω ¡Ÿ∑Œ ≥—æÓ∞®
-            currentLineIndex++;
+            this.currentLineIndex++;
             ShowCurrentLine();
         }
     }
-    void ShowPortraits((string, int)[] currentCharacters)
+
+    void ShowPortraits((string, int)[] _currentCharacters)
     {
-        // ∏’¿˙ ¥Ÿ ≤Ù±‚
-        foreach (var img in portraits)
+        foreach (var t_img in this.portraits)
         {
-            img.gameObject.SetActive(false);
+            t_img.sprite = null;
+            t_img.color = new Color(0, 0, 0, 0);
         }
 
-        int count = currentCharacters.Length;
+        int t_count = _currentCharacters.Length;
 
-        // ƒ≥∏Ø≈Õ ºˆø° µ˚∂Û ¿ßƒ° ∏≈«Œ
-        for (int i = 0; i < count; i++)
+        for (int i = 0; i < t_count; i++)
         {
-            int slotIndex = (count == 1) ? 1 : (count == 2 ? (i == 0 ? 0 : 2) : i); // 1∏Ì = ∞°øÓµ•, 2∏Ì = ¡¬øÏ, 3∏Ì = ¡¬¡ﬂøÏ
+            int t_slotIndex = (t_count == 1) ? 0 : (t_count == 2 ? (i == 0 ? 0 : 2) : i);
 
-            var (t_charName, t_index) = currentCharacters[i];
-            Sprite portrait = DataLibrary.instance.GetPortrait(t_charName, t_index);
+            var (t_charName, t_index) = _currentCharacters[i];
+            Sprite t_portrait = DataLibrary.instance.GetPortrait(t_charName, t_index);
 
-            if (portrait != null)
+            if (t_portrait != null)
             {
-                portraits[slotIndex].sprite = portrait;
-                portraits[slotIndex].gameObject.SetActive(true);
+                this.portraits[t_slotIndex].sprite = t_portrait;
+                this.portraits[t_slotIndex].gameObject.SetActive(true);
+                this.portraits[t_slotIndex].color = new Color(1, 1, 1, 1);
             }
         }
     }

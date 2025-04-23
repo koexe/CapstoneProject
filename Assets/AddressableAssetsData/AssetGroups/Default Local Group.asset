@@ -47,6 +47,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Portraits
+  - m_GUID: ee7e7ecb25ca59e4ab6f3a702a7d3edf
+    m_Address: Assets/TextAssets/StatusTable.csv
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - TextAsset
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
   m_SchemaSet:
