@@ -1,2 +1,2 @@
-dialogIndex,comment,LinkCondition,Choice,Custom
+﻿dialogIndex,comment,LinkCondition,Choice,Custom
 0,"몽요_0,너_0#몽요*안녕? 어드레서블 시작해볼까?$카메라줌$/몽요_0,너_0#너*응, 사실 좀 겁났는데... 지금은 기대돼.$줌아웃$/너_0,몽요_0#몽요*그럼 일단 설치부터 하자. Addressables 패키지 기억나?$설치UI$/몽요_0,너_0#너*설치 완료했어. 이제 그룹 만들 차례지?$UIFocus$/몽요_0,너_0#몽요*멋져! 그럼 빌드하고 불러오는 것도 연습해보자.$하이파이브$",NONE,NONE,NONE

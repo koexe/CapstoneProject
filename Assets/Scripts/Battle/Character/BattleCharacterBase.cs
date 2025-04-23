@@ -21,7 +21,8 @@ public class BattleCharacterBase : MonoBehaviour
 
     [SerializeField] bool isActionDone = false;
 
-    //public void SetActionDone(bool _actionDone) => this.isActionDone = _actionDone;
+    [SerializeField] Dictionary<StatType, Stat> stats = new Dictionary<StatType, Stat>();
+
 
     public void SetActionDone() => this.isActionDone = true;
 
@@ -31,9 +32,10 @@ public class BattleCharacterBase : MonoBehaviour
     {
         this.battleManager = _battleManager;
         this.buffSystem = new BuffSystem();
+        Temp_SetStat();
         return;
     }
-    public void SetSelectedSkill(SOSkillBase _skill , BattleCharacterBase[] _target)
+    public void SetSelectedSkill(SOSkillBase _skill, BattleCharacterBase[] _target)
     {
         this.selectedSkill = Instantiate(_skill);
         this.selectedSkill.target = _target;
@@ -82,10 +84,70 @@ public class BattleCharacterBase : MonoBehaviour
     {
         this.buffSystem.OnTurnStart(this);
     }
+    #region 상태이상 대응 메서드
 
+    public void ModifyStat(StatType _type, int _delta)
+    {
+        if (this.stats.TryGetValue(_type, out var t_stat))
+        {
+            t_stat.SetCurrent(t_stat.Current + _delta);
+            this.stats[_type] = t_stat;
+            Debug.Log($"{this.name}'s {_type} changed by {_delta}. Now: {t_stat.Current}");
+        }
+    }
+    public void SetCanEscape(bool _value)
+    {
+        Debug.Log($"{this.name} escape ability: {_value}");
+        // 필요 시 도망 가능 여부 플래그 추가
+    }
+
+    public void SetSkillUseDisabled(bool _value)
+    {
+        Debug.Log($"{this.name} skill use disabled: {_value}");
+        // 필요 시 스킬 사용 제한 변수 추가
+    }
+
+    public void IncreaseDebuffDuration(int _turns)
+    {
+        Debug.Log($"{this.name} will receive longer debuffs (+{_turns})");
+        // BuffSystem에서 적용되도록 연동 필요
+    }
+
+    public void ForceAttackSelf()
+    {
+        Debug.Log($"{this.name} attacks itself! (implement attack logic)");
+        // 직접 자신 공격 처리
+    }
+
+    #endregion
+#if UNITY_EDITOR
+    void Temp_SetStat()
+    {
+        AddStat(StatType.Hp, 100);
+        AddStat(StatType.Atk, 20);
+        AddStat(StatType.Def, 10);
+        AddStat(StatType.Evasion, 15);
+        AddStat(StatType.Acc, 90);
+        AddStat(StatType.Spd, 12);
+        AddStat(StatType.HealEffecincy, 100);
+    }
+#endif
+    #region Stats
+    private void AddStat(StatType _type, int _initialValue)
+    {
+        Stat t_stat = new Stat();
+        t_stat.Init(_initialValue);
+
+        // statType을 직접 보관하고 싶다면 여기서 설정
+        typeof(Stat).GetField("statType", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+            ?.SetValueDirect(__makeref(t_stat), _type);
+
+        this.stats[_type] = t_stat;
+    }
     [System.Serializable]
     public struct Stat
     {
+        [SerializeField] StatType statType;
         [SerializeField] private int max;
         [SerializeField] private int current;
 
@@ -125,5 +187,19 @@ public class BattleCharacterBase : MonoBehaviour
             this.current = 0;
         }
     }
+    public enum StatType
+    {
+        None = 0,
+        Hp = 1,
+        Atk = 2,
+        Def = 3,
+        Evasion = 4,
+        Acc = 5,
+        Spd = 6,
+        HealEffecincy = 7,
+        CriticalChance = 8,
+        DamageReduce = 9,
+    }
+    #endregion
 
 }

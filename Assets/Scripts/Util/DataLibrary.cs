@@ -77,7 +77,7 @@ public class DataLibrary : MonoBehaviour
 
     public void LoadDialog()
     {
-        Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/DialogDataTable.csv").Completed += handle =>
+        Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/DialogDataTable - 복사본.csv").Completed += handle =>
         {
             var asset = handle.Result;
             this.dialogData = CSVReader.ReadDialogData(asset);
