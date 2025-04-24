@@ -11,17 +11,18 @@ public class SOSkillBase : ScriptableObject
     public Sprite skillIcon;
     public AttackRangeType attackRange;
     public StatusEffectID statusEffect;
+    public RaceType attackRaceType;
 
     public enum AttackRangeType
     {
         All,
         Select,
         Random,
-        Ally
+        Ally,
+        Self,
     }
 
-    public void Execute(BattleCharacterBase _character)
+    public virtual void Execute()
     {
-        Debug.Log($"{_character.name} Used :    SkillName    {this.skillName} ");
     }
 }

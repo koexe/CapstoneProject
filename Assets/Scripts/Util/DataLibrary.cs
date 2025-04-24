@@ -157,7 +157,7 @@ public class DataLibrary : MonoBehaviour
 
     public StatusEffectInfo GetStateInfo(StatusEffectID _id)
     {
-        if(this.effectTable.TryGetValue(_id,out var t_value))
+        if (this.effectTable.TryGetValue(_id, out var t_value))
         {
             return t_value;
         }
@@ -170,6 +170,7 @@ public class DataLibrary : MonoBehaviour
     #endregion
 }
 
+#region Class Type
 public class BattleConversationData
 {
     public int index;
@@ -220,25 +221,31 @@ public class StatusEffectInfo
 public enum StatusEffectID
 {
     None = 0,
-    Bleed = 1,
-    Corrosion = 2,
-    Poison = 3,
-    Blind = 4,
-    DEFDown = 5,
-    ATKDown = 6,
-    Frail = 7,
-    HealBlock = 8,
-    SensoryLoss = 9,
-    Decay = 10,
-    HealDisable = 11,
-    FocusLoss = 12,
-    Bind = 13,
-    Confusion = 14,
-    MentalBreak = 15,
-    Lethargy = 16,
-    Stun = 17,
-    WeakResistance = 18,
-    Split = 19,
-    SelfHarm = 20,
-    MarkOfDoom = 21
+    Bleed = 11,
+    Corrosion = 12,
+    Poison = 13,
+    Blind = 14,
+    DEFDown = 15,
+    ATKDown = 16,
+    Frail = 17,
+    HealBlock = 18,
+    SensoryLoss = 19,
+    Decay = 20,
+    HealDisable = 21,
+    FocusLoss = 22,
+    Bind = 23,
+    Confusion = 24,
+    MentalBreak = 25,
+    Lethargy = 26,
+    Stun = 27,
+    WeakResistance = 28,
+    Split = 29,
+    SelfHarm = 30,
+    MarkOfDoom = 31,
+    PN001 = 101,
+    PN002 = 102,
+    PN003 = 103,
+    PN004 = 104,
+    PN005 = 105,
 }
+#endregion

@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class BattleCharacterBase : MonoBehaviour
 {
-    [SerializeField] protected int maxHP = 100;
-    [SerializeField] protected int currentHP;
+    [SerializeField]
+    private float maxHP;
+    [SerializeField]
+    private float currentHP;
+    [SerializeField]
+    private StatBlock statBlock;
+
+    public float MaxHP() => this.maxHP;
+
     [SerializeField] protected bool isActionDisabled;
     public void SetActionDisabled(bool _isActionDisabled) => this.isActionDisabled = _isActionDisabled;
-    public int MaxHP() => this.maxHP;
 
     public int speed;
     [SerializeField] BattleManager battleManager;
@@ -21,8 +27,26 @@ public class BattleCharacterBase : MonoBehaviour
 
     [SerializeField] bool isActionDone = false;
 
-    [SerializeField] Dictionary<StatType, Stat> stats = new Dictionary<StatType, Stat>();
+    public void RecalculateMaxHP()
+    {
+        this.maxHP = this.statBlock.GetStat(StatType.Hp);
 
+        // 비율 유지
+        float t_ratio = Mathf.Clamp01(this.currentHP / this.maxHP);
+        this.currentHP = this.maxHP * t_ratio;
+    }
+
+    public void TakeDamage(float _amount)
+    {
+        this.currentHP = Mathf.Max(0f, this.currentHP - _amount);
+        if (this.currentHP <= 0f)
+            Die();
+    }
+
+    public void Heal(float _amount)
+    {
+        this.currentHP = Mathf.Min(this.maxHP, this.currentHP + _amount);
+    }
 
     public void SetActionDone() => this.isActionDone = true;
 
@@ -32,7 +56,7 @@ public class BattleCharacterBase : MonoBehaviour
     {
         this.battleManager = _battleManager;
         this.buffSystem = new BuffSystem();
-        Temp_SetStat();
+        //Temp_SetStat();
         return;
     }
     public void SetSelectedSkill(SOSkillBase _skill, BattleCharacterBase[] _target)
@@ -63,16 +87,9 @@ public class BattleCharacterBase : MonoBehaviour
 
     public void StartAction()
     {
-        this.selectedSkill.Execute(this);
+        this.selectedSkill.Execute();
         this.battleManager.ShowText($"{this.name} Used {selectedSkill.skillName}");
         Invoke("SetActionDone", 3.0f);
-    }
-
-    public void TakeDamage(int amount)
-    {
-        currentHP = Mathf.Max(0, currentHP - amount);
-        if (currentHP == 0)
-            Die();
     }
 
     protected virtual void Die()
@@ -84,17 +101,15 @@ public class BattleCharacterBase : MonoBehaviour
     {
         this.buffSystem.OnTurnStart(this);
     }
+    public float GetStat(StatType _type)
+    {
+        if (_type == StatType.Hp)
+            return this.maxHP; // max 기준으로 리턴
+        return this.statBlock.GetStat(_type);
+    }
     #region 상태이상 대응 메서드
 
-    public void ModifyStat(StatType _type, int _delta)
-    {
-        if (this.stats.TryGetValue(_type, out var t_stat))
-        {
-            t_stat.SetCurrent(t_stat.Current + _delta);
-            this.stats[_type] = t_stat;
-            Debug.Log($"{this.name}'s {_type} changed by {_delta}. Now: {t_stat.Current}");
-        }
-    }
+
     public void SetCanEscape(bool _value)
     {
         Debug.Log($"{this.name} escape ability: {_value}");
@@ -121,85 +136,21 @@ public class BattleCharacterBase : MonoBehaviour
 
     #endregion
 #if UNITY_EDITOR
-    void Temp_SetStat()
-    {
-        AddStat(StatType.Hp, 100);
-        AddStat(StatType.Atk, 20);
-        AddStat(StatType.Def, 10);
-        AddStat(StatType.Evasion, 15);
-        AddStat(StatType.Acc, 90);
-        AddStat(StatType.Spd, 12);
-        AddStat(StatType.HealEffecincy, 100);
-    }
+
 #endif
-    #region Stats
-    private void AddStat(StatType _type, int _initialValue)
+    public void AddStatBuff(StatusEffectID _id, BuffBlock _block)
     {
-        Stat t_stat = new Stat();
-        t_stat.Init(_initialValue);
-
-        // statType을 직접 보관하고 싶다면 여기서 설정
-        typeof(Stat).GetField("statType", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-            ?.SetValueDirect(__makeref(t_stat), _type);
-
-        this.stats[_type] = t_stat;
+        this.statBlock.AddBuff(_id, _block);
     }
-    [System.Serializable]
-    public struct Stat
-    {
-        [SerializeField] StatType statType;
-        [SerializeField] private int max;
-        [SerializeField] private int current;
 
-        public int Max => this.max;
-        public int Current => this.current;
 
-        public void Init(int _value)
-        {
-            this.max = _value;
-            this.current = _value;
-        }
 
-        public void SetMax(int _value, bool _fill = true)
-        {
-            this.max = _value;
-            if (_fill) this.current = _value;
-            else this.current = Mathf.Min(this.current, this.max);
-        }
-
-        public void SetCurrent(int _value)
-        {
-            this.current = Mathf.Clamp(_value, 0, this.max);
-        }
-
-        public void Add(int _value)
-        {
-            this.current = Mathf.Clamp(this.current + _value, 0, this.max);
-        }
-
-        public void Fill()
-        {
-            this.current = this.max;
-        }
-
-        public void Empty()
-        {
-            this.current = 0;
-        }
-    }
-    public enum StatType
-    {
-        None = 0,
-        Hp = 1,
-        Atk = 2,
-        Def = 3,
-        Evasion = 4,
-        Acc = 5,
-        Spd = 6,
-        HealEffecincy = 7,
-        CriticalChance = 8,
-        DamageReduce = 9,
-    }
-    #endregion
-
+}
+public enum RaceType
+{
+    Shadow,
+    Phantasm,
+    Mutation,
+    VoidBorn,  // or Beast
+    Radiance,
 }
