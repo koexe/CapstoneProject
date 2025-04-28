@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
 public static class ParkMandooUtility 
@@ -42,5 +44,64 @@ public static class CoroutineUtil
             waitForSecondsCache[seconds] = wait;
         }
         return wait;
+    }
+
+    public static Task ToTask(this MonoBehaviour _monoBehaviour, IEnumerator _coroutine, CancellationToken _cancellationToken = default, int _timeoutMilliseconds = -1)
+    {
+        var tcs = new TaskCompletionSource<object>();
+        Coroutine runner = _monoBehaviour.StartCoroutine(RunCoroutine(_coroutine, tcs, _cancellationToken));
+
+        // 타임아웃 설정
+        if (_timeoutMilliseconds > 0)
+        {
+            _ = TimeoutCoroutine(tcs, _timeoutMilliseconds);
+        }
+
+        // 취소 설정
+        if (_cancellationToken != default)
+        {
+            _cancellationToken.Register(() => {
+                if (!tcs.Task.IsCompleted)
+                {
+                    tcs.TrySetCanceled();
+                    if (runner != null)
+                    {
+                        _monoBehaviour.StopCoroutine(runner);
+                    }
+                }
+            });
+        }
+
+        return tcs.Task;
+    }
+
+    private static IEnumerator RunCoroutine(IEnumerator _coroutine, TaskCompletionSource<object> _tcs, CancellationToken _cancellationToken)
+    {
+        while (true)
+        {
+            if (_cancellationToken.IsCancellationRequested)
+            {
+                yield break;
+            }
+
+            if (_coroutine.MoveNext())
+            {
+                yield return _coroutine.Current;
+            }
+            else
+            {
+                _tcs.TrySetResult(null);
+                yield break;
+            }
+        }
+    }
+
+    private static async Task TimeoutCoroutine(TaskCompletionSource<object> _tcs, int _timeoutMilliseconds)
+    {
+        await Task.Delay(_timeoutMilliseconds);
+        if (!_tcs.Task.IsCompleted)
+        {
+            _tcs.TrySetException(new TaskCanceledException("Coroutine timed out"));
+        }
     }
 }

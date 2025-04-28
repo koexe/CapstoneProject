@@ -215,7 +215,7 @@ public class StatusEffectInfo
     public string description;
     public int duration;
     public bool isStackable;
-    public int activationChance;
+    public float activationChance;
     public int maxStack; // -1이면 스택 불가능
 }
 public enum StatusEffectID

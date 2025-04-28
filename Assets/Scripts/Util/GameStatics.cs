@@ -43,8 +43,29 @@ public class GameStatics : MonoBehaviour
         if (t_defenderIndex == t_strongAgainst) return 1;  // 유리
         else if (t_defenderIndex == t_weakAgainst) return -1; // 불리
         else return 0; // 중립
-
-
     }
 }
 
+public static class DebugLogger
+{
+    public static void Log(string _message)
+    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.Log(_message);
+#endif
+    }
+
+    public static void LogWarning(string _message)
+    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.LogWarning(_message);
+#endif
+    }
+
+    public static void LogError(string _message)
+    {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        Debug.LogError(_message);
+#endif
+    }
+}

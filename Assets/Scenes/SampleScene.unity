@@ -3057,7 +3057,7 @@ PrefabInstance:
     - target: {fileID: 8620806760606421823, guid: 9e7a0ec6532af0e4bacdc5d1f48384c5, type: 3}
       propertyPath: skills.Array.data[0]
       value: 
-      objectReference: {fileID: 11400000, guid: 36fbae4e65cfcef4882e09ff16a27030, type: 2}
+      objectReference: {fileID: 11400000, guid: 460869358919ab741bfef33568a0dbc0, type: 2}
     - target: {fileID: 8620806760606421823, guid: 9e7a0ec6532af0e4bacdc5d1f48384c5, type: 3}
       propertyPath: skills.Array.data[1]
       value: 

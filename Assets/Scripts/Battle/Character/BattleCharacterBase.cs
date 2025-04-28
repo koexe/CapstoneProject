@@ -30,6 +30,14 @@ public class BattleCharacterBase : MonoBehaviour
 
     [SerializeField] TextMeshPro hpText;
 
+    public RaceType raceType;
+
+    public void SetActionDone(bool _is) => this.isActionDone = _is;
+
+    public bool IsActionDone() => this.isActionDone;
+    public SOSkillBase[] GetSkills() => this.skills;
+
+
     public void RecalculateMaxHP()
     {
         this.maxHP = this.statBlock.GetStat(StatType.Hp);
@@ -39,12 +47,42 @@ public class BattleCharacterBase : MonoBehaviour
         this.currentHP = this.maxHP * t_ratio;
     }
 
-    public void TakeDamage(float _amount)
+    public void StartAttack(HitInfo _hitInfo)
     {
-        this.currentHP = Mathf.Max(0f, this.currentHP - _amount);
+        StartCoroutine(AttackCoroutine(_hitInfo));
+    }
+
+    public IEnumerator AttackCoroutine(HitInfo _hitInfo)
+    {
+        this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
+        yield return CoroutineUtil.WaitForSeconds(1f);
+        yield return StartCoroutine(_hitInfo.target.HitCoroutine(_hitInfo));
+        this.battleManager.ShowText($"다음차례!");
+        yield return CoroutineUtil.WaitForSeconds(1f);
+        yield break;
+    }
+
+
+    public void TakeDamage(HitInfo _hitInfo)
+    {
+        this.currentHP = Mathf.Max(0f, this.currentHP - _hitInfo.hitDamage);
         this.hpText.text = this.currentHP.ToString();
         if (this.currentHP <= 0f)
             Die();
+    }
+
+    public IEnumerator HitCoroutine(HitInfo _hitInfo)
+    {
+        this.battleManager.ShowText($"{_hitInfo.hitDamage}의 데미지를 {this.name} 이 받았다!!");
+        TakeDamage(_hitInfo);
+        yield return CoroutineUtil.WaitForSeconds(1f);
+        if (_hitInfo.statusEffect != StatusEffectID.None)
+        {
+            this.buffSystem.Add(_hitInfo.statusEffect);
+            this.battleManager.ShowText($"{this.name}이 데미지를 {_hitInfo.statusEffect} 에 걸렸다!!");
+            yield return CoroutineUtil.WaitForSeconds(1f);
+        }
+        yield break;
     }
 
     public void Heal(float _amount)
@@ -52,15 +90,10 @@ public class BattleCharacterBase : MonoBehaviour
         this.currentHP = Mathf.Min(this.maxHP, this.currentHP + _amount);
     }
 
-    public void SetActionDone() => this.isActionDone = true;
-
-    public bool IsActionDone() => this.isActionDone;
-    public SOSkillBase[] GetSkills() => this.skills;
     public void Initialization(BattleManager _battleManager)
     {
         this.battleManager = _battleManager;
         this.buffSystem = new BuffSystem();
-        //Temp_SetStat();
         InitStats();
         this.hpText.text = this.currentHP.ToString();
         return;
@@ -68,6 +101,7 @@ public class BattleCharacterBase : MonoBehaviour
     public void SetSelectedSkill(SOSkillBase _skill, BattleCharacterBase[] _target)
     {
         this.selectedSkill = Instantiate(_skill);
+        this.selectedSkill.character = this;
         this.selectedSkill.target = _target;
     }
     public void ResetSelectedSkill()
@@ -94,8 +128,6 @@ public class BattleCharacterBase : MonoBehaviour
     public void StartAction()
     {
         this.selectedSkill.Execute();
-        this.battleManager.ShowText($"{this.name} Used {selectedSkill.skillName}");
-        Invoke("SetActionDone", 3.0f);
     }
 
     protected virtual void Die()
@@ -142,6 +174,7 @@ public class BattleCharacterBase : MonoBehaviour
 
     #endregion
 
+    #region 스탯 관련 메서드
     public void AddStatBuff(StatusEffectID _id, BuffBlock _block)
     {
         this.statBlock.AddBuff(_id, _block);
@@ -152,11 +185,21 @@ public class BattleCharacterBase : MonoBehaviour
         this.statBlock = new StatBlock();
         this.maxHP = this.currentHP = this.statBlock.GetStat(StatType.Hp);
     }
-
+    #endregion
+    public struct HitInfo
+    {
+        public bool isCritical;
+        public int isRaceAdvantage;
+        public float hitDamage;
+        public RaceType attackRace;
+        public StatusEffectID statusEffect;
+        public BattleCharacterBase target;
+    }
 
 }
 public enum RaceType
 {
+    None,
     Shadow,
     Phantasm,
     Mutation,

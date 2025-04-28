@@ -6,6 +6,8 @@ public class BuffSystem
 {
     private Dictionary<StatusEffectID, StatusEffectInstance> activeEffects = new Dictionary<StatusEffectID, StatusEffectInstance>();
 
+
+
     public void OnTurnStart(BattleCharacterBase _target)
     {
         foreach (var t_effect in this.activeEffects.Values)
@@ -24,6 +26,20 @@ public class BuffSystem
 
     public bool Has(StatusEffectID _name) => this.activeEffects.ContainsKey(_name);
     public StatusEffectInstance Get(StatusEffectID _name) => this.activeEffects.TryGetValue(_name, out var t_effect) ? t_effect : null;
+
+    public void Add(StatusEffectID _id)
+    {
+        if (this.activeEffects.ContainsKey(_id))
+        {
+            // 이미 존재하면 갱신하거나 중첩 처리
+            this.activeEffects[_id].Refresh();
+        }
+        else
+        {
+            // 없으면 새로 추가
+            this.activeEffects.Add(_id, new StatusEffectInstance(DataLibrary.instance.GetStateInfo(_id)));
+        }
+    }
 }
 public class StatusEffectInstance
 {
@@ -70,7 +86,16 @@ public class StatusEffectInstance
                     float t_rate = this.info.id == StatusEffectID.Bleed ? 0.05f :
                                    this.info.id == StatusEffectID.Poison ? 0.07f : 0.03f;
                     float t_dmg = Mathf.CeilToInt(_target.MaxHP() * t_rate);
-                    _target.TakeDamage((int)t_dmg);
+                    _target.TakeDamage(
+                        new BattleCharacterBase.HitInfo()
+                        {
+                            hitDamage = t_dmg,
+                            isCritical = false,
+                            isRaceAdvantage = 0,
+                            attackRace = RaceType.None,
+
+                        });
+
                     Debug.Log($"{_target.name} takes {t_dmg} damage from {this.info.id}");
                     break;
                 }
@@ -160,7 +185,16 @@ public class StatusEffectInstance
                 if (Random.value < 0.10f)
                 {
                     float t_splitDmg = Mathf.CeilToInt(_target.MaxHP() * 0.05f);
-                    _target.TakeDamage((int)t_splitDmg);
+                    _target.TakeDamage(
+                        new BattleCharacterBase.HitInfo()
+                        {
+                            hitDamage = t_splitDmg,
+                            isCritical = false,
+                            isRaceAdvantage = 0,
+                            attackRace = RaceType.None,
+
+                        });
+
                     Debug.Log($"{_target.name} is split and takes {t_splitDmg} self-damage");
                 }
                 break;
@@ -179,7 +213,15 @@ public class StatusEffectInstance
                 if (this.remainingTurns <= 1)
                 {
                     float t_explosion = Mathf.CeilToInt(_target.MaxHP() * 0.25f);
-                    _target.TakeDamage((int)t_explosion);
+                    _target.TakeDamage(
+                   new BattleCharacterBase.HitInfo()
+                   {
+                       hitDamage = t_explosion,
+                       isCritical = false,
+                       isRaceAdvantage = 0,
+                       attackRace = RaceType.None,
+
+                   });
                     Debug.Log($"{_target.name} is hit by Mark of Doom explosion! {t_explosion} damage");
                 }
                 break;
@@ -233,22 +275,22 @@ public class StatBlock
         this.baseStats.Add(StatType.Hp, 100f);
         this.baseStats.Add(StatType.Atk, 10f);
         this.baseStats.Add(StatType.Def, 5f);
-        this.baseStats.Add(StatType.Evasion,5f);
+        this.baseStats.Add(StatType.Evasion, 5f);
         this.baseStats.Add(StatType.Acc, 95f);
         this.baseStats.Add(StatType.Spd, 10f);
         this.baseStats.Add(StatType.HealEffecincy, 100f);
         this.baseStats.Add(StatType.DamageReduce, 0f);
 
 
-    //    Hp = 1,
-    //Atk = 2,
-    //Def = 3,
-    //Evasion = 4,
-    //Acc = 5,
-    //Spd = 6,
-    //HealEffecincy = 7,
-    //CriticalChance = 8,
-    //DamageReduce = 9,
+        //    Hp = 1,
+        //Atk = 2,
+        //Def = 3,
+        //Evasion = 4,
+        //Acc = 5,
+        //Spd = 6,
+        //HealEffecincy = 7,
+        //CriticalChance = 8,
+        //DamageReduce = 9,
     }
     public void SetBase(StatType _type, float _value)
     {

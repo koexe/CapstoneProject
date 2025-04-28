@@ -141,7 +141,7 @@ public class CSVReader
             effect.category = ParseCategory(values[1]);
             effect.description = values[2].Trim();
             effect.duration = ParseInt(values[3]);
-            effect.activationChance = ParseInt(values[4]);
+            effect.activationChance = float.Parse(values[4]);
             effect.maxStack = ParseStack(values[5]);
             effect.isStackable = effect.maxStack != -1 ? true : false;
 

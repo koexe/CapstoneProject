@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading.Tasks;
 
 [CreateAssetMenu(fileName = "SKill_Base", menuName = "Skill/SkillBase")]
 public class SOSkillBase : ScriptableObject
@@ -22,7 +23,9 @@ public class SOSkillBase : ScriptableObject
         Self,
     }
 
-    public virtual void Execute()
+    public virtual async void Execute()
     {
+        await Task.Delay(3000); // 밀리초 단위 (3초)
+        this.character.SetActionDone(true);
     }
 }
