@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
-public class BuffSystem : MonoBehaviour
+public class BuffSystem
 {
     private Dictionary<StatusEffectID, StatusEffectInstance> activeEffects = new Dictionary<StatusEffectID, StatusEffectInstance>();
 
@@ -229,6 +228,28 @@ public class StatBlock
     private Dictionary<StatType, float> baseStats = new Dictionary<StatType, float>();
     private Dictionary<StatusEffectID, BuffBlock> buffStats = new Dictionary<StatusEffectID, BuffBlock>();
 
+    public StatBlock()
+    {
+        this.baseStats.Add(StatType.Hp, 100f);
+        this.baseStats.Add(StatType.Atk, 10f);
+        this.baseStats.Add(StatType.Def, 5f);
+        this.baseStats.Add(StatType.Evasion,5f);
+        this.baseStats.Add(StatType.Acc, 95f);
+        this.baseStats.Add(StatType.Spd, 10f);
+        this.baseStats.Add(StatType.HealEffecincy, 100f);
+        this.baseStats.Add(StatType.DamageReduce, 0f);
+
+
+    //    Hp = 1,
+    //Atk = 2,
+    //Def = 3,
+    //Evasion = 4,
+    //Acc = 5,
+    //Spd = 6,
+    //HealEffecincy = 7,
+    //CriticalChance = 8,
+    //DamageReduce = 9,
+    }
     public void SetBase(StatType _type, float _value)
     {
         this.baseStats[_type] = _value;

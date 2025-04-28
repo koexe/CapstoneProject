@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class BattleCharacterBase : MonoBehaviour
@@ -27,6 +28,8 @@ public class BattleCharacterBase : MonoBehaviour
 
     [SerializeField] bool isActionDone = false;
 
+    [SerializeField] TextMeshPro hpText;
+
     public void RecalculateMaxHP()
     {
         this.maxHP = this.statBlock.GetStat(StatType.Hp);
@@ -39,6 +42,7 @@ public class BattleCharacterBase : MonoBehaviour
     public void TakeDamage(float _amount)
     {
         this.currentHP = Mathf.Max(0f, this.currentHP - _amount);
+        this.hpText.text = this.currentHP.ToString();
         if (this.currentHP <= 0f)
             Die();
     }
@@ -57,6 +61,8 @@ public class BattleCharacterBase : MonoBehaviour
         this.battleManager = _battleManager;
         this.buffSystem = new BuffSystem();
         //Temp_SetStat();
+        InitStats();
+        this.hpText.text = this.currentHP.ToString();
         return;
     }
     public void SetSelectedSkill(SOSkillBase _skill, BattleCharacterBase[] _target)
@@ -135,14 +141,17 @@ public class BattleCharacterBase : MonoBehaviour
     }
 
     #endregion
-#if UNITY_EDITOR
 
-#endif
     public void AddStatBuff(StatusEffectID _id, BuffBlock _block)
     {
         this.statBlock.AddBuff(_id, _block);
     }
 
+    public void InitStats()
+    {
+        this.statBlock = new StatBlock();
+        this.maxHP = this.currentHP = this.statBlock.GetStat(StatType.Hp);
+    }
 
 
 }
