@@ -4,15 +4,24 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class SkillSelectUI : UIBase
 {
+    [SerializeField] Button[] actionButtons;
+
+    [Header("Skill UIs")]
     [SerializeField] SkillUI[] skillUIs;
+
+    [SerializeField] GameObject actionSelects;
+    [SerializeField] GameObject skillSelects;
+
+    SkillUIData skillUIData;
     public override void Hide()
     {
         this.contents.SetActive(false);
         this.isShow = false;
+        this.skillUIData.onHide?.Invoke();
     }
 
     public override void Initialization(UIData data)
@@ -25,21 +34,46 @@ public class SkillSelectUI : UIBase
         }
         for (int i = 0; i < skillUIs.Length; i++)
         {
-            this.skillUIs[i].Initialization(t_skillUIData.battleCharacterBase, t_skillUIData.skills[i] , t_skillUIData.action);
+            this.skillUIData = t_skillUIData;
+            this.skillUIs[i].Initialization(t_skillUIData.battleCharacterBase, t_skillUIData.skills[i], t_skillUIData.action);
         }
     }
 
     public override void Show(UIData _data)
     {
         this.contents.SetActive(true);
+        this.actionSelects.SetActive(true);
+        this.skillSelects.SetActive(false);
         this.isShow = true;
     }
 
-
+    public void BaseAttack()
+    {
+        LogUtil.Log("기본공격 예정");
+        this.skillUIData.battleCharacterBase.SetAction(CharacterActionType.Attack);
+        this.skillUIData.action(this.skillUIData.battleCharacterBase, Instantiate(DataLibrary.instance.GetSOSkill(1)));
+        UIManager.instance.HideUI("BattleSkillUI");
+    }
+    public void Defence()
+    {
+        LogUtil.Log("방어 예정");
+        this.skillUIData.battleCharacterBase.SetAction(CharacterActionType.Defence);
+        UIManager.instance.HideUI("BattleSkillUI");
+    }
+    public void Skill()
+    {
+        this.actionSelects.SetActive(false);
+        this.skillSelects.SetActive(true);
+    }
+    public void Talant()
+    {
+        LogUtil.Log("궁극기 구현 예정");
+        UIManager.instance.HideUI("BattleSkillUI");
+    }
 }
 public class SkillUIData : UIData
 {
     public BattleCharacterBase battleCharacterBase;
     public SOSkillBase[] skills;
-    public Action<BattleCharacterBase,SOSkillBase> action;
+    public Action<BattleCharacterBase, SOSkillBase> action;
 }

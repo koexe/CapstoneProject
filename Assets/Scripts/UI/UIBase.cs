@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,7 +6,7 @@ using UnityEngine.Rendering;
 
 public abstract class UIBase : MonoBehaviour
 {
-    UIData data;
+    protected UIData data;
 
     [SerializeField] protected GameObject contents;
     public abstract void Initialization(UIData data);
@@ -23,5 +24,7 @@ public class UIData
     public string identifier;
     public int order;
     public bool isAllowMultifle;
+
+    public Action onHide;
 }
  

@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading;
+using Cysharp.Threading.Tasks;
+using System;
+using Random = UnityEngine.Random;
+
 
 public class BuffSystem
 {
     private Dictionary<StatusEffectID, StatusEffectInstance> activeEffects = new Dictionary<StatusEffectID, StatusEffectInstance>();
-
-
 
     public void OnTurnStart(BattleCharacterBase _target)
     {
@@ -23,6 +26,27 @@ public class BuffSystem
         foreach (var t_key in t_expired)
             this.activeEffects.Remove(t_key);
     }
+    
+    public async UniTask OnTurnStartAsync(BattleCharacterBase _target)
+    {
+        foreach (var t_effect in this.activeEffects.Values)
+        {
+            t_effect.Tick(_target);
+            await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        }
+ 
+
+        var t_expired = new List<StatusEffectID>();
+        foreach (var t_pair in this.activeEffects)
+        {
+            if (t_pair.Value.IsExpired)
+                t_expired.Add(t_pair.Key);
+        }
+
+        foreach (var t_key in t_expired)
+            this.activeEffects.Remove(t_key);
+    }
+
 
     public bool Has(StatusEffectID _name) => this.activeEffects.ContainsKey(_name);
     public StatusEffectInstance Get(StatusEffectID _name) => this.activeEffects.TryGetValue(_name, out var t_effect) ? t_effect : null;
@@ -75,7 +99,6 @@ public class StatusEffectInstance
 
     public void ApplyEffect(BattleCharacterBase _target)
     {
-
         switch (this.info.id)
         {
             // 매 턴 피해

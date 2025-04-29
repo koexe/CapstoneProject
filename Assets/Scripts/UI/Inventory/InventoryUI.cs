@@ -42,16 +42,6 @@ public class InventoryUI : UIBase
         return;
     }
 
-    private void OnDestroy()
-    {
-        var t_currentSaveData = SaveGameManager.instance.GetCurrentSaveData();
-        t_currentSaveData.items = null;
-        t_currentSaveData.items = this.items;
-        SaveGameManager.instance.SetCurrentSaveData(t_currentSaveData);
-        FieldManager.instance.state = FieldManager.GameState.InProgress;
-        return;
-    }
-
     public override void Initialization(UIData data)
     {
         InventoryUIData t_skillUIData = data as InventoryUIData;
@@ -69,12 +59,18 @@ public class InventoryUI : UIBase
 
     public override void Show(UIData _data)
     {
-        throw new NotImplementedException();
+        this.contents.SetActive(true);
     }
 
     public override void Hide()
     {
-        throw new NotImplementedException();
+        this.contents.SetActive(false);
+        var t_currentSaveData = SaveGameManager.instance.GetCurrentSaveData();
+        t_currentSaveData.items = null;
+        t_currentSaveData.items = this.items;
+        SaveGameManager.instance.SetCurrentSaveData(t_currentSaveData);
+        FieldManager.instance.state = FieldManager.GameState.InProgress;
+        return;
     }
 
     class InventoryUIData : UIData

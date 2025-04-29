@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+using Cysharp.Threading;
 
 [System.Serializable]
 public class TurnSequence
@@ -13,6 +13,7 @@ public class TurnSequence
         InitializeSequence,
         ChooseSequence,
         ExecuteSequence,
+        SummarySequence,
     }
 
     protected Action BeforeSequence;
@@ -229,6 +230,7 @@ public class ExecuteSequence : TurnSequence
     public ExecuteSequence(BattleManager _battleManager, List<BattleCharacterBase> _battleCharacters, Action _beforeAction = null, Action _afterAction = null) : base(_battleManager, _beforeAction, _afterAction)
     {
         this.battleCharacters = _battleCharacters;
+
         this.sequenceType = BattleSequenceType.ChooseSequence;
 
         this.battleManager.SetCurrentSequenceType(this.sequenceType);
@@ -236,22 +238,53 @@ public class ExecuteSequence : TurnSequence
     public override void SequenceAction()
     {
         base.SequenceAction();
-        this.battleManager.StartCoroutine(ActionCoroutine());
+        ActionTask();
     }
-    IEnumerator ActionCoroutine()
+    public async void ActionTask()
     {
+        for (int i = 0; i < battleCharacters.Count; i++)
+        {
+            if (battleCharacters[i].GetAction() == CharacterActionType.Defence)
+            {
+                GameStatics.Swap(battleCharacters, i, 0);
+            }
+        }
+
         foreach (var t_battleCharacter in battleCharacters)
         {
-            t_battleCharacter.StartAction();
-            while (!t_battleCharacter.IsActionDone())
-            {
-                yield return CoroutineUtil.WaitForFixedUpdate;
-            }
-
+            await t_battleCharacter.StartAction();
         }
 
         battleManager.NextSequence();
 
-        yield break;
+    }
+}
+
+[System.Serializable]
+public class SummarySequence : TurnSequence
+{
+    List<BattleCharacterBase> battleCharacters;
+    public SummarySequence(BattleManager _battleManager, List<BattleCharacterBase> _battleCharacters, Action _beforeAction = null, Action _afterAction = null) : base(_battleManager, _beforeAction, _afterAction)
+    {
+        this.battleCharacters = _battleCharacters;
+        this.sequenceType = BattleSequenceType.SummarySequence;
+
+        this.battleManager.SetCurrentSequenceType(this.sequenceType);
+    }
+    public override void SequenceAction()
+    {
+        base.SequenceAction();
+        SummaryTask();
+    }
+    async void SummaryTask()
+    {
+        foreach (var t_battleCharacter in battleCharacters)
+        {
+            await t_battleCharacter.Summary();
+        }
+
+        battleManager.NextSequence();
+
+
     }
 }

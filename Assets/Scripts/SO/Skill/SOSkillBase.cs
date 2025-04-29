@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 
 [CreateAssetMenu(fileName = "SKill_Base", menuName = "Skill/SkillBase")]
 public class SOSkillBase : ScriptableObject
 {
-    public BattleCharacterBase character;
-    public BattleCharacterBase[] target;
+    [HideInInspector] public BattleCharacterBase character;
+    [HideInInspector] public BattleCharacterBase[] target;
+    public int skillIdentifier;
     public string skillName;
     public Sprite skillIcon;
     public AttackRangeType attackRange;
@@ -23,7 +25,7 @@ public class SOSkillBase : ScriptableObject
         Self,
     }
 
-    public virtual async void Execute()
+    public virtual async UniTask Execute()
     {
         await Task.Delay(3000); // 밀리초 단위 (3초)
         this.character.SetActionDone(true);

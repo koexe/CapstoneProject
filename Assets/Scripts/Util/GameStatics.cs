@@ -44,9 +44,15 @@ public class GameStatics : MonoBehaviour
         else if (t_defenderIndex == t_weakAgainst) return -1; // 불리
         else return 0; // 중립
     }
+
+    public static void Swap<T>(List<T> _list, int _i, int _j)
+    {
+        (_list[_i], _list[_j]) = (_list[_j], _list[_i]);
+    }
+
 }
 
-public static class DebugLogger
+public static class LogUtil
 {
     public static void Log(string _message)
     {

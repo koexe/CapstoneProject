@@ -66,12 +66,21 @@ public class BattleManager : MonoBehaviour
 
     void NewTurn()
     {
-        this.turnSystem.AddSequence(new InitializeSequence(this, _beforeAction: () => {
+        foreach(var t_char in this.allyCharacters)
+        {
+            t_char.SetAction(CharacterActionType.None);
+        }
+        //foreach (var t_char in this.enemyCharacters)
+        //{
+        //    t_char.SetAction(CharacterActionType.None);
+        //}
+        this.turnSystem.AddSequence(new InitializeSequence(this, _beforeAction: () =>
+        {
             foreach (var t_character in this.allyCharacters)
                 t_character.ResetSelectedSkill();
-            foreach(var t_character in this.enemyCharacters)
+            foreach (var t_character in this.enemyCharacters)
                 t_character.ResetSelectedSkill();
-                }));
+        }));
         this.turnSystem.AddSequence(new ChooseSequence(this, this.allyCharacters, this.enemyCharacters,
             () =>
             {
@@ -86,6 +95,7 @@ public class BattleManager : MonoBehaviour
                 GameStatics.instance.CameraController.SetTarget(null);
             }));
         this.turnSystem.AddSequence(new ExecuteSequence(this, TurnCheck()));
+        this.turnSystem.AddSequence(new SummarySequence(this, TurnCheck()));
     }
 
     #region 기능
@@ -134,10 +144,12 @@ public class BattleManager : MonoBehaviour
             t_BattleOrder.Add(t_character);
         }
         t_BattleOrder.Sort((a, b) => b.speed.CompareTo(a.speed));
+
+
         return t_BattleOrder;
     }
 
-    public T[] GetRandomElementAsArray<T>(T[] sourceArray)
+    T[] GetRandomElementAsArray<T>(T[] sourceArray)
     {
         if (sourceArray == null || sourceArray.Length == 0)
             return new T[0]; // 빈 배열 반환
@@ -152,7 +164,7 @@ public class BattleManager : MonoBehaviour
         bool t_isAllReady = true;
         foreach (var t_character in this.allyCharacters)
         {
-            if (t_character.IsReadySkill() == false)
+            if (t_character.IsReady() == false)
             {
                 t_isAllReady = false;
                 break;
@@ -178,21 +190,32 @@ public class BattleManager : MonoBehaviour
             t_Sequence.state = ChooseSequence.ChooseState.SelectSkill;
         }
 
-        switch ((PlayerActionType)_type)
+        switch ((CharacterActionType)_type)
         {
-            case PlayerActionType.Attack:
-            case PlayerActionType.Talk:
-            case PlayerActionType.Item:
-            case PlayerActionType.Run:
+            case CharacterActionType.Attack:
+                this.currentSelectedCharacter.SetAction(CharacterActionType.Skill);
                 UIManager.instance.ShowUI<SkillSelectUI>(new SkillUIData()
                 {
                     battleCharacterBase = this.currentSelectedCharacter,
                     identifier = "BattleSkillUI",
+                    onHide = () => CheckAllReady(),
                     skills = this.currentSelectedCharacter.GetSkills(),
                     isAllowMultifle = false,
                     order = 0,
                     action = UISelectSkill
                 });
+                break;
+            case CharacterActionType.Talk:
+                this.currentSelectedCharacter.SetAction(CharacterActionType.Talk);
+                CheckAllReady();
+                break;
+            case CharacterActionType.Item:
+                this.currentSelectedCharacter.SetAction(CharacterActionType.Item);
+                CheckAllReady();
+                break;
+            case CharacterActionType.Run:
+                this.currentSelectedCharacter.SetAction(CharacterActionType.Run);
+                CheckAllReady();
                 break;
         }
     }
@@ -200,18 +223,15 @@ public class BattleManager : MonoBehaviour
     {
         UIManager.instance.HideUI("BattleSkillUI");
 
-
         switch (_skill.attackRange)
         {
             case SOSkillBase.AttackRangeType.All:
                 _character.SetSelectedSkill(_skill, enemyCharacters);
                 SetChooseSequenceState(ChooseSequence.ChooseState.None);
-                CheckAllReady();
                 break;
             case SOSkillBase.AttackRangeType.Random:
                 _character.SetSelectedSkill(_skill, GetRandomElementAsArray<BattleCharacterBase>(this.enemyCharacters));
                 SetChooseSequenceState(ChooseSequence.ChooseState.None);
-                CheckAllReady();
                 break;
             case SOSkillBase.AttackRangeType.Select:
                 GameStatics.instance.CameraController.SetTarget(null);
@@ -223,8 +243,6 @@ public class BattleManager : MonoBehaviour
                 ShowText("아군 선택");
                 break;
         }
-
-        CheckAllReady();
     }
 
 
@@ -238,14 +256,14 @@ public class BattleManager : MonoBehaviour
     }
     #endregion
     #endregion
-
-
-
-    public enum PlayerActionType
-    {
-        Attack,
-        Talk,
-        Item,
-        Run,
-    }
+}
+public enum CharacterActionType
+{
+    None,
+    Attack,
+    Defence,
+    Talk,
+    Skill,
+    Item,
+    Run,
 }

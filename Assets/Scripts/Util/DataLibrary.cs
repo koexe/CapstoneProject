@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.UIElements;
+using Cysharp.Threading;
+using Cysharp.Threading.Tasks;
 
 public class DataLibrary : MonoBehaviour
 {
@@ -13,15 +15,17 @@ public class DataLibrary : MonoBehaviour
 
     CSVReader csvReader;
 
-    Dictionary<int, SOMonsterBase> monsterDictionary = new Dictionary<int, SOMonsterBase>();
+    Dictionary<int, SOMonsterBase> monsterData = new Dictionary<int, SOMonsterBase>();
 
     Dictionary<int, BattleConversationData> battleConversationData = new Dictionary<int, BattleConversationData>();
 
     Dictionary<int, DialogData> dialogData = new Dictionary<int, DialogData>();
 
-    Dictionary<string, Dictionary<int, Sprite>> dialogPortraits = new Dictionary<string, Dictionary<int, Sprite>>();
+    Dictionary<string, Dictionary<int, Sprite>> dialogPortraitsdata = new Dictionary<string, Dictionary<int, Sprite>>();
 
-    Dictionary<StatusEffectID, StatusEffectInfo> effectTable;
+    Dictionary<StatusEffectID, StatusEffectInfo> statusEffectData;
+
+    Dictionary<int, SOSkillBase> skillData = new Dictionary<int, SOSkillBase>();
 
 
     private void Awake()
@@ -35,13 +39,24 @@ public class DataLibrary : MonoBehaviour
     private void Start()
     {
         this.csvReader = new CSVReader();
-        LoadAllMonsterBase("MonsterSO");
-        LoadConversation();
-        LoadDialog();
-        LoadAllPortraits();
-        LoadEffect();
+        LoadAllMonsterData();
+        LoadConversationData();
+        LoadDialogData();
+        LoadAllPortraitsData();
+        LoadEffectData();
+        LoadAllSkillData();
 
     }
+
+    public async UniTask LoadAllDataAsync()
+    {
+        await LoadAllMonsterDataAsync();
+        await LoadDialogDataAsync();
+        await LoadAllPortraitsDataAsync();
+        await LoadEffectDataAsync();
+        await LoadAllSkillDataAsync();
+    }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -55,18 +70,87 @@ public class DataLibrary : MonoBehaviour
     }
 
     #region Load
-    public void LoadAllMonsterBase(string label)
+    public async UniTask LoadConversationDataAsync()
     {
-        Addressables.LoadAssetsAsync<SOMonsterBase>(label, so =>
+        var handle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/ConversationData.csv");
+        var asset = await handle.Task;
+        this.battleConversationData = CSVReader.ReadConversationTable(asset);
+    }
+
+    public async UniTask LoadDialogDataAsync()
+    {
+        var handle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/DialogDataTable - 복사본.csv");
+        var asset = await handle.Task;
+        this.dialogData = CSVReader.ReadDialogData(asset);
+    }
+
+    public async UniTask LoadEffectDataAsync()
+    {
+        var handle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/StatusTable.csv");
+        var asset = await handle.Task;
+        this.statusEffectData = CSVReader.ReadEffectData(asset);
+    }
+
+    public async UniTask LoadAllSkillDataAsync()
+    {
+        var handle = Addressables.LoadAssetsAsync<SOSkillBase>("SkillSO", so =>
         {
-            if (!monsterDictionary.ContainsKey(so.identifier))
+            if (!skillData.ContainsKey(so.skillIdentifier))
             {
-                monsterDictionary.Add(so.identifier, so);
+                skillData.Add(so.skillIdentifier, so);
+                Debug.Log($"로드된: {so.name}");
+            }
+        });
+        await handle.Task;
+        Debug.Log($"Skill 로드 완료: {handle.Result.Count}개");
+    }
+
+    public async UniTask LoadAllMonsterDataAsync()
+    {
+        var handle = Addressables.LoadAssetsAsync<SOMonsterBase>("MonsterSO", so =>
+        {
+            if (!monsterData.ContainsKey(so.identifier))
+            {
+                monsterData.Add(so.identifier, so);
+                Debug.Log($"로드된: {so.name}");
+            }
+        });
+        await handle.Task;
+        Debug.Log($"Monster 로드 완료: {handle.Result.Count}개");
+    }
+
+
+    public async UniTask LoadAllPortraitsDataAsync()
+    {
+        var handle = Addressables.LoadAssetsAsync<Sprite>("Portraits", sprite =>
+        {
+            var parts = Regex.Split(sprite.name, "_");
+            if (!dialogPortraitsdata.ContainsKey(parts[0]))
+            {
+                dialogPortraitsdata[parts[0]] = new Dictionary<int, Sprite>();
+            }
+            dialogPortraitsdata[parts[0]][int.Parse(parts[1])] = sprite;
+            Debug.Log($"로드된: {sprite.name}");
+        });
+        await handle.Task;
+        Debug.Log($"Portrait 로드 완료: {handle.Result.Count}개");
+    }
+
+
+
+
+    public void LoadAllMonsterData()
+    {
+        Addressables.LoadAssetsAsync<SOMonsterBase>("MonsterSO", so =>
+        {
+            if (!monsterData.ContainsKey(so.identifier))
+            {
+                monsterData.Add(so.identifier, so);
                 Debug.Log($"로드된: {so.name}");
             }
         }).Completed += OnLoadComplete;
     }
-    public void LoadConversation()
+    public void LoadConversationData()
     {
         Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/ConversationData.csv").Completed += handle =>
         {
@@ -75,7 +159,7 @@ public class DataLibrary : MonoBehaviour
         };
     }
 
-    public void LoadDialog()
+    public void LoadDialogData()
     {
         Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/DialogDataTable - 복사본.csv").Completed += handle =>
         {
@@ -84,29 +168,28 @@ public class DataLibrary : MonoBehaviour
         };
     }
 
-    public void LoadEffect()
+    public void LoadEffectData()
     {
         Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/StatusTable.csv").Completed += handle =>
         {
             var asset = handle.Result;
-            this.effectTable = CSVReader.ReadEffectData(asset);
+            this.statusEffectData = CSVReader.ReadEffectData(asset);
         };
     }
-
-    public void LoadAllPortraits()
+    public void LoadAllPortraitsData()
     {
         Addressables.LoadAssetsAsync<Sprite>("Portraits", t_sprite =>
         {
             var t_name = Regex.Split(t_sprite.name, "_");
-            if (!dialogPortraits.ContainsKey(t_name[0]))
+            if (!dialogPortraitsdata.ContainsKey(t_name[0]))
             {
-                dialogPortraits.Add(t_name[0], new Dictionary<int, Sprite>());
-                this.dialogPortraits[t_name[0]].Add(int.Parse(t_name[1]), t_sprite);
+                dialogPortraitsdata.Add(t_name[0], new Dictionary<int, Sprite>());
+                this.dialogPortraitsdata[t_name[0]].Add(int.Parse(t_name[1]), t_sprite);
                 Debug.Log($"로드된: {t_sprite.name}");
             }
             else
             {
-                dialogPortraits[t_name[0]].Add(int.Parse(t_name[1]), t_sprite);
+                dialogPortraitsdata[t_name[0]].Add(int.Parse(t_name[1]), t_sprite);
                 Debug.Log($"로드된: {t_sprite.name}");
             }
         }).Completed += OnLoadComplete;
@@ -125,17 +208,33 @@ public class DataLibrary : MonoBehaviour
         }
     }
 
+    public void LoadAllSkillData()
+    {
+        Addressables.LoadAssetsAsync<SOSkillBase>("SkillSO", so =>
+        {
+            if (!monsterData.ContainsKey(so.skillIdentifier))
+            {
+                skillData.Add(so.skillIdentifier, so);
+                Debug.Log($"로드된: {so.name }           {so.skillIdentifier}");
+            }
+        }).Completed += OnLoadComplete;
+    }
+
     #endregion
     #region Get
-    public SOMonsterBase GetSOMonster(int key)
+    public SOMonsterBase GetSOMonster(int _key)
     {
-        return monsterDictionary.TryGetValue(key, out var so) ? so : null;
+        return this.monsterData.TryGetValue(_key, out var t_so) ? t_so : null;
+    }
+    public SOSkillBase GetSOSkill(int _key)
+    {
+        return this.skillData.TryGetValue(_key, out var t_so) ? t_so : null;
     }
 
     public Sprite GetPortrait(string _key, int _emotion)
     {
         Debug.Log($"{_key}");
-        if (this.dialogPortraits.TryGetValue(_key, out var t_dic))
+        if (this.dialogPortraitsdata.TryGetValue(_key, out var t_dic))
         {
             if (t_dic.TryGetValue(_emotion, out var t_portrait))
             {
@@ -157,7 +256,7 @@ public class DataLibrary : MonoBehaviour
 
     public StatusEffectInfo GetStateInfo(StatusEffectID _id)
     {
-        if (this.effectTable.TryGetValue(_id, out var t_value))
+        if (this.statusEffectData.TryGetValue(_id, out var t_value))
         {
             return t_value;
         }

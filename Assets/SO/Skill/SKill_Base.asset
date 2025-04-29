@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   character: {fileID: 0}
   target: []
+  skillIdentifier: 77777777
   skillName: 
   skillIcon: {fileID: 0}
   attackRange: 0
   statusEffect: -1
+  attackRaceType: 0

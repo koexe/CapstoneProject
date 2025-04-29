@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using Cysharp.Threading;
+using Cysharp.Threading.Tasks;
 
 [CreateAssetMenu(fileName = "SKill_Attack_", menuName = "Skill/Attack")]
 public class SOAtatckSkill : SOSkillBase
@@ -9,7 +11,7 @@ public class SOAtatckSkill : SOSkillBase
     public float attackModifier;
     public StatusEffectID selfPanlty;
 
-    public override async void Execute()
+    public override async UniTask Execute()
     {
         base.Execute();
         if (this.target == null || this.character == null)
@@ -59,7 +61,7 @@ public class SOAtatckSkill : SOSkillBase
             t_hitInfo.target = t_target;
             t_hitInfo.hitDamage = t_damage;
             t_hitInfo.attackRace = this.attackRaceType;
-            await this.character.ToTask(this.character.AttackCoroutine(t_hitInfo)); 
+            await this.character.AttackTask(t_hitInfo); 
         }
         this.character.SetActionDone(true);
     }

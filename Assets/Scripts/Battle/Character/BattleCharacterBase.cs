@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using Cysharp.Threading;
+using Cysharp.Threading.Tasks;
+using System;
 
 public class BattleCharacterBase : MonoBehaviour
 {
@@ -30,6 +33,10 @@ public class BattleCharacterBase : MonoBehaviour
 
     [SerializeField] TextMeshPro hpText;
 
+    [SerializeField] CharacterActionType currentAction;
+    public void SetAction(CharacterActionType _action) => this.currentAction = _action;
+    public CharacterActionType GetAction() => this.currentAction;
+
     public RaceType raceType;
 
     public void SetActionDone(bool _is) => this.isActionDone = _is;
@@ -47,42 +54,41 @@ public class BattleCharacterBase : MonoBehaviour
         this.currentHP = this.maxHP * t_ratio;
     }
 
-    public void StartAttack(HitInfo _hitInfo)
-    {
-        StartCoroutine(AttackCoroutine(_hitInfo));
-    }
-
-    public IEnumerator AttackCoroutine(HitInfo _hitInfo)
+    public async UniTask AttackTask(HitInfo _hitInfo)
     {
         this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
-        yield return CoroutineUtil.WaitForSeconds(1f);
-        yield return StartCoroutine(_hitInfo.target.HitCoroutine(_hitInfo));
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        await _hitInfo.target.HitCoroutine(_hitInfo);
         this.battleManager.ShowText($"다음차례!");
-        yield return CoroutineUtil.WaitForSeconds(1f);
-        yield break;
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
     }
 
 
     public void TakeDamage(HitInfo _hitInfo)
     {
+        this.battleManager.ShowText($"{_hitInfo.hitDamage}의 데미지를 {this.name} 이 받았다!!");
         this.currentHP = Mathf.Max(0f, this.currentHP - _hitInfo.hitDamage);
         this.hpText.text = this.currentHP.ToString();
         if (this.currentHP <= 0f)
             Die();
     }
 
-    public IEnumerator HitCoroutine(HitInfo _hitInfo)
+    public async UniTask HitCoroutine(HitInfo _hitInfo)
     {
-        this.battleManager.ShowText($"{_hitInfo.hitDamage}의 데미지를 {this.name} 이 받았다!!");
         TakeDamage(_hitInfo);
-        yield return CoroutineUtil.WaitForSeconds(1f);
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
         if (_hitInfo.statusEffect != StatusEffectID.None)
         {
             this.buffSystem.Add(_hitInfo.statusEffect);
-            this.battleManager.ShowText($"{this.name}이 데미지를 {_hitInfo.statusEffect} 에 걸렸다!!");
-            yield return CoroutineUtil.WaitForSeconds(1f);
+            this.battleManager.ShowText($"{this.name}이  {_hitInfo.statusEffect} 에 걸렸다!!");
+            await UniTask.Delay(TimeSpan.FromSeconds(1f));
         }
-        yield break;
+    }
+
+    public async UniTask Summary()
+    {
+        await OnTurnStart();
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
     }
 
     public void Heal(float _amount)
@@ -113,11 +119,30 @@ public class BattleCharacterBase : MonoBehaviour
         }
     }
 
-    public bool IsReadySkill()
+    public bool IsReady()
     {
-        if (this.selectedSkill == null) return false;
-        else if (this.selectedSkill.target == null) return false;
-        else return true;
+        switch (this.currentAction)
+        {
+            case CharacterActionType.Attack:
+                if (this.selectedSkill == null) return false;
+                else if (this.selectedSkill.target == null) return false;
+                else return true;
+            case CharacterActionType.Defence:
+                return true;
+            case CharacterActionType.Skill:
+                if (this.selectedSkill == null) return false;
+                else if (this.selectedSkill.target == null) return false;
+                else return true;
+            case CharacterActionType.Talk:
+                return false;
+            case CharacterActionType.Run:
+                return false;
+            case CharacterActionType.Item:
+                return false;
+            case CharacterActionType.None:
+                return false;
+            default: return false;
+        }
     }
 
     public SOSkillBase GetSelectedSkill()
@@ -125,9 +150,26 @@ public class BattleCharacterBase : MonoBehaviour
         return this.selectedSkill;
     }
 
-    public void StartAction()
+    public async UniTask StartAction()
     {
-        this.selectedSkill.Execute();
+        switch (this.currentAction)
+        {
+            case CharacterActionType.Attack:
+                await this.selectedSkill.Execute();
+                break;
+            case CharacterActionType.Defence:
+                LogUtil.Log("기본 방어 구현 예정");
+                break;
+            case CharacterActionType.Skill:
+                await this.selectedSkill.Execute();
+                break;
+            case CharacterActionType.Item:
+                LogUtil.Log("아이템 사용 예정");
+                break;
+            case CharacterActionType.Run:
+                LogUtil.Log("도망 구현 예정");
+                break;
+        }
     }
 
     protected virtual void Die()
@@ -135,9 +177,9 @@ public class BattleCharacterBase : MonoBehaviour
         Debug.Log($"{name} has died.");
     }
 
-    public void OnTurnStart()
+    public async UniTask OnTurnStart()
     {
-        this.buffSystem.OnTurnStart(this);
+        await this.buffSystem.OnTurnStartAsync(this);
     }
     public float GetStat(StatType _type)
     {
