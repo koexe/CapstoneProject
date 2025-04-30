@@ -13,7 +13,7 @@ public class SOAtatckSkill : SOSkillBase
 
     public override async UniTask Execute()
     {
-        base.Execute();
+        await base.Execute();
         if (this.target == null || this.character == null)
         {
             Debug.LogError("No Target or Chracter!!!");
@@ -29,12 +29,12 @@ public class SOAtatckSkill : SOSkillBase
 
             t_damage *= 1 - (t_target.GetStat(StatType.Def) / (t_target.GetStat(StatType.Def) + 100));
 
-            if(GameStatics.GetRaceCompatibility(this.attackRaceType, t_target.raceType) == 1)
+            if (GameStatics.GetRaceCompatibility(this.attackRaceType, t_target.raceType) == 1)
             {
                 t_damage *= 1.2f;
                 t_hitInfo.isRaceAdvantage = 1;
             }
-            else if(GameStatics.GetRaceCompatibility(this.attackRaceType, t_target.raceType) == -1)
+            else if (GameStatics.GetRaceCompatibility(this.attackRaceType, t_target.raceType) == -1)
             {
                 t_damage *= 0.7f;
                 t_hitInfo.isRaceAdvantage = -1;
@@ -43,7 +43,7 @@ public class SOAtatckSkill : SOSkillBase
             {
                 t_hitInfo.isRaceAdvantage = 0;
             }
-    
+
 
             if (this.character.GetStat(StatType.CriticalChance) > Random.Range(0f, 1f))
             {
@@ -51,9 +51,9 @@ public class SOAtatckSkill : SOSkillBase
                 t_hitInfo.isCritical = true;
             }
 
-            if(this.statusEffect != StatusEffectID.None)
+            if (this.statusEffect != StatusEffectID.None)
             {
-                if(DataLibrary.instance.GetStateInfo(this.statusEffect).activationChance > Random.Range(0f,1f))
+                if (DataLibrary.instance.GetStateInfo(this.statusEffect).activationChance > Random.Range(0f, 1f))
                 {
                     t_hitInfo.statusEffect = this.statusEffect;
                 }
@@ -61,7 +61,7 @@ public class SOAtatckSkill : SOSkillBase
             t_hitInfo.target = t_target;
             t_hitInfo.hitDamage = t_damage;
             t_hitInfo.attackRace = this.attackRaceType;
-            await this.character.AttackTask(t_hitInfo); 
+            await this.character.AttackTask(t_hitInfo);
         }
         this.character.SetActionDone(true);
     }

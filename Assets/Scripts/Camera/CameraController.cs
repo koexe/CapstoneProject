@@ -22,7 +22,8 @@ public class CameraController : MonoBehaviour
     private void LateUpdate()
     {
         Vector3 targetPosition = currentTarget != null ? currentTarget.position : Vector3.zero;
-        targetPosition.z = transform.position.z;
+        targetPosition.y = transform.position.y;
+        targetPosition.z -= 5.0f;
 
         // 부드럽게 따라가기
         Vector3 smoothPosition = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);

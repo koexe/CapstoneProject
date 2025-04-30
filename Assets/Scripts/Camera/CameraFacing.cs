@@ -30,7 +30,7 @@ public class CameraFacing : MonoBehaviour
         Vector3 cameraEuler = cameraTransform.eulerAngles;
 
         // 바닥은 눕혀지지 않게 → 카메라의 y축(수평) 방향만 반영
-        Quaternion targetRotation = Quaternion.Euler(0f, cameraEuler.y, 0f);
+        Quaternion targetRotation = Quaternion.Euler(cameraEuler.x, 0f, 0f);
 
         transform.rotation = initialRotation * targetRotation;
     }

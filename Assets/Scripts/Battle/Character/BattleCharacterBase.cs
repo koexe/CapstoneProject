@@ -1,19 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Cysharp.Threading;
 using Cysharp.Threading.Tasks;
-using System;
+using Random = UnityEngine.Random;
 
 public class BattleCharacterBase : MonoBehaviour
 {
-    [SerializeField]
-    private float maxHP;
-    [SerializeField]
-    private float currentHP;
-    [SerializeField]
-    private StatBlock statBlock;
+    [SerializeField] float maxHP;
+    [SerializeField] float currentHP;
+    [SerializeField] StatBlock statBlock;
+    [SerializeField] int isUsedDefence;
+    [SerializeField] bool isInDefence;
+    [SerializeField] bool isActionDone = false;
 
     public float MaxHP() => this.maxHP;
 
@@ -21,6 +22,7 @@ public class BattleCharacterBase : MonoBehaviour
     public void SetActionDisabled(bool _isActionDisabled) => this.isActionDisabled = _isActionDisabled;
 
     public int speed;
+
     [SerializeField] BattleManager battleManager;
     [SerializeField] SpriteRenderer skin;
     [SerializeField] Animator animator;
@@ -29,7 +31,6 @@ public class BattleCharacterBase : MonoBehaviour
 
     [SerializeField] BuffSystem buffSystem;
 
-    [SerializeField] bool isActionDone = false;
 
     [SerializeField] TextMeshPro hpText;
 
@@ -52,37 +53,6 @@ public class BattleCharacterBase : MonoBehaviour
         // 비율 유지
         float t_ratio = Mathf.Clamp01(this.currentHP / this.maxHP);
         this.currentHP = this.maxHP * t_ratio;
-    }
-
-    public async UniTask AttackTask(HitInfo _hitInfo)
-    {
-        this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
-        await UniTask.Delay(TimeSpan.FromSeconds(1f));
-        await _hitInfo.target.HitCoroutine(_hitInfo);
-        this.battleManager.ShowText($"다음차례!");
-        await UniTask.Delay(TimeSpan.FromSeconds(1f));
-    }
-
-
-    public void TakeDamage(HitInfo _hitInfo)
-    {
-        this.battleManager.ShowText($"{_hitInfo.hitDamage}의 데미지를 {this.name} 이 받았다!!");
-        this.currentHP = Mathf.Max(0f, this.currentHP - _hitInfo.hitDamage);
-        this.hpText.text = this.currentHP.ToString();
-        if (this.currentHP <= 0f)
-            Die();
-    }
-
-    public async UniTask HitCoroutine(HitInfo _hitInfo)
-    {
-        TakeDamage(_hitInfo);
-        await UniTask.Delay(TimeSpan.FromSeconds(1f));
-        if (_hitInfo.statusEffect != StatusEffectID.None)
-        {
-            this.buffSystem.Add(_hitInfo.statusEffect);
-            this.battleManager.ShowText($"{this.name}이  {_hitInfo.statusEffect} 에 걸렸다!!");
-            await UniTask.Delay(TimeSpan.FromSeconds(1f));
-        }
     }
 
     public async UniTask Summary()
@@ -158,7 +128,7 @@ public class BattleCharacterBase : MonoBehaviour
                 await this.selectedSkill.Execute();
                 break;
             case CharacterActionType.Defence:
-                LogUtil.Log("기본 방어 구현 예정");
+                await DefenceTask();
                 break;
             case CharacterActionType.Skill:
                 await this.selectedSkill.Execute();
@@ -180,6 +150,10 @@ public class BattleCharacterBase : MonoBehaviour
     public async UniTask OnTurnStart()
     {
         await this.buffSystem.OnTurnStartAsync(this);
+        if (!this.isInDefence)
+            this.isUsedDefence = 0;
+        this.isInDefence = false;
+
     }
     public float GetStat(StatType _type)
     {
@@ -187,6 +161,81 @@ public class BattleCharacterBase : MonoBehaviour
             return this.maxHP; // max 기준으로 리턴
         return this.statBlock.GetStat(_type);
     }
+
+    #region 턴 처리
+    public async UniTask AttackTask(HitInfo _hitInfo)
+    {
+        this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        await _hitInfo.target.HitTask(_hitInfo);
+        this.battleManager.ShowText($"다음차례!");
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+    }
+
+
+    public void TakeDamage(HitInfo _hitInfo)
+    {
+        float t_finalDamage = _hitInfo.hitDamage;
+        if (this.isInDefence)
+        {
+            if (_hitInfo.isRaceAdvantage == 1)
+            {
+                t_finalDamage *= 0.5f;
+            }
+            else
+            {
+                t_finalDamage *= 0.75f;
+            }
+        }
+
+
+        this.battleManager.ShowText($"{(int)t_finalDamage}의 데미지를 {this.name} 이 받았다!!");
+        this.currentHP = Mathf.Max(0f, this.currentHP - (int)t_finalDamage);
+        this.hpText.text = this.currentHP.ToString();
+        if (this.currentHP <= 0f)
+            Die();
+    }
+
+    public async UniTask HitTask(HitInfo _hitInfo)
+    {
+        TakeDamage(_hitInfo);
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        if (_hitInfo.statusEffect != StatusEffectID.None)
+        {
+            this.buffSystem.Add(_hitInfo.statusEffect);
+            this.battleManager.ShowText($"{this.name}이  {_hitInfo.statusEffect} 에 걸렸다!!");
+            await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        }
+    }
+
+    public async UniTask DefenceTask()
+    {
+        this.battleManager.ShowText($"{this.name} 이 방어를 시작했다!");
+
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        if (this.isUsedDefence == 0)
+        {
+            this.isInDefence = true;
+            this.isUsedDefence += 1;
+        }
+        else
+        {
+            if (0.2f * this.isUsedDefence < Random.Range(0f, 1f))
+            {
+                this.isInDefence = true;
+                this.isUsedDefence += 1;
+            }
+            else
+            {
+                this.isInDefence = false;
+                this.isUsedDefence = 0;
+                this.battleManager.ShowText($"하지만 실패했다!");
+            }
+        }
+    }
+
+    #endregion
+
     #region 상태이상 대응 메서드
 
 

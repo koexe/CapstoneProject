@@ -20,3 +20,4 @@ Weak Resistance,Restriction,Increases debuff duration by 1 turn,1,0.6,-,Refreshe
 Split,Restriction,10% chance to self-damage each turn,4,0.5,-,Refreshes on reapply
 SelfHarm,SpecialEffect,50% chance to attack self,1,0.2,-,Hits self
 Mark of Doom,SpecialEffect,Triggers damage explosion after 2 turns,2,0.8,-,Delayed explosion
+Defence,SpecialEffect,데미지 감소,2,1,-,방어 커멘드 전용

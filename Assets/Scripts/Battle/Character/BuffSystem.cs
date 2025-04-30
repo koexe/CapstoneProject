@@ -26,7 +26,7 @@ public class BuffSystem
         foreach (var t_key in t_expired)
             this.activeEffects.Remove(t_key);
     }
-    
+
     public async UniTask OnTurnStartAsync(BattleCharacterBase _target)
     {
         foreach (var t_effect in this.activeEffects.Values)
@@ -34,7 +34,7 @@ public class BuffSystem
             t_effect.Tick(_target);
             await UniTask.Delay(TimeSpan.FromSeconds(1f));
         }
- 
+
 
         var t_expired = new List<StatusEffectID>();
         foreach (var t_pair in this.activeEffects)
@@ -143,7 +143,7 @@ public class StatusEffectInstance
 
             // 받는 피해 증가 (퍼센트 기반)
             case StatusEffectID.Frail:
-                _target.AddStatBuff(this.info.id, new BuffBlock(StatType.DamageReduce, StatSign.Percentage, -0.2f));
+                _target.AddStatBuff(this.info.id, new BuffBlock(StatType.DamageReduce, StatSign.Constant, -20f));
                 break;
 
             // 회복량 감소
@@ -292,6 +292,7 @@ public class StatBlock
 {
     private Dictionary<StatType, float> baseStats = new Dictionary<StatType, float>();
     private Dictionary<StatusEffectID, BuffBlock> buffStats = new Dictionary<StatusEffectID, BuffBlock>();
+    Dictionary<StatType, float> instnatStatBuff = new Dictionary<StatType, float>();
 
     public StatBlock()
     {
@@ -303,17 +304,6 @@ public class StatBlock
         this.baseStats.Add(StatType.Spd, 10f);
         this.baseStats.Add(StatType.HealEffecincy, 100f);
         this.baseStats.Add(StatType.DamageReduce, 0f);
-
-
-        //    Hp = 1,
-        //Atk = 2,
-        //Def = 3,
-        //Evasion = 4,
-        //Acc = 5,
-        //Spd = 6,
-        //HealEffecincy = 7,
-        //CriticalChance = 8,
-        //DamageReduce = 9,
     }
     public void SetBase(StatType _type, float _value)
     {
@@ -326,6 +316,13 @@ public class StatBlock
             this.buffStats.Add(_id, _block);
         else
             this.buffStats[_id] = _block;
+    }
+    public void AddInstantBuff(StatType _type, float _value)
+    {
+        if (instnatStatBuff.ContainsKey(_type))
+            this.instnatStatBuff[_type] = _value;
+        else
+            this.instnatStatBuff.Add(_type, _value);
     }
 
     public void ClearBuff(StatusEffectID _type)

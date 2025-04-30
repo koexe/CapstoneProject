@@ -113,20 +113,12 @@ public class BattleManager : MonoBehaviour
     }
 
 
-    public void StartAction(List<BattleCharacterBase> battleCharacters, int index)
-    {
-        if (index >= battleCharacters.Count)
-            return;
-        battleCharacters[index].StartAction();
-
-    }
     #endregion
 
     void EnemyAttackSelect()
     {
         foreach (var t_character in this.enemyCharacters)
         {
-            //t_character.SetSelectedSkill(t_character.GetSkills()[Random.Range(0, t_character.GetSkills().Length)]);
             t_character.SetSelectedSkill(t_character.GetSkills()[0], GetRandomElementAsArray<BattleCharacterBase>(this.allyCharacters));
         }
     }
@@ -161,6 +153,13 @@ public class BattleManager : MonoBehaviour
     #region ChooseSequence
     public void CheckAllReady()
     {
+        GameStatics.instance.CameraController.SetTarget(null);
+
+        var t_Sequence = this.turnSystem.GetCurrentSequence() as ChooseSequence;
+        if (t_Sequence != null)
+        {
+            t_Sequence.state = ChooseSequence.ChooseState.None;
+        }
         bool t_isAllReady = true;
         foreach (var t_character in this.allyCharacters)
         {
@@ -181,6 +180,8 @@ public class BattleManager : MonoBehaviour
             return;
         }
     }
+
+   
 
     public void SelectPlayerAction(int _type)
     {

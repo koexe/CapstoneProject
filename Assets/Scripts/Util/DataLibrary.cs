@@ -320,6 +320,7 @@ public class StatusEffectInfo
 public enum StatusEffectID
 {
     None = 0,
+    Defence = 1,
     Bleed = 11,
     Corrosion = 12,
     Poison = 13,
