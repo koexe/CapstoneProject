@@ -5,6 +5,13 @@ using UnityEngine;
 public class MapEntity : MonoBehaviour
 {
     [SerializeField] MapPath[] mapPath;
+    
+    public void MoveMap()
+    {
+
+    }
+
+
 
 
     [System.Serializable]
