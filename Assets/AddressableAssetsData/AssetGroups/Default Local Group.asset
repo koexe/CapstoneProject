@@ -97,6 +97,32 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - SkillSO
+  - m_GUID: 403f5fda3d6c4c5498f0899cb992c161
+    m_Address: Prefabs/Map/MapEntity
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MapPrefab
+  - m_GUID: 7f697b54280ff664381449e53a422463
+    m_Address: Prefabs/Map/MapEntity1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MapPrefab
+  - m_GUID: 625246924904e3e4dbefd5134df888ee
+    m_Address: Assets/Images/DialogCharacters/lemo/Profile/Limo_000.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: c964d2ff438bbaa41b073a7fba0be666
+    m_Address: Assets/Images/DialogCharacters/lemo/Profile/Limo_003.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 4c35dc1bb63edbb4db058edf5417983d
+    m_Address: Assets/Images/DialogCharacters/lemo/Profile/Limo_001.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: a0020857a04ab7b49b612da7f86a9c51
+    m_Address: Assets/Images/DialogCharacters/lemo/Profile/Limo_002.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
   m_SchemaSet:

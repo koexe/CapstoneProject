@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class SaveGameManager : MonoBehaviour
@@ -23,8 +24,7 @@ public class SaveGameManager : MonoBehaviour
     {
         instance = this;
         this.Initialization();
-        DontDestroyOnLoad(this);
-        Debug.Log("���̺� �ʱ�ȭ �Ϸ�");
+        DontDestroyOnLoad(this.gameObject);
         return;
     }
 #if UNITY_EDITOR
@@ -38,7 +38,7 @@ public class SaveGameManager : MonoBehaviour
 #endif
     public void SavetoFile()
     {
-        foreach (var item in this.currentSaveData.items)
+        foreach (var item in this.currentSaveData.items.Values)
         {
             this.currentSaveData.itemNames.Add(new SaveItemMinimal(item.GetItemIndex(), item.amount));
         }
@@ -83,8 +83,6 @@ public class SaveGameManager : MonoBehaviour
             //this.currentSaveData = this.saveInFile;
 
         }
-        //���� �۾� ����
-
         return;
     }
 
@@ -112,7 +110,6 @@ public class SaveGameManager : MonoBehaviour
 
         string path = Path.Combine(Application.persistentDataPath, fileName);
 
-        // JSON ���ڿ��� ���Ͽ� ��
         File.WriteAllText(path, json);
 
         Debug.Log($"Data saved to {path}");
@@ -137,17 +134,19 @@ public class SaveGameManager : MonoBehaviour
         }
     }
 
-    public void DeleteItem(int item)
+    public void DeleteItem(int _item)
     {
-        int index = this.currentSaveData.items.FindIndex(x => x.GetItemIndex() == item);
-        if (index == -1)
-            return;
+        var t_items = SaveGameManager.instance.currentSaveData.items;
+
+        if (t_items.TryGetValue(_item, out var t_item))
+        {
+            this.currentSaveData.items.Remove(_item);
+        }
         else
         {
-            this.currentSaveData.items.RemoveAt(index);
+            LogUtil.Log("No Such Item");
         }
     }
-
 
     public void ResetSave()
     {
@@ -155,14 +154,11 @@ public class SaveGameManager : MonoBehaviour
     }
 }
 
-
-
-
 [System.Serializable]
 public class SaveData
 {
     public string currentMap;
-    public List<SaveItem> items;
+    public Dictionary<int, SaveItem> items;
     public Dictionary<int, bool> chatacterDialogs;
     public List<SaveItemMinimal> itemNames;
 
@@ -170,11 +166,12 @@ public class SaveData
     public Dictionary<string, List<bool>> mapItems;
     public SaveData()
     {
-        this.items = new List<SaveItem>();
+        this.items = new Dictionary<int, SaveItem>();
         this.itemNames = new List<SaveItemMinimal>();
         this.chatacterDialogs = new Dictionary<int, bool>();
     }
 }
+
 [System.Serializable]
 public class SaveItem
 {

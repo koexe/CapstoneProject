@@ -1,23 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MapEntity : MonoBehaviour
 {
-    [SerializeField] MapPath[] mapPath;
-    
-    public void MoveMap()
-    {
-
-    }
-
-
+    [SerializeField] MapMovePoint[] mapPath;
+    public MapMovePoint GetMapPoint(int _index) => this.mapPath[_index];
 
 
     [System.Serializable]
     public class MapPath
     {
-        public MapMovePoint transform;
+        public Transform transform;
         public MapEntity linkedMap;
         public int linkedMapPoint;
     }

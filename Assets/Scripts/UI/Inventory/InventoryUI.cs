@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class InventoryUI : UIBase
@@ -51,7 +52,7 @@ public class InventoryUI : UIBase
             return;
         }
 
-        this.items = SaveGameManager.instance.GetCurrentSaveData().items;
+        this.items = SaveGameManager.instance.GetCurrentSaveData().items.Values.ToList();
         Refresh();
         FieldManager.instance.state = FieldManager.GameState.Pause;
 
@@ -67,7 +68,13 @@ public class InventoryUI : UIBase
         this.contents.SetActive(false);
         var t_currentSaveData = SaveGameManager.instance.GetCurrentSaveData();
         t_currentSaveData.items = null;
-        t_currentSaveData.items = this.items;
+
+        Dictionary<int, SaveItem> t_itemDictionary = new Dictionary<int, SaveItem>();
+        foreach (var t_item in this.items)
+        {
+            t_itemDictionary.Add(t_item.GetItemIndex(), t_item);
+        }
+        t_currentSaveData.items = t_itemDictionary;
         SaveGameManager.instance.SetCurrentSaveData(t_currentSaveData);
         FieldManager.instance.state = FieldManager.GameState.InProgress;
         return;

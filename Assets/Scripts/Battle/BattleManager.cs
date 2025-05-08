@@ -1,7 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using Spine.Unity.Examples;
 using TMPro;
 using UnityEngine;
 

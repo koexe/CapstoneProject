@@ -6,9 +6,21 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    [SerializeField] GameState gameState;
+
     [SerializeField] GameStatics gameStatics;
+    [SerializeField] DataLibrary dataLibrary;
+    [SerializeField] GameObject player;
     [SerializeField] SceneLoadManager sceneLoadManager;
     [SerializeField] SaveGameManager saveGameManager;
+
+    public GameState GetGameState() => this.gameState;
+    public void SetGameState(GameState _gameState) => this.gameState = _gameState;    
+
+    public GameObject GetPlayer()
+    {
+        return this.player;
+    }
 
     private void Awake()
     {
@@ -17,8 +29,6 @@ public class GameManager : MonoBehaviour
         else
             Destroy(this);
     }
-    
-
 
     class OnChangeBattleSceneData
     {
@@ -31,4 +41,13 @@ public class GameManager : MonoBehaviour
         SOSkillBase[] skillBases;
         SOMonsterBase currentNPC;
     }
+}
+public enum GameState
+{
+    None,
+    Menu,
+    Loading,
+    Ingame,
+    Pause,
+    Battle
 }

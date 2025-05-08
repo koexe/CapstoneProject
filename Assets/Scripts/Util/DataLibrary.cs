@@ -1,19 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
+using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.UIElements;
-using Cysharp.Threading;
-using Cysharp.Threading.Tasks;
+using UnityEngine.UI;
 
 public class DataLibrary : MonoBehaviour
 {
     public static DataLibrary instance;
 
-    CSVReader csvReader;
+    [SerializeField] Image coverImage;
+    [SerializeField] TextMeshProUGUI loadingInfoText;
 
     Dictionary<int, SOMonsterBase> monsterData = new Dictionary<int, SOMonsterBase>();
 
@@ -27,6 +26,8 @@ public class DataLibrary : MonoBehaviour
 
     Dictionary<int, SOSkillBase> skillData = new Dictionary<int, SOSkillBase>();
 
+    Dictionary<int, MapEntity> mapData;
+
 
     private void Awake()
     {
@@ -36,25 +37,30 @@ public class DataLibrary : MonoBehaviour
             Destroy(this);
     }
 
-    private void Start()
+    private async void Start()
     {
-        this.csvReader = new CSVReader();
-        LoadAllMonsterData();
-        LoadConversationData();
-        LoadDialogData();
-        LoadAllPortraitsData();
-        LoadEffectData();
-        LoadAllSkillData();
-
+        await LoadAllDataAsync();
     }
 
     public async UniTask LoadAllDataAsync()
     {
+        this.coverImage.gameObject.SetActive(true);
+        this.loadingInfoText.gameObject.SetActive(true);
+        this.loadingInfoText.text = "Load Monster Data";
         await LoadAllMonsterDataAsync();
+        this.loadingInfoText.text = "Load Dialog Data";
         await LoadDialogDataAsync();
+        this.loadingInfoText.text = "Load Portraits Data";
         await LoadAllPortraitsDataAsync();
+        this.loadingInfoText.text = "Load Effect Data";
         await LoadEffectDataAsync();
+        this.loadingInfoText.text = "Load Skill Data";
         await LoadAllSkillDataAsync();
+
+        this.loadingInfoText.text = "All Loading Done!!";
+        await UniTask.Delay(1000);
+        this.coverImage.gameObject.SetActive(false);
+        this.loadingInfoText.gameObject.SetActive(false);
     }
 
     private void Update()
