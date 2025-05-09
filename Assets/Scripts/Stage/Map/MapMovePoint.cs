@@ -17,7 +17,7 @@ public class MapMovePoint : MonoBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        if (other.TryGetComponent<MoveModule>(out var t_moveModule))
+        if (other.TryGetComponent<PlayerInputModule>(out var t_moveModule))
         {
             if (this.currentWaitTime == 0f)
             {

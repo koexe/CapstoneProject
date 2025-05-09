@@ -110,19 +110,53 @@ MonoBehaviour:
   - m_GUID: 625246924904e3e4dbefd5134df888ee
     m_Address: Assets/Images/DialogCharacters/lemo/Profile/Limo_000.png
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Portraits
   - m_GUID: c964d2ff438bbaa41b073a7fba0be666
     m_Address: Assets/Images/DialogCharacters/lemo/Profile/Limo_003.png
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Portraits
   - m_GUID: 4c35dc1bb63edbb4db058edf5417983d
     m_Address: Assets/Images/DialogCharacters/lemo/Profile/Limo_001.png
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Portraits
   - m_GUID: a0020857a04ab7b49b612da7f86a9c51
     m_Address: Assets/Images/DialogCharacters/lemo/Profile/Limo_002.png
     m_ReadOnly: 0
-    m_SerializedLabels: []
+    m_SerializedLabels:
+    - Portraits
+  - m_GUID: 0c4d268e4d56aab4bac194cb07d151b9
+    m_Address: Assets/Prefabs/UI/SkillSelectUI.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UIPrefab
+  - m_GUID: 6896faae5a25dd644b0c87b1c48c26e2
+    m_Address: Assets/Prefabs/UI/InventorySlot.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UIPrefab
+  - m_GUID: e186e6ee3e2fa3d4b9f5d54c7076dd9d
+    m_Address: Assets/Prefabs/UI/SkillUI.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UIPrefab
+  - m_GUID: 3ba83719653601d4b9381a29bee6d920
+    m_Address: Assets/Prefabs/UI/DialogUI.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UIPrefab
+  - m_GUID: 1a778dc65896e4240bf0882be2c33e35
+    m_Address: Assets/Prefabs/UI/Inventory.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UIPrefab
+  - m_GUID: 1c09370b964af3e4d9fa0123cc90f8ba
+    m_Address: Assets/Prefabs/UI/LoadingUI.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UIPrefab
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
   m_SchemaSet:

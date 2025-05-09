@@ -28,6 +28,8 @@ public class DataLibrary : MonoBehaviour
 
     Dictionary<int, MapEntity> mapData;
 
+    Dictionary<string, GameObject> uiPrefabData = new Dictionary<string, GameObject>();
+
 
     private void Awake()
     {
@@ -56,7 +58,8 @@ public class DataLibrary : MonoBehaviour
         await LoadEffectDataAsync();
         this.loadingInfoText.text = "Load Skill Data";
         await LoadAllSkillDataAsync();
-
+        this.loadingInfoText.text = "Load UI Data";
+        await LoadAllUIDataAsync();
         this.loadingInfoText.text = "All Loading Done!!";
         await UniTask.Delay(1000);
         this.coverImage.gameObject.SetActive(false);
@@ -142,89 +145,18 @@ public class DataLibrary : MonoBehaviour
         Debug.Log($"Portrait 로드 완료: {handle.Result.Count}개");
     }
 
-
-
-
-    public void LoadAllMonsterData()
+    public async UniTask LoadAllUIDataAsync()
     {
-        Addressables.LoadAssetsAsync<SOMonsterBase>("MonsterSO", so =>
+        var handle = Addressables.LoadAssetsAsync<GameObject>("UIPrefab", t_Prefab =>
         {
-            if (!monsterData.ContainsKey(so.identifier))
-            {
-                monsterData.Add(so.identifier, so);
-                Debug.Log($"로드된: {so.name}");
-            }
-        }).Completed += OnLoadComplete;
-    }
-    public void LoadConversationData()
-    {
-        Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/ConversationData.csv").Completed += handle =>
-        {
-            var asset = handle.Result;
-            this.battleConversationData = CSVReader.ReadConversationTable(asset);
-        };
+            this.uiPrefabData.Add(t_Prefab.name, t_Prefab);
+
+        });
+        await handle.Task;
+        Debug.Log($"Portrait 로드 완료: {handle.Result.Count}개");
     }
 
-    public void LoadDialogData()
-    {
-        Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/DialogDataTable - 복사본.csv").Completed += handle =>
-        {
-            var asset = handle.Result;
-            this.dialogData = CSVReader.ReadDialogData(asset);
-        };
-    }
 
-    public void LoadEffectData()
-    {
-        Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/StatusTable.csv").Completed += handle =>
-        {
-            var asset = handle.Result;
-            this.statusEffectData = CSVReader.ReadEffectData(asset);
-        };
-    }
-    public void LoadAllPortraitsData()
-    {
-        Addressables.LoadAssetsAsync<Sprite>("Portraits", t_sprite =>
-        {
-            var t_name = Regex.Split(t_sprite.name, "_");
-            if (!dialogPortraitsdata.ContainsKey(t_name[0]))
-            {
-                dialogPortraitsdata.Add(t_name[0], new Dictionary<int, Sprite>());
-                this.dialogPortraitsdata[t_name[0]].Add(int.Parse(t_name[1]), t_sprite);
-                Debug.Log($"로드된: {t_sprite.name}");
-            }
-            else
-            {
-                dialogPortraitsdata[t_name[0]].Add(int.Parse(t_name[1]), t_sprite);
-                Debug.Log($"로드된: {t_sprite.name}");
-            }
-        }).Completed += OnLoadComplete;
-    }
-
-    private void OnLoadComplete<T>(AsyncOperationHandle<IList<T>> handle)
-    {
-        if (handle.Status == AsyncOperationStatus.Succeeded)
-        {
-            Debug.Log($"총 로드 완료: {handle.Result.Count}개");
-
-        }
-        else
-        {
-            Debug.LogError("로딩 실패!");
-        }
-    }
-
-    public void LoadAllSkillData()
-    {
-        Addressables.LoadAssetsAsync<SOSkillBase>("SkillSO", so =>
-        {
-            if (!monsterData.ContainsKey(so.skillIdentifier))
-            {
-                skillData.Add(so.skillIdentifier, so);
-                Debug.Log($"로드된: {so.name }           {so.skillIdentifier}");
-            }
-        }).Completed += OnLoadComplete;
-    }
 
     #endregion
     #region Get
@@ -270,6 +202,19 @@ public class DataLibrary : MonoBehaviour
         {
             Debug.Log($"no Such State!  {_id}");
             return null;
+        }
+    }
+
+    public GameObject GetUI(string _key)
+    {
+        if (this.uiPrefabData.TryGetValue(_key, out var t_ui))
+        {
+            return t_ui;
+        }
+        else
+        {
+            LogUtil.Log($"no Such UI {_key}");
+            return null;    
         }
     }
     #endregion

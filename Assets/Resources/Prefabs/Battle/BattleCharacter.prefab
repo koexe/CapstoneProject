@@ -182,6 +182,8 @@ GameObject:
   - component: {fileID: 8620806760606421823}
   - component: {fileID: 8620806760606421820}
   - component: {fileID: 8620806760606421809}
+  - component: {fileID: 8564233521677758433}
+  - component: {fileID: 4730795872236492300}
   m_Layer: 0
   m_Name: BattleCharacter
   m_TagString: Untagged
@@ -218,6 +220,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHP: 0
   currentHP: 0
+  isUsedDefence: 0
+  isInDefence: 0
+  isActionDone: 0
   isActionDisabled: 0
   speed: 0
   battleManager: {fileID: 0}
@@ -227,9 +232,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 54c81be1569442247af97e78e93a79b6, type: 2}
   - {fileID: 11400000, guid: 422e972f0b9b2c3469d6a4e065c88ac3, type: 2}
   selectedSkill: {fileID: 0}
-  buffSystem: {fileID: 0}
-  isActionDone: 0
   hpText: {fileID: 5336255000690367949}
+  currentAction: 0
+  raceType: 0
 --- !u!212 &8620806760606421820
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -302,3 +307,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!65 &8564233521677758433
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8620806760606421821}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.12, y: 2.445, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!210 &4730795872236492300
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8620806760606421821}
+  m_Enabled: 1
+  m_SortingLayerID: 1968103765
+  m_SortingLayer: 2
+  m_SortingOrder: 0

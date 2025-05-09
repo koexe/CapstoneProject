@@ -17,10 +17,12 @@ public class MapManager : MonoBehaviour
             Destroy(this);
 
         DontDestroyOnLoad(instance);
-    }
+    } 
     private void Start()
     {
+#if UNITY_EDITOR
         this.currentMap = Instantiate(startMap, this.transform);
+#endif
     }
 
     public void MoveMap(MapEntity.MapPath _path)

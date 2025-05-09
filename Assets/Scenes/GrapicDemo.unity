@@ -266,6 +266,49 @@ MonoBehaviour:
   areaCenter: {x: 0, y: 0}
   areaSize: {x: 1000, y: 1000}
   followSpeed: 5
+--- !u!1 &214824412
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 214824414}
+  - component: {fileID: 214824413}
+  m_Layer: 0
+  m_Name: InputManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &214824413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214824412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17b36281c376d3d428baf1320bc13477, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &214824414
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 214824412}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &696279884
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,10 +797,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1431977268}
   - component: {fileID: 1431977271}
-  - component: {fileID: 1431977270}
   - component: {fileID: 1431977269}
   - component: {fileID: 1431977272}
   - component: {fileID: 1431977273}
+  - component: {fileID: 1431977270}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -805,7 +848,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1431977267}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13631af3135131a4bb6d560e1748f4ee, type: 3}
+  m_Script: {fileID: 11500000, guid: fc1d0a5fe17866c4eb7d00fb1da4dbfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10

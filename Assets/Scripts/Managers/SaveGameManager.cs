@@ -192,8 +192,6 @@ public class SaveItem
     {
         this.item = _item;
         this.amount = _amount;
-        if (_item == null)
-            Debug.Log("������ ��");
     }
 
 

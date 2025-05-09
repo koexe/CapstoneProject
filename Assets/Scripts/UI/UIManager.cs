@@ -15,7 +15,7 @@ public class UIManager : MonoBehaviour
 {
     { typeof(UIBase), "InventoryKey" },
     { typeof(SkillSelectUI), "SkillSelectUI" },
-    { typeof(InventoryUI),"" },
+    { typeof(InventoryUI),"Inventory" },
     { typeof(DialogUI) ,"DialogUI" }
 
 };
@@ -61,7 +61,8 @@ public class UIManager : MonoBehaviour
 
             return this.currentUIObjects[_data.identifier];
         }
-        UIBase t_UIObject = GameObject.Instantiate(UIPrefabs[staticKeys[typeof(T)]]).GetComponent<UIBase>();
+
+        UIBase t_UIObject = GameObject.Instantiate(DataLibrary.instance.GetUI(staticKeys[typeof(T)])).GetComponent<UIBase>();
         t_UIObject.transform.SetParent(this.canvas.transform, false);
         t_UIObject.sortingGroup.sortingLayerName = "UIElements";
         if (_data.order == -1)

@@ -54,13 +54,14 @@ public class InventoryUI : UIBase
 
         this.items = SaveGameManager.instance.GetCurrentSaveData().items.Values.ToList();
         Refresh();
-        FieldManager.instance.state = FieldManager.GameState.Pause;
+        GameManager.instance.SetGameState(GameState.Pause);
 
     }
 
     public override void Show(UIData _data)
     {
         this.contents.SetActive(true);
+        Refresh();
     }
 
     public override void Hide()
@@ -76,13 +77,14 @@ public class InventoryUI : UIBase
         }
         t_currentSaveData.items = t_itemDictionary;
         SaveGameManager.instance.SetCurrentSaveData(t_currentSaveData);
-        FieldManager.instance.state = FieldManager.GameState.InProgress;
+        GameManager.instance.SetGameState(GameState.Ingame);
         return;
     }
 
-    class InventoryUIData : UIData
-    {
 
-    }
+
+}
+public class InventoryUIData : UIData
+{
 
 }

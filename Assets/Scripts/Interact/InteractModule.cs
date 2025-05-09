@@ -7,17 +7,20 @@ public class InteractModule : MonoBehaviour
     [SerializeField] KeyCode interactKey = KeyCode.F;
     [SerializeField] Vector3 interactArea = Vector3.one;
     [SerializeField] LayerMask interactableLayer;
-    private void Update()
+
+    private void Start()
     {
-        if (Input.GetKey(this.interactKey))
+        IngameInputManager.instance.AddInput(this.interactKey, IngameInputManager.InputEventType.Down, Interact);
+    }
+
+    void Interact()
+    {
+        var t_result = Physics.OverlapBox(this.transform.position, this.interactArea, Quaternion.identity, this.interactableLayer);
+        foreach (var t_interacable in t_result)
         {
-            var t_result = Physics.OverlapBox(this.transform.position, this.interactArea, Quaternion.identity, this.interactableLayer);
-            foreach (var t_interacable in t_result)
+            if (t_interacable.TryGetComponent<IInteractable>(out var t_component))
             {
-                if(t_interacable.TryGetComponent<IInteractable>(out var t_component))
-                {
-                    t_component.ExecuteAction();
-                }
+                t_component.ExecuteAction();
             }
         }
     }
