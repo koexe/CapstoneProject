@@ -14,7 +14,7 @@ public class DataLibrary : MonoBehaviour
     [SerializeField] Image coverImage;
     [SerializeField] TextMeshProUGUI loadingInfoText;
 
-    Dictionary<int, SOMonsterBase> monsterData = new Dictionary<int, SOMonsterBase>();
+    Dictionary<int, SOBattleCharacter> characterData = new Dictionary<int, SOBattleCharacter>();
 
     Dictionary<int, BattleConversationData> battleConversationData = new Dictionary<int, BattleConversationData>();
 
@@ -34,14 +34,22 @@ public class DataLibrary : MonoBehaviour
     private void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+
         else
-            Destroy(this);
+        {
+            Destroy(this.gameObject);
+            return;
+        }
     }
 
-    private async void Start()
+    public async UniTask Initialization()
     {
         await LoadAllDataAsync();
+        UnloadAllData();
     }
 
     public async UniTask LoadAllDataAsync()
@@ -49,7 +57,7 @@ public class DataLibrary : MonoBehaviour
         this.coverImage.gameObject.SetActive(true);
         this.loadingInfoText.gameObject.SetActive(true);
         this.loadingInfoText.text = "Load Monster Data";
-        await LoadAllMonsterDataAsync();
+        await LoadAllCharacterDataAsync();
         this.loadingInfoText.text = "Load Dialog Data";
         await LoadDialogDataAsync();
         this.loadingInfoText.text = "Load Portraits Data";
@@ -79,90 +87,175 @@ public class DataLibrary : MonoBehaviour
     }
 
     #region Load
+    //public async UniTask LoadConversationDataAsync()
+    //{
+    //    var handle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/ConversationData.csv");
+    //    var asset = await handle.Task;
+    //    this.battleConversationData = CSVReader.ReadConversationTable(asset);
+    //}
+
+    //public async UniTask LoadDialogDataAsync()
+    //{
+    //    var handle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/DialogDataTable - 복사본.csv");
+    //    var asset = await handle.Task;
+    //    this.dialogData = CSVReader.ReadDialogData(asset);
+    //}
+
+    //public async UniTask LoadEffectDataAsync()
+    //{
+    //    var handle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/StatusTable.csv");
+    //    var asset = await handle.Task;
+    //    this.statusEffectData = CSVReader.ReadEffectData(asset);
+    //}
+
+    //public async UniTask LoadAllSkillDataAsync()
+    //{
+    //    var handle = Addressables.LoadAssetsAsync<SOSkillBase>("SkillSO", so =>
+    //    {
+    //        if (!skillData.ContainsKey(so.skillIdentifier))
+    //        {
+    //            skillData.Add(so.skillIdentifier, so);
+    //            Debug.Log($"로드된: {so.name}");
+    //        }
+    //    });
+    //    await handle.Task;
+    //    Debug.Log($"Skill 로드 완료: {handle.Result.Count}개");
+    //}
+
+    //public async UniTask LoadAllCharacterDataAsync()
+    //{
+    //    var handle = Addressables.LoadAssetsAsync<SOBattleCharacter>("MonsterSO", so =>
+    //    {
+    //        if (!characterData.ContainsKey(so.identifier))
+    //        {
+    //            characterData.Add(so.identifier, so);
+    //            Debug.Log($"로드된: {so.name}");
+    //        }
+    //    });
+    //    await handle.Task;
+    //    Debug.Log($"Monster 로드 완료: {handle.Result.Count}개");
+    //}
+
+
+    //public async UniTask LoadAllPortraitsDataAsync()
+    //{
+    //    var handle = Addressables.LoadAssetsAsync<Sprite>("Portraits", sprite =>
+    //    {
+    //        var parts = Regex.Split(sprite.name, "_");
+    //        if (!dialogPortraitsdata.ContainsKey(parts[0]))
+    //        {
+    //            dialogPortraitsdata[parts[0]] = new Dictionary<int, Sprite>();
+    //        }
+    //        dialogPortraitsdata[parts[0]][int.Parse(parts[1])] = sprite;
+    //        Debug.Log($"로드된: {sprite.name}");
+    //    });
+    //    await handle.Task;
+    //    Debug.Log($"Portrait 로드 완료: {handle.Result.Count}개");
+    //}
+
+    //public async UniTask LoadAllUIDataAsync()
+    //{
+    //    var handle = Addressables.LoadAssetsAsync<GameObject>("UIPrefab", t_Prefab =>
+    //    {
+    //        this.uiPrefabData.Add(t_Prefab.name, t_Prefab);
+
+    //    });
+    //    await handle.Task;
+    //    Debug.Log($"Portrait 로드 완료: {handle.Result.Count}개");
+    //}
+
+    // 주소값 해제를 위한 핸들 추적용 변수들
+    private AsyncOperationHandle<TextAsset> conversationHandle;
+    private AsyncOperationHandle<TextAsset> dialogHandle;
+    private AsyncOperationHandle<TextAsset> effectHandle;
+    private AsyncOperationHandle<IList<SOSkillBase>> skillHandle;
+    private AsyncOperationHandle<IList<SOBattleCharacter>> characterHandle;
+    private AsyncOperationHandle<IList<Sprite>> portraitHandle;
+    private AsyncOperationHandle<IList<GameObject>> uiHandle;
+
+    // 기존 Load 메서드 내부에서 handle 저장 추가
     public async UniTask LoadConversationDataAsync()
     {
-        var handle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/ConversationData.csv");
-        var asset = await handle.Task;
+        conversationHandle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/ConversationData.csv");
+        var asset = await conversationHandle.Task;
         this.battleConversationData = CSVReader.ReadConversationTable(asset);
     }
 
     public async UniTask LoadDialogDataAsync()
     {
-        var handle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/DialogDataTable - 복사본.csv");
-        var asset = await handle.Task;
+        dialogHandle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/DialogDataTable - 복사본.csv");
+        var asset = await dialogHandle.Task;
         this.dialogData = CSVReader.ReadDialogData(asset);
     }
 
     public async UniTask LoadEffectDataAsync()
     {
-        var handle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/StatusTable.csv");
-        var asset = await handle.Task;
+        effectHandle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/StatusTable.csv");
+        var asset = await effectHandle.Task;
         this.statusEffectData = CSVReader.ReadEffectData(asset);
     }
 
     public async UniTask LoadAllSkillDataAsync()
     {
-        var handle = Addressables.LoadAssetsAsync<SOSkillBase>("SkillSO", so =>
+        skillHandle = Addressables.LoadAssetsAsync<SOSkillBase>("SkillSO", so =>
         {
             if (!skillData.ContainsKey(so.skillIdentifier))
-            {
                 skillData.Add(so.skillIdentifier, so);
-                Debug.Log($"로드된: {so.name}");
-            }
         });
-        await handle.Task;
-        Debug.Log($"Skill 로드 완료: {handle.Result.Count}개");
+        await skillHandle.Task;
     }
 
-    public async UniTask LoadAllMonsterDataAsync()
+    public async UniTask LoadAllCharacterDataAsync()
     {
-        var handle = Addressables.LoadAssetsAsync<SOMonsterBase>("MonsterSO", so =>
+        characterHandle = Addressables.LoadAssetsAsync<SOBattleCharacter>("CharacterSO", so =>
         {
-            if (!monsterData.ContainsKey(so.identifier))
-            {
-                monsterData.Add(so.identifier, so);
-                Debug.Log($"로드된: {so.name}");
-            }
+            if (!characterData.ContainsKey(so.GetIdentifier()))
+                characterData.Add(so.GetIdentifier(), so);
         });
-        await handle.Task;
-        Debug.Log($"Monster 로드 완료: {handle.Result.Count}개");
+        await characterHandle.Task;
     }
-
 
     public async UniTask LoadAllPortraitsDataAsync()
     {
-        var handle = Addressables.LoadAssetsAsync<Sprite>("Portraits", sprite =>
+        portraitHandle = Addressables.LoadAssetsAsync<Sprite>("Portraits", sprite =>
         {
             var parts = Regex.Split(sprite.name, "_");
             if (!dialogPortraitsdata.ContainsKey(parts[0]))
-            {
                 dialogPortraitsdata[parts[0]] = new Dictionary<int, Sprite>();
-            }
             dialogPortraitsdata[parts[0]][int.Parse(parts[1])] = sprite;
-            Debug.Log($"로드된: {sprite.name}");
         });
-        await handle.Task;
-        Debug.Log($"Portrait 로드 완료: {handle.Result.Count}개");
+        await portraitHandle.Task;
     }
 
     public async UniTask LoadAllUIDataAsync()
     {
-        var handle = Addressables.LoadAssetsAsync<GameObject>("UIPrefab", t_Prefab =>
+        uiHandle = Addressables.LoadAssetsAsync<GameObject>("UIPrefab", prefab =>
         {
-            this.uiPrefabData.Add(t_Prefab.name, t_Prefab);
-
+            Debug.Log(prefab.name);
+            uiPrefabData[prefab.name] = prefab;
         });
-        await handle.Task;
-        Debug.Log($"Portrait 로드 완료: {handle.Result.Count}개");
+        await uiHandle.Task;
     }
 
+    // 🔻 메모리 언로드 처리 메서드
+    public void UnloadAllData()
+    {
+        if (conversationHandle.IsValid()) Addressables.Release(conversationHandle);
+        if (dialogHandle.IsValid()) Addressables.Release(dialogHandle);
+        if (effectHandle.IsValid()) Addressables.Release(effectHandle);
+        if (skillHandle.IsValid()) Addressables.Release(skillHandle);
+        if (characterHandle.IsValid()) Addressables.Release(characterHandle);
+        if (portraitHandle.IsValid()) Addressables.Release(portraitHandle);
+        if (uiHandle.IsValid()) Addressables.Release(uiHandle);
 
+        Debug.Log(" Addressables 리소스 전부 언로드 완료!");
+    }
 
     #endregion
     #region Get
-    public SOMonsterBase GetSOMonster(int _key)
+    public SOBattleCharacter GetSOCharacter(int _key)
     {
-        return this.monsterData.TryGetValue(_key, out var t_so) ? t_so : null;
+        return this.characterData.TryGetValue(_key, out var t_so) ? t_so : null;
     }
     public SOSkillBase GetSOSkill(int _key)
     {
@@ -214,7 +307,7 @@ public class DataLibrary : MonoBehaviour
         else
         {
             LogUtil.Log($"no Such UI {_key}");
-            return null;    
+            return null;
         }
     }
     #endregion

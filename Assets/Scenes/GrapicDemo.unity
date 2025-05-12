@@ -801,9 +801,9 @@ GameObject:
   - component: {fileID: 1431977272}
   - component: {fileID: 1431977273}
   - component: {fileID: 1431977270}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1307,7 +1307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentMap: {fileID: 0}
-  startMap: {fileID: 6202327555237461339, guid: 7f697b54280ff664381449e53a422463, type: 3}
+  startMap: {fileID: 6202327555237461339, guid: 403f5fda3d6c4c5498f0899cb992c161, type: 3}
 --- !u!1 &2141549562
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,37 +9,33 @@ using Random = UnityEngine.Random;
 
 public class BattleCharacterBase : MonoBehaviour
 {
+    [Header("컴포넌트")]
+    [SerializeField] BattleManager battleManager;
+    [SerializeField] SpriteRenderer skin;
+    [SerializeField] Animator animator;
+    [SerializeField] SOSkillBase[] skills;
+    [SerializeField] SOSkillBase selectedSkill;
+    [SerializeField] BuffSystem buffSystem;
+    [SerializeField] TextMeshPro hpText;
+
+    [Header("정보")]
     [SerializeField] float maxHP;
     [SerializeField] float currentHP;
     [SerializeField] StatBlock statBlock;
     [SerializeField] int isUsedDefence;
     [SerializeField] bool isInDefence;
     [SerializeField] bool isActionDone = false;
+    [SerializeField] bool isDie;
+    [SerializeField] protected bool isActionDisabled;
+    [SerializeField] CharacterActionType currentAction;
+    public RaceType raceType;
 
     public float MaxHP() => this.maxHP;
-
-    [SerializeField] protected bool isActionDisabled;
     public void SetActionDisabled(bool _isActionDisabled) => this.isActionDisabled = _isActionDisabled;
-
-    public int speed;
-
-    [SerializeField] BattleManager battleManager;
-    [SerializeField] SpriteRenderer skin;
-    [SerializeField] Animator animator;
-    [SerializeField] SOSkillBase[] skills;
-    [SerializeField] SOSkillBase selectedSkill;
-
-    [SerializeField] BuffSystem buffSystem;
-
-
-    [SerializeField] TextMeshPro hpText;
-
-    [SerializeField] CharacterActionType currentAction;
     public void SetAction(CharacterActionType _action) => this.currentAction = _action;
     public CharacterActionType GetAction() => this.currentAction;
 
-    public RaceType raceType;
-
+    public bool IsDie() => this.isDie;
     public void SetActionDone(bool _is) => this.isActionDone = _is;
 
     public bool IsActionDone() => this.isActionDone;
@@ -66,11 +62,16 @@ public class BattleCharacterBase : MonoBehaviour
         this.currentHP = Mathf.Min(this.maxHP, this.currentHP + _amount);
     }
 
-    public void Initialization(BattleManager _battleManager)
+    public void Initialization(BattleManager _battleManager, SOBattleCharacter _character)
     {
         this.battleManager = _battleManager;
         this.buffSystem = new BuffSystem();
-        InitStats();
+        InitStats(_character.GetStatus());
+        this.skills = new SOSkillBase[_character.GetSkills().Length];
+        for (int i = 0; i < skills.Length; i++)
+            this.skills[i] = Instantiate(_character.GetSkills()[i]);
+
+        this.raceType = _character.GetRaceType();
         this.hpText.text = this.currentHP.ToString();
         return;
     }
@@ -145,6 +146,7 @@ public class BattleCharacterBase : MonoBehaviour
     protected virtual void Die()
     {
         Debug.Log($"{name} has died.");
+        this.isDie = true;
     }
 
     public async UniTask OnTurnStart()
@@ -271,10 +273,11 @@ public class BattleCharacterBase : MonoBehaviour
         this.statBlock.AddBuff(_id, _block);
     }
 
-    public void InitStats()
+    public void InitStats(BattleStatus _status)
     {
-        this.statBlock = new StatBlock();
+        this.statBlock = new StatBlock(_status);
         this.maxHP = this.currentHP = this.statBlock.GetStat(StatType.Hp);
+
     }
     #endregion
     public struct HitInfo

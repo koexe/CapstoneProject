@@ -37,4 +37,9 @@ public class MapManager : MonoBehaviour
 
         t_player.transform.position = this.currentMap.GetMapPoint(_path.linkedMapPoint).transform.position;
     }
+
+    public void OnChangeToBattleScene()
+    {
+        this.currentMap.gameObject.SetActive(false);
+    }
 }

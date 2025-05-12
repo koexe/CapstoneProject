@@ -17,21 +17,20 @@ public class SceneLoadManager : MonoBehaviour
 
         return;
     }
-    public void LoadScene_Async(GameObject _LoadingUI, string _Scenename)
+    public void LoadScene_Async(string _Scenename)
     {
         StopAllCoroutines();
-        StartCoroutine(ChangeScene_Async(_LoadingUI, _Scenename));
+        StartCoroutine(ChangeScene_Async(_Scenename));
         return;
     }
 
 
-    IEnumerator ChangeScene_Async(GameObject _LoadingUI, string _SceneName)
+    IEnumerator ChangeScene_Async(string _SceneName)
     {
         AsyncOperation t_asyncOper = SceneManager.LoadSceneAsync(_SceneName, LoadSceneMode.Single);
         t_asyncOper.allowSceneActivation = false;
         while (!t_asyncOper.isDone)
         {
-            // 로딩이 거의 완료되었는지 확인 (progress는 0.0f ~ 0.9f 사이)
             if (t_asyncOper.progress >= 0.9f)
             {
                 // 추가적인 로딩 UI를 처리할 수 있음 (필요시)

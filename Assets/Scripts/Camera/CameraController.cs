@@ -11,10 +11,10 @@ public class CameraController : MonoBehaviour
 
     Camera cam;
 
-    private void Awake()
+    private void Start()
     {
         cam = Camera.main;
-        //GameStatics.instance.CameraController = this;
+        GameStatics.instance.CameraController = this;
     }
 
     public void SetTarget(Transform _target) => this.currentTarget = _target;

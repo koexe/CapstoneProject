@@ -9,12 +9,14 @@ public class SOSkillBase : ScriptableObject
 {
     [HideInInspector] public BattleCharacterBase character;
     [HideInInspector] public BattleCharacterBase[] target;
+
     public int skillIdentifier;
     public string skillName;
     public Sprite skillIcon;
     public AttackRangeType attackRange;
     public StatusEffectID statusEffect;
     public RaceType attackRaceType;
+    public int requireMp;
 
     public enum AttackRangeType
     {

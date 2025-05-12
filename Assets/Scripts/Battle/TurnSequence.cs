@@ -111,7 +111,6 @@ public class ChooseSequence : TurnSequence
         this.state = ChooseState.None;
         this.enemys = _enemys;
         this.battleManager.SetCurrentSequenceType(this.sequenceType);
-
     }
 
     public override void SequenceUpdate()
@@ -187,17 +186,15 @@ public class ChooseSequence : TurnSequence
             }
             if (Input.GetMouseButtonDown(0))
             {
-                Vector2 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(mouseWorldPos, Vector2.zero);
-
-                if (hit.collider != null)
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out RaycastHit hit))
                 {
                     if (hit.transform.TryGetComponent<BattleCharacterBase>(out var t_character))
                     {
                         if (this.enemys.Contains(t_character))
                         {
                             GameStatics.instance.CameraController.SetTarget(hit.transform);
-                          
+
                             this.currentEnemyIndex = System.Array.IndexOf(this.players, t_character);
 
                             this.players[this.currentPlayerIndex].GetSelectedSkill().target = new BattleCharacterBase[] { t_character };

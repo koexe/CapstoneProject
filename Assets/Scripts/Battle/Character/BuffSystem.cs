@@ -305,6 +305,18 @@ public class StatBlock
         this.baseStats.Add(StatType.HealEffecincy, 100f);
         this.baseStats.Add(StatType.DamageReduce, 0f);
     }
+    public StatBlock(BattleStatus _status)
+    {
+        this.baseStats.Add(StatType.Hp, _status.GetHp());
+        this.baseStats.Add(StatType.Mp, _status.GetMp());
+        this.baseStats.Add(StatType.Atk, _status.GetAtk());
+        this.baseStats.Add(StatType.Def, _status.GetDef());
+        this.baseStats.Add(StatType.Spd, _status.GetSpd());
+        this.baseStats.Add(StatType.Evasion, 5f);
+        this.baseStats.Add(StatType.Acc, 95f);
+        this.baseStats.Add(StatType.HealEffecincy, 100f);
+        this.baseStats.Add(StatType.DamageReduce, 0f);
+    }
     public void SetBase(StatType _type, float _value)
     {
         this.baseStats[_type] = _value;
@@ -361,6 +373,7 @@ public enum StatType
 {
     None = 0,
     Hp = 1,
+    Mp = 10,
     Atk = 2,
     Def = 3,
     Evasion = 4,

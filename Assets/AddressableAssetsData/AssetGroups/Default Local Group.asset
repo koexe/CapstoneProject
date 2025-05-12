@@ -17,16 +17,6 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: b3f7586259ee1ab4197a7e41e9dd353b
   m_SerializeEntries:
-  - m_GUID: af02215f0b9575543a2d6fabe26a2478
-    m_Address: Assets/SO/Monster/Monster_Base.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - MonsterSO
-  - m_GUID: f870ef9e49d4d654cbc07bc7c4a037be
-    m_Address: Assets/SO/Monster/Monster_Base 12.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - MonsterSO
   - m_GUID: 090d65e2657c7ee448e93c5be9f96367
     m_Address: Assets/TextAssets/DialogDataTable.csv
     m_ReadOnly: 0
@@ -87,8 +77,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - SkillSO
-  - m_GUID: 1e44c5ac8bd534d42b23a43eb0fab36f
-    m_Address: Assets/SO/Skill/SKill_Base.asset
+  - m_GUID: 823cee0226951404d852df765dbc94cf
+    m_Address: Assets/SO/Skill/AttackSKills/Shadow/1008.asset
     m_ReadOnly: 0
     m_SerializedLabels:
     - SkillSO
@@ -157,6 +147,51 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - UIPrefab
+  - m_GUID: 1f20fb76fb8005c4ba4d8fb5e250166a
+    m_Address: Assets/SO/Character/Character_Vivito.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CharacterSO
+  - m_GUID: 4f81eed7328d9604aa495b52742b7733
+    m_Address: Assets/SO/Character/Character_Hex.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CharacterSO
+  - m_GUID: 48a5cdfa8310da742bc75a66a75eb7a3
+    m_Address: Assets/SO/Character/Character_Pompi.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CharacterSO
+  - m_GUID: 7dd71183314068a458948599a77a5dd1
+    m_Address: Assets/SO/Character/Character_Lemo.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CharacterSO
+  - m_GUID: 64d9666440f56104f9da1a7a07548456
+    m_Address: Assets/SO/Character/Character_Sarah.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CharacterSO
+  - m_GUID: 36aba541b19193a44a1804d9ec06b8bb
+    m_Address: Assets/SO/Skill/AttackSKills/Shadow/1007.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SkillSO
+  - m_GUID: 6b05e36233cdc004b8c82a9d070d996a
+    m_Address: Assets/SO/Skill/AttackSKills/Shadow/1006.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SkillSO
+  - m_GUID: e9ac87b43c5adea4eb1e68dd972f5fc0
+    m_Address: Assets/SO/Skill/AttackSKills/Shadow/1005.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SkillSO
+  - m_GUID: 39e147217b519ad40bc814edc9691aa4
+    m_Address: Assets/SO/Skill/AttackSKills/Shadow/1004.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SkillSO
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
   m_SchemaSet:
