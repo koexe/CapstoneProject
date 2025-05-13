@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using static GameManager;
+using Random = UnityEngine.Random;
 
 public class BattleManager : MonoBehaviour
 {
@@ -9,6 +11,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField] TurnSystem turnSystem;
 
     [SerializeField] GameObject battleCharacterPrefab;
+    [SerializeField] GameObject enemyCharacterPrefab;
+
     [SerializeField] BattleCharacterBase[] allyCharacters;
     [SerializeField] BattleCharacterBase[] enemyCharacters;
 
@@ -43,8 +47,8 @@ public class BattleManager : MonoBehaviour
     {
         SOBattleCharacter[] t_allys = new SOBattleCharacter[2]
         {
-            GameManager.instance.GetBattleSceneData().GetPlayerData().currentNPC,
-            GameManager.instance.GetBattleSceneData().GetPlayerData().currentPlayer
+            GameManager.instance.GetBattleSceneData().GetPlayerData(),
+            GameManager.instance.GetBattleSceneData().GetNPCData()
         };
         SOBattleCharacter[] t_enemys = GameManager.instance.GetBattleSceneData().GetEnemys();
 
@@ -60,7 +64,7 @@ public class BattleManager : MonoBehaviour
         }
         for (int i = 0; i < t_enemys.Length; i++)
         {
-            this.enemyCharacters[i] = Instantiate(this.battleCharacterPrefab).GetComponent<BattleCharacterBase>();
+            this.enemyCharacters[i] = Instantiate(this.enemyCharacterPrefab).GetComponent<BattleCharacterBase>();
             this.enemyCharacters[i].Initialization(this, t_enemys[i]);
             this.enemyCharacters[i].transform.position = this.enemyPositions[i].position;
         }
@@ -102,10 +106,6 @@ public class BattleManager : MonoBehaviour
         {
             t_char.SetAction(CharacterActionType.None);
         }
-        //foreach (var t_char in this.enemyCharacters)
-        //{
-        //    t_char.SetAction(CharacterActionType.None);
-        //}
         this.turnSystem.AddSequence(new InitializeSequence(this, _beforeAction: () =>
         {
             foreach (var t_character in this.allyCharacters)
@@ -128,6 +128,7 @@ public class BattleManager : MonoBehaviour
             }));
         this.turnSystem.AddSequence(new ExecuteSequence(this, TurnCheck()));
         this.turnSystem.AddSequence(new SummarySequence(this, TurnCheck()));
+        this.turnSystem.AddSequence(new EndSequence(this));
     }
 
     #region 기능
@@ -161,11 +162,13 @@ public class BattleManager : MonoBehaviour
 
         foreach (var t_character in this.allyCharacters)
         {
-            t_BattleOrder.Add(t_character);
+            if (!t_character.IsDie())
+                t_BattleOrder.Add(t_character);
         }
         foreach (var t_character in enemyCharacters)
         {
-            t_BattleOrder.Add(t_character);
+            if (!t_character.IsDie())
+                t_BattleOrder.Add(t_character);
         }
         t_BattleOrder.Sort((a, b) => b.GetStat(StatType.Spd).CompareTo(a.GetStat(StatType.Spd)));
 
@@ -180,6 +183,31 @@ public class BattleManager : MonoBehaviour
 
         int randomIndex = Random.Range(0, sourceArray.Length); // UnityEngine.Random
         return new T[] { sourceArray[randomIndex] };
+    }
+
+    public bool IsAllyAllDie()
+    {
+        foreach (var t_ally in this.allyCharacters)
+        {
+            if (!t_ally.IsDie())
+                return false;
+        }
+        return true;
+    }
+
+    public bool IsEnemyAllDie()
+    {
+        foreach (var t_enemy in this.enemyCharacters)
+        {
+            if (!t_enemy.IsDie())
+                return false;
+        }
+        return true;
+    }
+
+    public void ChangeToFieldScene()
+    {
+        GameManager.instance.ChangeSceneToField(this.allyCharacters[0].GetBattleCharacter(), this.allyCharacters[1].GetBattleCharacter());
     }
 
     #region ChooseSequence
@@ -231,7 +259,6 @@ public class BattleManager : MonoBehaviour
                 {
                     battleCharacterBase = this.currentSelectedCharacter,
                     identifier = "BattleSkillUI",
-                    onHide = () => CheckAllReady(),
                     skills = this.currentSelectedCharacter.GetSkills(),
                     isAllowMultifle = false,
                     order = 0,
@@ -261,10 +288,12 @@ public class BattleManager : MonoBehaviour
             case SOSkillBase.AttackRangeType.All:
                 _character.SetSelectedSkill(_skill, enemyCharacters);
                 SetChooseSequenceState(ChooseSequence.ChooseState.None);
+                CheckAllReady();
                 break;
             case SOSkillBase.AttackRangeType.Random:
                 _character.SetSelectedSkill(_skill, GetRandomElementAsArray<BattleCharacterBase>(this.enemyCharacters));
                 SetChooseSequenceState(ChooseSequence.ChooseState.None);
+                CheckAllReady();
                 break;
             case SOSkillBase.AttackRangeType.Select:
                 GameStatics.instance.CameraController.SetTarget(null);
@@ -274,6 +303,7 @@ public class BattleManager : MonoBehaviour
                 break;
             case SOSkillBase.AttackRangeType.Ally:
                 ShowText("아군 선택");
+                CheckAllReady();
                 break;
         }
     }
@@ -285,6 +315,30 @@ public class BattleManager : MonoBehaviour
         if (t_Sequence != null)
         {
             t_Sequence.state = _state;
+        }
+    }
+
+
+    public async UniTask GainExp(int _exp)
+    {
+        List<BattleCharacterBase> t_allyCharacter = new List<BattleCharacterBase>();
+        foreach (var t_character in this.allyCharacters)
+        {
+            if (!t_character.IsDie())
+                t_allyCharacter.Add(t_character);
+        }
+        foreach (var t_chracter in t_allyCharacter)
+        {
+            int t_Exp = _exp / t_allyCharacter.Count;
+            ShowText($"{t_chracter.GetCharacterName()} 이 {t_Exp} 의 경험치를 얻었다!");
+
+            await UniTask.Delay(TimeSpan.FromSeconds(1f));
+
+            if (t_chracter.GainExp(t_Exp))
+            {
+                ShowText($"{t_chracter.GetCharacterName()} 의 레벨이 올랐다!");
+                await UniTask.Delay(TimeSpan.FromSeconds(1f));
+            }
         }
     }
     #endregion

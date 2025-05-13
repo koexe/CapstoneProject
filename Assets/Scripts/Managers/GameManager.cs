@@ -17,8 +17,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] SceneLoadManager sceneLoadManager;
     [SerializeField] SaveGameManager saveGameManager;
 
-
-    [SerializeField] PlayerData playerData;
+    [SerializeField] SOBattleCharacter currentPlayer;
+    [SerializeField] SOBattleCharacter currentNPC;
 
     OnChangeBattleSceneData onChangeBattleSceneData = new OnChangeBattleSceneData();
 
@@ -37,45 +37,58 @@ public class GameManager : MonoBehaviour
         if (instance == null)
             instance = this;
         else
-            Destroy(this);
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
         Initialization();
     }
 
     public async void Initialization()
     {
         await this.dataLibrary.Initialization();
-        this.playerData = new PlayerData();
-        this.playerData.currentPlayer = DataLibrary.instance.GetSOCharacter(1);
-        this.playerData.currentNPC = DataLibrary.instance.GetSOCharacter(2);
+        this.currentPlayer = DataLibrary.instance.GetSOCharacter(1);
+        this.currentNPC = DataLibrary.instance.GetSOCharacter(2);
     }
 
 
     public void ChangeSceneToBattle(SOBattleCharacter[] enemys)
     {
-        this.onChangeBattleSceneData.Set(this.playerData, enemys);
+        this.onChangeBattleSceneData.Set(this.currentPlayer, this.currentNPC, enemys);
         this.sceneLoadManager.LoadScene_Async("BattleScene");
         MapManager.instance.OnChangeToBattleScene();
     }
-
+    public void ChangeSceneToField(SOBattleCharacter _currentPlayer, SOBattleCharacter _currentNpc)
+    {
+        this.currentNPC = _currentNpc;
+        this.currentPlayer = _currentPlayer;
+        this.onChangeBattleSceneData.Reset();
+        this.sceneLoadManager.LoadScene_Async("FieldScene");
+        MapManager.instance.OnChangeToFieldScene();
+    }
 
     public class OnChangeBattleSceneData
     {
-        PlayerData playerData;
+        [SerializeField] SOBattleCharacter currentPlayer;
+        [SerializeField] SOBattleCharacter currentNPC;
         SOBattleCharacter[] enemys;
 
-        public void Set(PlayerData _player, SOBattleCharacter[] _enemys)
+        public void Set(SOBattleCharacter _player, SOBattleCharacter _npc, SOBattleCharacter[] _enemys)
         {
-            this.playerData = _player;
+            this.currentPlayer = _player;
+            this.currentNPC = _npc;
             this.enemys = _enemys;
         }
+        public void Reset()
+        {
+            this.currentPlayer = null;
+            this.currentNPC = null;
+            this.enemys = null;
+        }
         public SOBattleCharacter[] GetEnemys() => this.enemys;
-        public PlayerData GetPlayerData() => this.playerData;
-    }
-
-    public class PlayerData
-    {
-        public SOBattleCharacter currentPlayer;
-        public SOBattleCharacter currentNPC;
+        public SOBattleCharacter GetPlayerData() => this.currentPlayer;
+        public SOBattleCharacter GetNPCData() => this.currentNPC;
     }
 }
 public enum GameState

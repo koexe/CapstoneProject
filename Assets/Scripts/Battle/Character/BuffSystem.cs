@@ -5,16 +5,17 @@ using Cysharp.Threading;
 using Cysharp.Threading.Tasks;
 using System;
 using Random = UnityEngine.Random;
+using System.Threading.Tasks;
 
 
 public class BuffSystem
 {
     private Dictionary<StatusEffectID, StatusEffectInstance> activeEffects = new Dictionary<StatusEffectID, StatusEffectInstance>();
 
-    public void OnTurnStart(BattleCharacterBase _target)
+    public async Task OnTurnStart(BattleCharacterBase _target)
     {
         foreach (var t_effect in this.activeEffects.Values)
-            t_effect.Tick(_target);
+           await t_effect.Tick(_target);
 
         var t_expired = new List<StatusEffectID>();
         foreach (var t_pair in this.activeEffects)
@@ -31,7 +32,7 @@ public class BuffSystem
     {
         foreach (var t_effect in this.activeEffects.Values)
         {
-            t_effect.Tick(_target);
+            await t_effect.Tick(_target);
             await UniTask.Delay(TimeSpan.FromSeconds(1f));
         }
 
@@ -91,13 +92,13 @@ public class StatusEffectInstance
         }
     }
 
-    public void Tick(BattleCharacterBase _target)
+    public async Task Tick(BattleCharacterBase _target)
     {
-        this.ApplyEffect(_target);
+        await this.ApplyEffect(_target);
         this.remainingTurns--;
     }
 
-    public void ApplyEffect(BattleCharacterBase _target)
+    public async Task ApplyEffect(BattleCharacterBase _target)
     {
         switch (this.info.id)
         {
@@ -109,7 +110,7 @@ public class StatusEffectInstance
                     float t_rate = this.info.id == StatusEffectID.Bleed ? 0.05f :
                                    this.info.id == StatusEffectID.Poison ? 0.07f : 0.03f;
                     float t_dmg = Mathf.CeilToInt(_target.MaxHP() * t_rate);
-                    _target.TakeDamage(
+                   await  _target.HitTask(
                         new BattleCharacterBase.HitInfo()
                         {
                             hitDamage = t_dmg,

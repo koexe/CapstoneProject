@@ -17,7 +17,7 @@ public class MapManager : MonoBehaviour
             Destroy(this);
 
         DontDestroyOnLoad(instance);
-    } 
+    }
     private void Start()
     {
 #if UNITY_EDITOR
@@ -38,6 +38,10 @@ public class MapManager : MonoBehaviour
         t_player.transform.position = this.currentMap.GetMapPoint(_path.linkedMapPoint).transform.position;
     }
 
+    public void OnChangeToFieldScene()
+    {
+        this.currentMap.gameObject.SetActive(true);
+    }
     public void OnChangeToBattleScene()
     {
         this.currentMap.gameObject.SetActive(false);

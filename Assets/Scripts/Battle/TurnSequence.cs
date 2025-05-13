@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Cysharp.Threading;
+using Cysharp.Threading.Tasks;
 
 [System.Serializable]
 public class TurnSequence
@@ -14,6 +15,7 @@ public class TurnSequence
         ChooseSequence,
         ExecuteSequence,
         SummarySequence,
+        EndSequence,
     }
 
     protected Action BeforeSequence;
@@ -245,7 +247,8 @@ public class ExecuteSequence : TurnSequence
 
         foreach (var t_battleCharacter in battleCharacters)
         {
-            await t_battleCharacter.StartAction();
+            if (!t_battleCharacter.IsDie())
+                await t_battleCharacter.StartAction();
         }
 
         battleManager.NextSequence();
@@ -273,11 +276,44 @@ public class SummarySequence : TurnSequence
     {
         foreach (var t_battleCharacter in battleCharacters)
         {
-            await t_battleCharacter.Summary();
+            if (!t_battleCharacter.IsDie())
+                await t_battleCharacter.Summary();
         }
 
         battleManager.NextSequence();
 
 
+    }
+}
+
+[System.Serializable]
+public class EndSequence : TurnSequence
+{
+    List<BattleCharacterBase> battleCharacters;
+    public EndSequence(BattleManager _battleManager, Action _beforeAction = null, Action _afterAction = null) : base(_battleManager, _beforeAction, _afterAction)
+    {
+        this.sequenceType = BattleSequenceType.EndSequence;
+
+        this.battleManager.SetCurrentSequenceType(this.sequenceType);
+    }
+    public override void SequenceAction()
+    {
+        base.SequenceAction();
+        if (this.battleManager.IsAllyAllDie())
+        {
+            //게임오버 작동 구현
+        }
+        else if (this.battleManager.IsEnemyAllDie())
+        {
+            EndTask();
+        }
+
+    }
+    async void EndTask()
+    {
+        battleManager.ShowText("승리했다! 전투 종료!");
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        battleManager.ChangeToFieldScene();
+        
     }
 }

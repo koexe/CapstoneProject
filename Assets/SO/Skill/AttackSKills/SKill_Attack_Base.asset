@@ -15,10 +15,11 @@ MonoBehaviour:
   character: {fileID: 0}
   target: []
   skillIdentifier: -1
-  skillName: "\uC2A4\uD0AC\uC774\uB984"
+  skillName: "\uC804\uCCB4\uD14C\uC2A4\uD2B8"
   skillIcon: {fileID: 21300000, guid: f09df3a430b6c1a4190da523f92c1847, type: 3}
   attackRange: 0
   statusEffect: 11
   attackRaceType: 0
+  requireMp: 0
   attackModifier: 1
   selfPanlty: 0

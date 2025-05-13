@@ -23,6 +23,9 @@ public class SOAtatckSkill : SOSkillBase
 
         foreach (var t_target in this.target)
         {
+            if (t_target.IsDie()) continue;
+
+
             BattleCharacterBase.HitInfo t_hitInfo = new BattleCharacterBase.HitInfo();
 
             float t_damage = this.character.GetStat(StatType.Atk) * this.attackModifier;

@@ -4,14 +4,25 @@ using UnityEngine;
 public class BattleStatus
 {
 
-    int level;
-    int exp;
+    [SerializeField] int level;
+    [SerializeField] int exp;
     [SerializeField] float baseHp;
     [SerializeField] float baseMp;
     [SerializeField] float baseAtk;
     [SerializeField] float baseDef;
     [SerializeField] float baseSpeed;
     const int maxLevel = 50;
+
+    public BattleStatus(BattleStatus _copy)
+    {
+        this.level = _copy.level;
+        this.exp = _copy.exp;
+        this.baseHp = _copy.baseHp;
+        this.baseMp = _copy.baseMp;
+        this.baseAtk = _copy.baseAtk;
+        this.baseDef = _copy.baseDef;
+        this.baseSpeed = _copy.baseSpeed;
+    }
 
 
     public int GetHp()

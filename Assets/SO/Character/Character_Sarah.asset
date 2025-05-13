@@ -19,6 +19,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 460869358919ab741bfef33568a0dbc0, type: 2}
   characterName: "\uC0AC\uB77C"
   status:
+    level: 0
+    exp: 0
     baseHp: 30
     baseMp: 5
     baseAtk: 6

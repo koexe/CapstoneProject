@@ -10,12 +10,13 @@ using Random = UnityEngine.Random;
 public class BattleCharacterBase : MonoBehaviour
 {
     [Header("컴포넌트")]
-    [SerializeField] BattleManager battleManager;
+    [SerializeField] protected string characterName;
+    [SerializeField] protected BattleManager battleManager;
     [SerializeField] SpriteRenderer skin;
     [SerializeField] Animator animator;
     [SerializeField] SOSkillBase[] skills;
     [SerializeField] SOSkillBase selectedSkill;
-    [SerializeField] BuffSystem buffSystem;
+    [SerializeField] protected BuffSystem buffSystem;
     [SerializeField] TextMeshPro hpText;
 
     [Header("정보")]
@@ -25,16 +26,17 @@ public class BattleCharacterBase : MonoBehaviour
     [SerializeField] int isUsedDefence;
     [SerializeField] bool isInDefence;
     [SerializeField] bool isActionDone = false;
-    [SerializeField] bool isDie;
+    [SerializeField] protected bool isDie;
     [SerializeField] protected bool isActionDisabled;
     [SerializeField] CharacterActionType currentAction;
+    [SerializeField] protected SOBattleCharacter soBattleCharacter;
     public RaceType raceType;
 
     public float MaxHP() => this.maxHP;
     public void SetActionDisabled(bool _isActionDisabled) => this.isActionDisabled = _isActionDisabled;
     public void SetAction(CharacterActionType _action) => this.currentAction = _action;
     public CharacterActionType GetAction() => this.currentAction;
-
+    public string GetCharacterName() => this.characterName;
     public bool IsDie() => this.isDie;
     public void SetActionDone(bool _is) => this.isActionDone = _is;
 
@@ -66,8 +68,10 @@ public class BattleCharacterBase : MonoBehaviour
     {
         this.battleManager = _battleManager;
         this.buffSystem = new BuffSystem();
-        InitStats(_character.GetStatus());
-        this.skills = new SOSkillBase[_character.GetSkills().Length];
+        this.soBattleCharacter = Instantiate(_character);
+        this.characterName = soBattleCharacter.GetCharacterName();
+        InitStats(soBattleCharacter.GetStatus());
+        this.skills = new SOSkillBase[soBattleCharacter.GetSkills().Length];
         for (int i = 0; i < skills.Length; i++)
             this.skills[i] = Instantiate(_character.GetSkills()[i]);
 
@@ -198,7 +202,7 @@ public class BattleCharacterBase : MonoBehaviour
             Die();
     }
 
-    public async UniTask HitTask(HitInfo _hitInfo)
+    public virtual async UniTask HitTask(HitInfo _hitInfo)
     {
         TakeDamage(_hitInfo);
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
@@ -289,6 +293,16 @@ public class BattleCharacterBase : MonoBehaviour
         public StatusEffectID statusEffect;
         public BattleCharacterBase target;
     }
+
+    public virtual bool GainExp(int _exp)
+    {
+        return this.soBattleCharacter.GetStatus().GainExp(_exp);
+    }
+    public SOBattleCharacter GetBattleCharacter()
+    {
+        return this.soBattleCharacter;
+    }
+
 
 }
 public enum RaceType
