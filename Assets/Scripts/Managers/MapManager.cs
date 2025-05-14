@@ -16,7 +16,7 @@ public class MapManager : MonoBehaviour
         else
             Destroy(this);
 
-        DontDestroyOnLoad(instance);
+        DontDestroyOnLoad(this.gameObject);
     }
     private void Start()
     {

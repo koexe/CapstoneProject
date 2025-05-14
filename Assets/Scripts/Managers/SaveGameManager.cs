@@ -22,10 +22,17 @@ public class SaveGameManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
-        this.Initialization();
-        DontDestroyOnLoad(this.gameObject);
-        return;
+        if(instance == null)
+        {
+            instance = this;
+            Initialization();
+            DontDestroyOnLoad(this.gameObject);
+            return;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
 #if UNITY_EDITOR
     private void Update()
@@ -52,16 +59,11 @@ public class SaveGameManager : MonoBehaviour
         this.saveInFile.items.Clear();
         this.currentSaveData = this.saveInFile;
 
-        //foreach (var item in this.currentSaveData.itemNames)
-        //{
-        //    Debug.Log(item.index);
+        foreach (var item in this.currentSaveData.itemNames)
+        {
+            int index = item.index;
 
-        //    int index = this.itemTable.itemTable.FindIndex(x => x.itemIndex == item.index);
-        //    Debug.Log(index);
-        //    Debug.Log(this.itemTable.itemTable[index].itemIndex);
-        //    Debug.Log(this.itemTable.itemTable[index].item.GetItemImage().name);
-        //    this.currentSaveData.items.Add(new SaveItem(Instantiate(this.itemTable.itemTable[index].item), item.amount));
-        //}
+        }
     }
 
 
@@ -86,20 +88,18 @@ public class SaveGameManager : MonoBehaviour
         return;
     }
 
-    //public void CheckMapItem()
-    //{
-    //    foreach (var map in MapPrefab)
-    //    {
-    //        Debug.Log($"�� {map.name} �ʱ�ȭ ����");
-    //        var Items = map.transform.GetComponent<MapOptions>().GetMapItems();
-    //        this.currentSaveData.mapItems.Add(map.name, new List<bool>());
-    //        foreach (var item in Items)
-    //        {
-    //            Debug.Log($"������ �̸� {item.name}");
-    //            this.currentSaveData.mapItems[map.name].Add(item.isGeted);
-    //        }
-    //    }
-    //}
+    public void CheckMapItem()
+    {
+        foreach (var map in DataLibrary.instance.GetMapAll())
+        {
+            //var Items = map.GetMapItems();
+            //this.currentSaveData.mapItems.Add(map.name, new List<bool>());
+            //foreach (var item in Items)
+            //{
+            //    this.currentSaveData.mapItems[map.name].Add(item.isGeted);
+            //}
+        }
+    }
 
 
 

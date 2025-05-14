@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -26,7 +27,7 @@ public class DataLibrary : MonoBehaviour
 
     Dictionary<int, SOSkillBase> skillData = new Dictionary<int, SOSkillBase>();
 
-    Dictionary<int, MapEntity> mapData;
+    Dictionary<string, MapEntity> mapData;
 
     Dictionary<string, GameObject> uiPrefabData = new Dictionary<string, GameObject>();
 
@@ -237,7 +238,6 @@ public class DataLibrary : MonoBehaviour
         await uiHandle.Task;
     }
 
-    // 🔻 메모리 언로드 처리 메서드
     public void UnloadAllData()
     {
         if (conversationHandle.IsValid()) Addressables.Release(conversationHandle);
@@ -261,7 +261,6 @@ public class DataLibrary : MonoBehaviour
     {
         return this.skillData.TryGetValue(_key, out var t_so) ? t_so : null;
     }
-
     public Sprite GetPortrait(string _key, int _emotion)
     {
         Debug.Log($"{_key}");
@@ -284,7 +283,6 @@ public class DataLibrary : MonoBehaviour
             return null;
         }
     }
-
     public StatusEffectInfo GetStateInfo(StatusEffectID _id)
     {
         if (this.statusEffectData.TryGetValue(_id, out var t_value))
@@ -297,7 +295,6 @@ public class DataLibrary : MonoBehaviour
             return null;
         }
     }
-
     public GameObject GetUI(string _key)
     {
         if (this.uiPrefabData.TryGetValue(_key, out var t_ui))
@@ -310,6 +307,8 @@ public class DataLibrary : MonoBehaviour
             return null;
         }
     }
+    public MapEntity GetMap(string _key) => this.mapData[_key];
+    public List<MapEntity> GetMapAll() => this.mapData.Values.ToList();
     #endregion
 }
 
