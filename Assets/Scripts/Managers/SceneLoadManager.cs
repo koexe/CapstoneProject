@@ -10,12 +10,15 @@ public class SceneLoadManager : MonoBehaviour
     private void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
         else
-            Destroy(this);
-        SceneLoadManager.DontDestroyOnLoad(this);
-
-        return;
+        {
+            Destroy(this.gameObject);
+            return;
+        }
     }
     public void LoadScene_Async(string _Scenename)
     {

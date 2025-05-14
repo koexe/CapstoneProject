@@ -11,34 +11,42 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance == null) instance = this;
-        else Destroy(gameObject);
-
-        if (bgmSource == null)
+        if (instance == null)
         {
-            GameObject bgmObj = new GameObject("BGM_Source");
-            bgmObj.transform.parent = transform;
-            bgmSource = bgmObj.AddComponent<AudioSource>();
-            bgmSource.loop = true;
+            DontDestroyOnLoad(gameObject);
+            instance = this;
+
+            if (bgmSource == null)
+            {
+                GameObject bgmObj = new GameObject("BGM_Source");
+                bgmObj.transform.parent = transform;
+                bgmSource = bgmObj.AddComponent<AudioSource>();
+                bgmSource.loop = true;
+            }
+
+            if (seContainer == null)
+            {
+                GameObject seParent = new GameObject("SE_Container");
+                seParent.transform.parent = transform;
+                seContainer = seParent.transform;
+            }
+
+            if (seSourcePrefab == null)
+            {
+                GameObject seObj = new GameObject("SE_Source_Prefab");
+                seObj.transform.parent = transform;
+                var source = seObj.AddComponent<AudioSource>();
+                seSourcePrefab = source;
+                seSourcePrefab.playOnAwake = false;
+                seSourcePrefab.loop = false;
+                seObj.SetActive(false);
+            }
+        }
+        else
+        {
+            Destroy(gameObject);
         }
 
-        if (seContainer == null)
-        {
-            GameObject seParent = new GameObject("SE_Container");
-            seParent.transform.parent = transform;
-            seContainer = seParent.transform;
-        }
-
-        if (seSourcePrefab == null)
-        {
-            GameObject seObj = new GameObject("SE_Source_Prefab");
-            seObj.transform.parent = transform;
-            var source = seObj.AddComponent<AudioSource>();
-            seSourcePrefab = source;
-            seSourcePrefab.playOnAwake = false;
-            seSourcePrefab.loop = false;
-            seObj.SetActive(false);
-        }
     }
 
     public void PlayBGM(AudioClip _clip, bool _loop = true)

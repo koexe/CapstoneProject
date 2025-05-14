@@ -14,7 +14,7 @@ public class CameraController : MonoBehaviour
     private void Start()
     {
         cam = Camera.main;
-        GameStatics.instance.CameraController = this;
+        GameManager.instance.SetCamera(this);
     }
 
     public void SetTarget(Transform _target) => this.currentTarget = _target;

@@ -15,7 +15,7 @@ public class BuffSystem
     public async Task OnTurnStart(BattleCharacterBase _target)
     {
         foreach (var t_effect in this.activeEffects.Values)
-           await t_effect.Tick(_target);
+            await t_effect.Tick(_target);
 
         var t_expired = new List<StatusEffectID>();
         foreach (var t_pair in this.activeEffects)
@@ -110,15 +110,15 @@ public class StatusEffectInstance
                     float t_rate = this.info.id == StatusEffectID.Bleed ? 0.05f :
                                    this.info.id == StatusEffectID.Poison ? 0.07f : 0.03f;
                     float t_dmg = Mathf.CeilToInt(_target.MaxHP() * t_rate);
-                   await  _target.HitTask(
-                        new BattleCharacterBase.HitInfo()
-                        {
-                            hitDamage = t_dmg,
-                            isCritical = false,
-                            isRaceAdvantage = 0,
-                            attackRace = RaceType.None,
+                    await _target.HitTask(
+                         new BattleCharacterBase.HitInfo()
+                         {
+                             hitDamage = t_dmg,
+                             isCritical = false,
+                             isRaceAdvantage = 0,
+                             attackRace = RaceType.None,
 
-                        });
+                         });
 
                     Debug.Log($"{_target.name} takes {t_dmg} damage from {this.info.id}");
                     break;
@@ -344,6 +344,14 @@ public class StatBlock
             this.buffStats.Remove(_type);
     }
 
+    public void UpdateBaseStats(BattleStatus _status)
+    {
+        this.baseStats[StatType.Hp] = _status.GetHp();
+        this.baseStats[StatType.Mp] = _status.GetMp();
+        this.baseStats[StatType.Atk] = _status.GetAtk();
+        this.baseStats[StatType.Def] = _status.GetDef();
+        this.baseStats[StatType.Spd] = _status.GetSpd();
+    }
     public float GetStat(StatType _type)
     {
         float t_base = this.baseStats.TryGetValue(_type, out var t_val) ? t_val : 0f;
@@ -366,7 +374,6 @@ public class StatBlock
 
         return (int)t_base;
     }
-
     public float GetBase(StatType _type) => this.baseStats.TryGetValue(_type, out var t_val) ? t_val : 0f;
     public BuffBlock GetBuff(StatusEffectID _type) => this.buffStats.TryGetValue(_type, out var t_val) ? t_val : null;
 }

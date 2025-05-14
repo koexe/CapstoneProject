@@ -119,12 +119,12 @@ public class BattleManager : MonoBehaviour
                 ActiveSelectButtonGroup(true);
                 this.nextButton.SetActive(false);
                 this.currentSelectedCharacter = this.allyCharacters[0];
-                GameStatics.instance.CameraController.SetTarget(this.currentSelectedCharacter.transform);
+                GameManager.instance.GetCamera().SetTarget(this.currentSelectedCharacter.transform);
             },
             () =>
             {
                 ActiveSelectButtonGroup(false);
-                GameStatics.instance.CameraController.SetTarget(null);
+                GameManager.instance.GetCamera().SetTarget(null);
             }));
         this.turnSystem.AddSequence(new ExecuteSequence(this, TurnCheck()));
         this.turnSystem.AddSequence(new SummarySequence(this, TurnCheck()));
@@ -213,7 +213,7 @@ public class BattleManager : MonoBehaviour
     #region ChooseSequence
     public void CheckAllReady()
     {
-        GameStatics.instance.CameraController.SetTarget(null);
+        GameManager.instance.GetCamera().SetTarget(null);
         ShowText("대기중");
         var t_Sequence = this.turnSystem.GetCurrentSequence() as ChooseSequence;
         if (t_Sequence != null)
@@ -296,7 +296,7 @@ public class BattleManager : MonoBehaviour
                 CheckAllReady();
                 break;
             case SOSkillBase.AttackRangeType.Select:
-                GameStatics.instance.CameraController.SetTarget(null);
+                GameManager.instance.GetCamera().SetTarget(null);
                 _character.SetSelectedSkill(_skill, null);
                 ShowText("적 선택");
                 SetChooseSequenceState(ChooseSequence.ChooseState.SelectEnemy);
@@ -333,12 +333,14 @@ public class BattleManager : MonoBehaviour
             ShowText($"{t_chracter.GetCharacterName()} 이 {t_Exp} 의 경험치를 얻었다!");
 
             await UniTask.Delay(TimeSpan.FromSeconds(1f));
-
-            if (t_chracter.GainExp(t_Exp))
+            t_chracter.GainExp(t_Exp);
+            while (t_chracter.CheckLevelup())
             {
-                ShowText($"{t_chracter.GetCharacterName()} 의 레벨이 올랐다!");
+                ShowText($"{t_chracter.GetCharacterName()} 의 레벨이 {t_chracter.GetStatus().GetLevel()}로 올랐다!");
                 await UniTask.Delay(TimeSpan.FromSeconds(1f));
+                t_chracter.LevelUp_UpdateStat();
             }
+
         }
     }
     #endregion
