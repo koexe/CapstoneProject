@@ -55,25 +55,22 @@ public class BattleStatus
         return (int)t_result;
     }
 
-    public bool GainExp(int _exp)
+    public int GetLevel() => this.level;
+
+    public bool CheckLevelup()
     {
-        this.exp += _exp;
         bool t_levelUpOccurred = false;
 
-        while (this.level < maxLevel)
+
+        int t_requiredExp = GetRequiredExp(this.level);
+        if (this.exp >= t_requiredExp)
         {
-            int t_requiredExp = GetRequiredExp(this.level);
-            if (this.exp >= t_requiredExp)
-            {
-                this.exp -= t_requiredExp;
-                this.level++;
-                t_levelUpOccurred = true;
-            }
-            else
-            {
-                break;
-            }
+            this.exp -= t_requiredExp;
+            this.level++;
+            t_levelUpOccurred = true;
+
         }
+
 
         // 만렙이면 초과 경험치 잘라주기 (선택사항)
         if (this.level >= maxLevel)
@@ -82,6 +79,11 @@ public class BattleStatus
         }
 
         return t_levelUpOccurred;
+    }
+    
+    public void GainExp(int _exp)
+    {
+        this.exp += _exp;
     }
 
     private int GetRequiredExp(int _level)

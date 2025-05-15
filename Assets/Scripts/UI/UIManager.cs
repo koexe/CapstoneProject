@@ -22,15 +22,23 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
-        this.currentUIObjects = new Dictionary<string, UIBase>();
-        DontDestroyOnLoad(this);
-        LoadAllUIs();
-        if (this.canvas == null)
+        if(instance == null)
         {
-            this.canvas = this.transform.GetComponent<Canvas>();
+            instance = this;
+            this.currentUIObjects = new Dictionary<string, UIBase>();
+            DontDestroyOnLoad(gameObject);
+            LoadAllUIs();
+            if (this.canvas == null)
+            {
+                this.canvas = this.transform.GetComponent<Canvas>();
+            }
+            return;
         }
-        return;
+        else
+        {
+            Destroy(gameObject);
+        }
+
     }
 
     public void HideUI(string _identifier)

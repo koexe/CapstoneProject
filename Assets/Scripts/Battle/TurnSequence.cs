@@ -124,7 +124,7 @@ public class ChooseSequence : TurnSequence
             {
                 this.currentPlayerIndex += 1;
                 if (this.currentPlayerIndex >= this.players.Length) this.currentPlayerIndex = 0;
-                GameStatics.instance.CameraController.SetTarget(this.players[this.currentPlayerIndex].transform);
+                GameManager.instance.GetCamera().SetTarget(this.players[this.currentPlayerIndex].transform);
                 this.battleManager.SetSelectedCharacter(this.players[this.currentPlayerIndex]);
 
             }
@@ -132,7 +132,7 @@ public class ChooseSequence : TurnSequence
             {
                 this.currentPlayerIndex -= 1;
                 if (this.currentPlayerIndex < 0) this.currentPlayerIndex = 1;
-                GameStatics.instance.CameraController.SetTarget(this.players[this.currentPlayerIndex].transform);
+                GameManager.instance.GetCamera().SetTarget(this.players[this.currentPlayerIndex].transform);
                 this.battleManager.SetSelectedCharacter(this.players[this.currentPlayerIndex]);
             }
 
@@ -147,7 +147,7 @@ public class ChooseSequence : TurnSequence
                         if (this.players.Contains(t_character))
                         {
                             this.currentPlayerIndex = System.Array.IndexOf(this.players, t_character);
-                            GameStatics.instance.CameraController.SetTarget(hit.transform);
+                            GameManager.instance.GetCamera().SetTarget(hit.transform);
                             this.battleManager.SetSelectedCharacter(t_character);
                         }
                     }
@@ -168,7 +168,7 @@ public class ChooseSequence : TurnSequence
             {
                 this.currentEnemyIndex += 1;
                 if (this.currentEnemyIndex >= this.enemys.Length) this.currentEnemyIndex = 0;
-                GameStatics.instance.CameraController.SetTarget(this.enemys[this.currentEnemyIndex].transform);
+                GameManager.instance.GetCamera().SetTarget(this.enemys[this.currentEnemyIndex].transform);
                 this.battleManager.SetSelectedCharacter(this.enemys[this.currentEnemyIndex]);
 
             }
@@ -176,13 +176,13 @@ public class ChooseSequence : TurnSequence
             {
                 this.currentEnemyIndex -= 1;
                 if (this.currentEnemyIndex < 0) this.currentEnemyIndex = this.enemys.Length - 1;
-                GameStatics.instance.CameraController.SetTarget(this.enemys[this.currentEnemyIndex].transform);
+                GameManager.instance.GetCamera().SetTarget(this.enemys[this.currentEnemyIndex].transform);
                 this.battleManager.SetSelectedCharacter(this.enemys[this.currentEnemyIndex]);
             }
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 this.players[this.currentPlayerIndex].GetSelectedSkill().target = new BattleCharacterBase[] { this.enemys[this.currentEnemyIndex] };
-                GameStatics.instance.CameraController.SetTarget(null);
+                GameManager.instance.GetCamera().SetTarget(null);
                 this.state = ChooseState.None;
                 this.battleManager.CheckAllReady();
             }
@@ -195,12 +195,12 @@ public class ChooseSequence : TurnSequence
                     {
                         if (this.enemys.Contains(t_character))
                         {
-                            GameStatics.instance.CameraController.SetTarget(hit.transform);
+                            GameManager.instance.GetCamera().SetTarget(hit.transform);
 
                             this.currentEnemyIndex = System.Array.IndexOf(this.players, t_character);
 
                             this.players[this.currentPlayerIndex].GetSelectedSkill().target = new BattleCharacterBase[] { t_character };
-                            GameStatics.instance.CameraController.SetTarget(null);
+                            GameManager.instance.GetCamera().SetTarget(null);
                             this.state = ChooseState.None;
                             this.battleManager.CheckAllReady();
                         }

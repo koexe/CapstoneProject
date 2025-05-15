@@ -20,6 +20,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] SOBattleCharacter currentPlayer;
     [SerializeField] SOBattleCharacter currentNPC;
 
+    [SerializeField] CameraController cameraController;
+    public CameraController GetCamera() => this.cameraController;
+    public void SetCamera(CameraController _controller) => this.cameraController = _controller;
+
     OnChangeBattleSceneData onChangeBattleSceneData = new OnChangeBattleSceneData();
 
     public OnChangeBattleSceneData GetBattleSceneData() => this.onChangeBattleSceneData;
@@ -35,14 +39,17 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         if (instance == null)
+        {
             instance = this;
+            DontDestroyOnLoad(this.gameObject);
+            Initialization();
+        }
         else
         {
             Destroy(this.gameObject);
             return;
         }
 
-        Initialization();
     }
 
     public async void Initialization()
@@ -90,6 +97,8 @@ public class GameManager : MonoBehaviour
         public SOBattleCharacter GetPlayerData() => this.currentPlayer;
         public SOBattleCharacter GetNPCData() => this.currentNPC;
     }
+
+
 }
 public enum GameState
 {

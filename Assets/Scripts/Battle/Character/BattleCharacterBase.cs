@@ -30,6 +30,7 @@ public class BattleCharacterBase : MonoBehaviour
     [SerializeField] protected bool isActionDisabled;
     [SerializeField] CharacterActionType currentAction;
     [SerializeField] protected SOBattleCharacter soBattleCharacter;
+    public BattleStatus GetStatus() => this.soBattleCharacter.GetStatus();
     public RaceType raceType;
 
     public float MaxHP() => this.maxHP;
@@ -163,8 +164,6 @@ public class BattleCharacterBase : MonoBehaviour
     }
     public float GetStat(StatType _type)
     {
-        if (_type == StatType.Hp)
-            return this.maxHP; // max 기준으로 리턴
         return this.statBlock.GetStat(_type);
     }
 
@@ -204,10 +203,16 @@ public class BattleCharacterBase : MonoBehaviour
 
         this.battleManager.ShowText($"{(int)t_finalDamage}의 데미지를 {this.name} 이 받았다!!");
         this.currentHP = Mathf.Max(0f, this.currentHP - (int)t_finalDamage);
-        this.hpText.text = this.currentHP.ToString();
+        SetHpText();
         if (this.currentHP <= 0f)
             Die();
     }
+    void SetHpText()
+    {
+        this.hpText.text = this.currentHP.ToString();
+    }
+
+
 
     public virtual async UniTask HitTask(HitInfo _hitInfo)
     {
@@ -300,16 +305,29 @@ public class BattleCharacterBase : MonoBehaviour
         public StatusEffectID statusEffect;
         public BattleCharacterBase target;
     }
-
-    public virtual bool GainExp(int _exp)
+    public virtual void GainExp(int _exp)
     {
-        return this.soBattleCharacter.GetStatus().GainExp(_exp);
+        this.soBattleCharacter.GetStatus().GainExp(_exp);
+    }
+    public virtual bool CheckLevelup()
+    {
+        return this.soBattleCharacter.GetStatus().CheckLevelup();
     }
     public SOBattleCharacter GetBattleCharacter()
     {
         return this.soBattleCharacter;
     }
+    public void LevelUp_UpdateStat()
+    {
+        float t_beforeMaxHp = this.statBlock.GetStat(StatType.Hp);
+        this.statBlock.UpdateBaseStats(this.soBattleCharacter.GetStatus());
+        this.maxHP = GetStat(StatType.Hp);
+        float t_afterMaxHp = this.statBlock.GetStat(StatType.Hp);
+        Debug.Log($"{t_afterMaxHp}        {t_beforeMaxHp}");
+        Heal(t_afterMaxHp - t_beforeMaxHp);
+        SetHpText();
 
+    }
 
 }
 public enum RaceType
