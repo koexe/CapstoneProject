@@ -169,9 +169,16 @@ public class BattleCharacterBase : MonoBehaviour
     }
 
     #region 턴 처리
+
+    public async UniTask BeforeAttack()
+    {
+
+    }
+
     public async UniTask AttackTask(HitInfo _hitInfo)
     {
         this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
+        
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
         await _hitInfo.target.HitTask(_hitInfo);
         this.battleManager.ShowText($"다음차례!");
