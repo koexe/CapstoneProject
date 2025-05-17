@@ -16,13 +16,14 @@ public class UIManager : MonoBehaviour
     { typeof(UIBase), "InventoryKey" },
     { typeof(SkillSelectUI), "SkillSelectUI" },
     { typeof(InventoryUI),"Inventory" },
-    { typeof(DialogUI) ,"DialogUI" }
+    { typeof(DialogUI) ,"DialogUI" },
+    { typeof(MapUI) ,"MapUI" }
 
 };
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
             this.currentUIObjects = new Dictionary<string, UIBase>();
@@ -63,7 +64,7 @@ public class UIManager : MonoBehaviour
                 this.currentUIObjects[_data.identifier].Hide();
             else
             {
-                this.currentUIObjects[_data.identifier].Initialization(_data);
+                //this.currentUIObjects[_data.identifier].Initialization(_data);
                 this.currentUIObjects[_data.identifier].Show(_data);
             }
 

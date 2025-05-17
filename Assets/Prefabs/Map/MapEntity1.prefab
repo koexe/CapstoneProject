@@ -4636,9 +4636,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3e4bd201c5159f4baeedf318f2e64c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mapIdentifier: "\uB9F52"
   mapPath:
   - {fileID: 7901727355787182879}
   - {fileID: 3101926175176044754}
+  items: {fileID: 0}
 --- !u!1 &2055209307439998346
 GameObject:
   m_ObjectHideFlags: 0

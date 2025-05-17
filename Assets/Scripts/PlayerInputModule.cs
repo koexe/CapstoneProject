@@ -14,6 +14,7 @@ public class PlayerInputModule : MonoBehaviour
         IngameInputManager.instance.AddInput(KeyCode.UpArrow, IngameInputManager.InputEventType.Hold, MoveForward);
         IngameInputManager.instance.AddInput(KeyCode.DownArrow, IngameInputManager.InputEventType.Hold, MoveBackward);
         IngameInputManager.instance.AddInput(KeyCode.I, IngameInputManager.InputEventType.Down, OpenInventory);
+        IngameInputManager.instance.AddInput(KeyCode.M, IngameInputManager.InputEventType.Down, OpenMap);
     }
 
     private void MoveLeft()
@@ -47,5 +48,9 @@ public class PlayerInputModule : MonoBehaviour
     void OpenInventory()
     {
         UIManager.instance.ShowUI<InventoryUI>(new InventoryUIData() { identifier = "InventoryUI", isAllowMultifle = false });
+    }
+    void OpenMap()
+    {
+        UIManager.instance.ShowUI<MapUI>(new UIData() { identifier = "MapUI", isAllowMultifle = false });
     }
 }

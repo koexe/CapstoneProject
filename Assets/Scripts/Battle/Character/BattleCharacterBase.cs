@@ -171,7 +171,7 @@ public class BattleCharacterBase : MonoBehaviour
 
     public async UniTask BeforeAttack()
     {
-
+        await UniTask.Delay(1000);
     }
 
     public async UniTask AttackTask(HitInfo _hitInfo)

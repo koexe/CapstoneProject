@@ -88,82 +88,6 @@ public class DataLibrary : MonoBehaviour
     }
 
     #region Load
-    //public async UniTask LoadConversationDataAsync()
-    //{
-    //    var handle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/ConversationData.csv");
-    //    var asset = await handle.Task;
-    //    this.battleConversationData = CSVReader.ReadConversationTable(asset);
-    //}
-
-    //public async UniTask LoadDialogDataAsync()
-    //{
-    //    var handle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/DialogDataTable - 복사본.csv");
-    //    var asset = await handle.Task;
-    //    this.dialogData = CSVReader.ReadDialogData(asset);
-    //}
-
-    //public async UniTask LoadEffectDataAsync()
-    //{
-    //    var handle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/StatusTable.csv");
-    //    var asset = await handle.Task;
-    //    this.statusEffectData = CSVReader.ReadEffectData(asset);
-    //}
-
-    //public async UniTask LoadAllSkillDataAsync()
-    //{
-    //    var handle = Addressables.LoadAssetsAsync<SOSkillBase>("SkillSO", so =>
-    //    {
-    //        if (!skillData.ContainsKey(so.skillIdentifier))
-    //        {
-    //            skillData.Add(so.skillIdentifier, so);
-    //            Debug.Log($"로드된: {so.name}");
-    //        }
-    //    });
-    //    await handle.Task;
-    //    Debug.Log($"Skill 로드 완료: {handle.Result.Count}개");
-    //}
-
-    //public async UniTask LoadAllCharacterDataAsync()
-    //{
-    //    var handle = Addressables.LoadAssetsAsync<SOBattleCharacter>("MonsterSO", so =>
-    //    {
-    //        if (!characterData.ContainsKey(so.identifier))
-    //        {
-    //            characterData.Add(so.identifier, so);
-    //            Debug.Log($"로드된: {so.name}");
-    //        }
-    //    });
-    //    await handle.Task;
-    //    Debug.Log($"Monster 로드 완료: {handle.Result.Count}개");
-    //}
-
-
-    //public async UniTask LoadAllPortraitsDataAsync()
-    //{
-    //    var handle = Addressables.LoadAssetsAsync<Sprite>("Portraits", sprite =>
-    //    {
-    //        var parts = Regex.Split(sprite.name, "_");
-    //        if (!dialogPortraitsdata.ContainsKey(parts[0]))
-    //        {
-    //            dialogPortraitsdata[parts[0]] = new Dictionary<int, Sprite>();
-    //        }
-    //        dialogPortraitsdata[parts[0]][int.Parse(parts[1])] = sprite;
-    //        Debug.Log($"로드된: {sprite.name}");
-    //    });
-    //    await handle.Task;
-    //    Debug.Log($"Portrait 로드 완료: {handle.Result.Count}개");
-    //}
-
-    //public async UniTask LoadAllUIDataAsync()
-    //{
-    //    var handle = Addressables.LoadAssetsAsync<GameObject>("UIPrefab", t_Prefab =>
-    //    {
-    //        this.uiPrefabData.Add(t_Prefab.name, t_Prefab);
-
-    //    });
-    //    await handle.Task;
-    //    Debug.Log($"Portrait 로드 완료: {handle.Result.Count}개");
-    //}
 
     // 주소값 해제를 위한 핸들 추적용 변수들
     private AsyncOperationHandle<TextAsset> conversationHandle;
@@ -171,6 +95,7 @@ public class DataLibrary : MonoBehaviour
     private AsyncOperationHandle<TextAsset> effectHandle;
     private AsyncOperationHandle<IList<SOSkillBase>> skillHandle;
     private AsyncOperationHandle<IList<SOBattleCharacter>> characterHandle;
+    private AsyncOperationHandle<IList<MapEntity>> mapHandle;
     private AsyncOperationHandle<IList<Sprite>> portraitHandle;
     private AsyncOperationHandle<IList<GameObject>> uiHandle;
 
@@ -215,6 +140,22 @@ public class DataLibrary : MonoBehaviour
         });
         await characterHandle.Task;
     }
+    public async UniTask LoadAllMapDataAsync()
+    {
+        mapHandle = Addressables.LoadAssetsAsync<MapEntity>("MapPrefab", t_map =>
+        {
+            if (!this.mapData.ContainsKey(t_map.GetID()))
+            {
+                this.mapData.Add(t_map.GetID(), t_map);
+            }
+            else
+            {
+                LogUtil.Log($"중복된 맵 { t_map.GetID() }");
+            }
+
+        });
+        await characterHandle.Task;
+    }
 
     public async UniTask LoadAllPortraitsDataAsync()
     {
@@ -232,7 +173,6 @@ public class DataLibrary : MonoBehaviour
     {
         uiHandle = Addressables.LoadAssetsAsync<GameObject>("UIPrefab", prefab =>
         {
-            Debug.Log(prefab.name);
             uiPrefabData[prefab.name] = prefab;
         });
         await uiHandle.Task;
