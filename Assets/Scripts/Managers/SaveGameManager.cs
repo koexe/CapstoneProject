@@ -22,7 +22,7 @@ public class SaveGameManager : MonoBehaviour
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
             Initialization();
@@ -43,6 +43,8 @@ public class SaveGameManager : MonoBehaviour
         }
     }
 #endif
+
+
     public void SavetoFile()
     {
         foreach (var item in this.currentSaveData.items.Values)
@@ -53,7 +55,7 @@ public class SaveGameManager : MonoBehaviour
         this.saveInFile = this.currentSaveData;
     }
 
-    void LoadToFile()
+    void LoadFromFile()
     {
         this.saveInFile = LoadFromJson<SaveData>(fileName);
         this.saveInFile.items.Clear();
@@ -75,34 +77,29 @@ public class SaveGameManager : MonoBehaviour
             this.saveInFile.currentMap = "Map7";
             this.saveInFile.chatacterDialogs = new Dictionary<int, bool>();
             this.saveInFile.mapItems = new Dictionary<string, List<bool>>();
+
+            foreach (var t_map in DataLibrary.instance.GetMapAll())
+            {
+                var t_list = new List<bool>();
+                foreach (var item in t_map.GetItems())
+                {
+                    t_list.Add(false);
+                }
+
+                this.saveInFile.mapItems.Add(t_map.GetID(), t_list);
+            }
+
+
             this.currentSaveData = this.saveInFile;
-            //CheckMapItem();
+
         }
         else
         {
-            LoadToFile();
-            //this.saveInFile = LoadFromJson<SaveData>(fileName);
-            //this.currentSaveData = this.saveInFile;
+            LoadFromFile();
 
         }
         return;
     }
-
-    public void CheckMapItem()
-    {
-        foreach (var map in DataLibrary.instance.GetMapAll())
-        {
-            //var Items = map.GetMapItems();
-            //this.currentSaveData.mapItems.Add(map.name, new List<bool>());
-            //foreach (var item in Items)
-            //{
-            //    this.currentSaveData.mapItems[map.name].Add(item.isGeted);
-            //}
-        }
-    }
-
-
-
 
     public void SaveToJsonFile<T>(T data, string fileName)
     {
@@ -161,9 +158,8 @@ public class SaveData
     public Dictionary<int, SaveItem> items;
     public Dictionary<int, bool> chatacterDialogs;
     public List<SaveItemMinimal> itemNames;
-
-
     public Dictionary<string, List<bool>> mapItems;
+
     public SaveData()
     {
         this.items = new Dictionary<int, SaveItem>();
