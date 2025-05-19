@@ -678,6 +678,7 @@ GameObject:
   - component: {fileID: 1431977272}
   - component: {fileID: 1431977273}
   - component: {fileID: 1431977270}
+  - component: {fileID: 1431977274}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -729,6 +730,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
+  gravity: {fileID: 1431977274}
 --- !u!212 &1431977271
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -803,8 +805,24 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4.55, y: 5.92, z: 0.2}
-  m_Center: {x: 0.009196997, y: 2.4449615, z: 0}
+  m_Size: {x: 4, y: 5, z: 0.2}
+  m_Center: {x: 0, y: 2.5, z: 0}
+--- !u!114 &1431977274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1431977267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f8ab3c992dd4234bbaa6d100b310648, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coll3D: {fileID: 1431977273}
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &1497594503
 GameObject:
   m_ObjectHideFlags: 0

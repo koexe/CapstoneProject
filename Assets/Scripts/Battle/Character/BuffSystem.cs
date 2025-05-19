@@ -98,7 +98,7 @@ public class StatusEffectInstance
         this.remainingTurns--;
     }
 
-    public async Task ApplyEffect(BattleCharacterBase _target)
+    public async UniTask ApplyEffect(BattleCharacterBase _target)
     {
         switch (this.info.id)
         {
@@ -209,7 +209,7 @@ public class StatusEffectInstance
                 if (Random.value < 0.10f)
                 {
                     float t_splitDmg = Mathf.CeilToInt(_target.MaxHP() * 0.05f);
-                    _target.TakeDamage(
+                    await _target.TakeDamage(
                         new BattleCharacterBase.HitInfo()
                         {
                             hitDamage = t_splitDmg,
@@ -237,7 +237,7 @@ public class StatusEffectInstance
                 if (this.remainingTurns <= 1)
                 {
                     float t_explosion = Mathf.CeilToInt(_target.MaxHP() * 0.25f);
-                    _target.TakeDamage(
+                    await _target.TakeDamage(
                    new BattleCharacterBase.HitInfo()
                    {
                        hitDamage = t_explosion,

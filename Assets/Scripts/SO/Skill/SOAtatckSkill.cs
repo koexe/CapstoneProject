@@ -20,7 +20,7 @@ public class SOAtatckSkill : SOSkillBase
             return;
         }
 
-
+        await this.character.AttackMotion();
         foreach (var t_target in this.target)
         {
             if (t_target.IsDie()) continue;
@@ -66,6 +66,7 @@ public class SOAtatckSkill : SOSkillBase
             t_hitInfo.attackRace = this.attackRaceType;
             await this.character.AttackTask(t_hitInfo);
         }
+        await this.character.ResetPosition();
         this.character.SetActionDone(true);
     }
 }

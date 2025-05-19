@@ -1,3 +1,4 @@
+using Spine.Unity;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Character_Base", menuName = "Character/Character_Base")]
@@ -8,6 +9,8 @@ public class SOBattleCharacter : ScriptableObject
     [SerializeField] SOSkillBase[] skills;
     [SerializeField] string characterName;
     [SerializeField] BattleStatus status;
+    [SerializeField] SkeletonDataAsset SkeletonDataAsset;
+    
     //스파인 데이터 추가?
 
     public int GetIdentifier()=> identifier;

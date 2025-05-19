@@ -6,7 +6,7 @@ public class PlayerInputModule : MonoBehaviour
 {
     // Update is called once per frame
     [SerializeField] float speed = 10;
-
+    [SerializeField] DynamicGravity2D gravity;
     private void Start()
     {
         IngameInputManager.instance.AddInput(KeyCode.LeftArrow, IngameInputManager.InputEventType.Hold, MoveLeft);
@@ -20,28 +20,52 @@ public class PlayerInputModule : MonoBehaviour
     private void MoveLeft()
     {
         Vector3 t_pos = transform.localPosition;
-        t_pos.x -= Time.deltaTime * speed;
+        Vector3 t_movement = Vector3.zero;
+
+        t_movement.x = -Time.deltaTime * speed;
+
+        Vector3 t_push = this.gravity.UpdateCheckWall(t_movement);
+        t_pos += (t_movement + t_push);
+
         transform.localPosition = t_pos;
     }
 
     private void MoveRight()
     {
         Vector3 t_pos = transform.localPosition;
-        t_pos.x += Time.deltaTime * speed;
+        Vector3 t_movement = Vector3.zero;
+
+        t_movement.x = Time.deltaTime * speed;
+
+        Vector3 t_push = this.gravity.UpdateCheckWall(t_movement);
+        t_pos += (t_movement + t_push);
+
         transform.localPosition = t_pos;
     }
 
     private void MoveForward()
     {
         Vector3 t_pos = transform.localPosition;
-        t_pos.z += Time.deltaTime * speed;
+        Vector3 t_movement = Vector3.zero;
+
+        t_movement.z = Time.deltaTime * speed;
+
+        Vector3 t_push = this.gravity.UpdateCheckWall(t_movement);
+        t_pos += (t_movement + t_push);
+
         transform.localPosition = t_pos;
     }
 
     private void MoveBackward()
     {
         Vector3 t_pos = transform.localPosition;
-        t_pos.z -= Time.deltaTime * speed;
+        Vector3 t_movement = Vector3.zero;
+
+        t_movement.z = -Time.deltaTime * speed;
+
+        Vector3 t_push = this.gravity.UpdateCheckWall(t_movement);
+        t_pos += (t_movement + t_push);
+
         transform.localPosition = t_pos;
     }
 

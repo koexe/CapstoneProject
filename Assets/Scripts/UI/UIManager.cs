@@ -64,7 +64,6 @@ public class UIManager : MonoBehaviour
                 this.currentUIObjects[_data.identifier].Hide();
             else
             {
-                //this.currentUIObjects[_data.identifier].Initialization(_data);
                 this.currentUIObjects[_data.identifier].Show(_data);
             }
 

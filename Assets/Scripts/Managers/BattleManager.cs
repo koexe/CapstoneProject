@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -26,10 +27,22 @@ public class BattleManager : MonoBehaviour
 
     [SerializeField] Transform[] enemyPositions;
     [SerializeField] Transform[] allyPositions;
+    [SerializeField] Transform middlePoint;
+
+    [SerializeField] int runStack = 0;
+    [SerializeField] bool isUsedRunCommend;
 
     public void SetCurrentSequenceType(TurnSequence.BattleSequenceType _type) => this.currentSequenceType = _type;
 
     public void SetSelectedCharacter(BattleCharacterBase _character) => this.currentSelectedCharacter = _character;
+
+    public Transform GetMiddlePoint() => this.middlePoint;
+
+    public Transform GetPlayerTranform(BattleCharacterBase _battleCharacterBase)
+    {
+        int t_index = Array.FindIndex(this.allyCharacters, x => x == _battleCharacterBase); // → 2
+        return this.allyPositions[t_index];
+    }
 
 #if UNITY_EDITOR
     [SerializeField] bool _isDebug;
@@ -40,9 +53,6 @@ public class BattleManager : MonoBehaviour
     {
         Initialization();
     }
-
-
-
     public void Initialization()
     {
         SOBattleCharacter[] t_allys = new SOBattleCharacter[2]
@@ -73,9 +83,6 @@ public class BattleManager : MonoBehaviour
         InitializeTurnSystem();
         this.turnSystem.SequenceAction();
     }
-
-
-
     private void Update()
     {
         this.turnSystem.UpdateTurn();
@@ -127,7 +134,7 @@ public class BattleManager : MonoBehaviour
                 GameManager.instance.GetCamera().SetTarget(null);
             }));
         this.turnSystem.AddSequence(new ExecuteSequence(this, TurnCheck()));
-        this.turnSystem.AddSequence(new SummarySequence(this, TurnCheck()));
+        this.turnSystem.AddSequence(new SummarySequence(this, TurnCheck(), _afterAction: TurnEnd));
         this.turnSystem.AddSequence(new EndSequence(this));
     }
 
@@ -144,7 +151,83 @@ public class BattleManager : MonoBehaviour
     {
         UIManager.instance.HideUI("BattleSkillUI");
     }
+    public bool IsAllyAllDie()
+    {
+        foreach (var t_ally in this.allyCharacters)
+        {
+            if (!t_ally.IsDie())
+                return false;
+        }
+        return true;
+    }
 
+    public bool IsEnemyAllDie()
+    {
+        foreach (var t_enemy in this.enemyCharacters)
+        {
+            if (!t_enemy.IsDie())
+                return false;
+        }
+        return true;
+    }
+
+    public async UniTask RunCheck()
+    {
+
+        float finalChance = 0f;
+
+        float baseChance = 0.5f; // 50%
+        float t_allyLevel = 0f;
+        foreach (var t_ally in this.allyCharacters)
+        {
+            t_allyLevel += t_ally.GetStatus().GetLevel();
+        }
+        t_allyLevel = t_allyLevel / this.allyCharacters.Length;
+        float t_enemyLevel = 0f;
+        foreach (var t_enemy in this.enemyCharacters)
+        {
+            t_enemyLevel += t_enemy.GetStatus().GetLevel();
+        }
+        t_enemyLevel /= this.enemyCharacters.Length;
+
+
+        float levelDiff = t_allyLevel - t_enemyLevel;
+        float levelModifier = 0f;
+
+        // 레벨 차이 보정
+        if (levelDiff >= 3)
+            levelModifier = 0.15f;
+        else if (levelDiff >= 1)
+            levelModifier = 0.05f;
+        else if (levelDiff <= -3)
+            levelModifier = -0.25f;
+        else if (levelDiff <= -1)
+            levelModifier = -0.15f;
+
+        // 연속 시도 페널티
+        int penaltyCount = Mathf.Max(0, this.runStack);
+        float penalty = penaltyCount * -0.15f;
+
+        finalChance = baseChance + levelModifier + penalty;
+        finalChance = Mathf.Clamp01(finalChance); // 0% ~ 100%
+
+        this.runStack += 1;
+        this.isUsedRunCommend = true;
+
+        bool success = UnityEngine.Random.value < finalChance;
+        if (success)
+        {
+            ShowText("도망에 성공했다!");
+            await UniTask.Delay(TimeSpan.FromSeconds(1f));
+            ChangeToFieldScene();
+            await UniTask.Delay(TimeSpan.FromSeconds(10000f));
+        }
+        else
+        {
+            ShowText("도망에 실패했다!");
+            await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        }
+    }
 
     #endregion
 
@@ -185,30 +268,20 @@ public class BattleManager : MonoBehaviour
         return new T[] { sourceArray[randomIndex] };
     }
 
-    public bool IsAllyAllDie()
+    void TurnEnd()
     {
-        foreach (var t_ally in this.allyCharacters)
-        {
-            if (!t_ally.IsDie())
-                return false;
-        }
-        return true;
+        if (!this.isUsedRunCommend)
+            this.runStack = 0;
+        this.isUsedRunCommend = false;
     }
 
-    public bool IsEnemyAllDie()
-    {
-        foreach (var t_enemy in this.enemyCharacters)
-        {
-            if (!t_enemy.IsDie())
-                return false;
-        }
-        return true;
-    }
 
     public void ChangeToFieldScene()
     {
         GameManager.instance.ChangeSceneToField(this.allyCharacters[0].GetBattleCharacter(), this.allyCharacters[1].GetBattleCharacter());
     }
+
+
 
     #region ChooseSequence
     public void CheckAllReady()
@@ -348,11 +421,11 @@ public class BattleManager : MonoBehaviour
 }
 public enum CharacterActionType
 {
-    None,
-    Attack,
-    Defence,
-    Talk,
-    Skill,
-    Item,
-    Run,
+    None = 0,
+    Attack = 1,
+    Defence = 5,
+    Talk = 2,
+    Skill = 6,
+    Item = 3,
+    Run = 4,
 }

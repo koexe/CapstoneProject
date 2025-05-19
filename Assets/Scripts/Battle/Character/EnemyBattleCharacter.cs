@@ -8,8 +8,7 @@ public class EnemyBattleCharacter : BattleCharacterBase
 {
     public async override UniTask HitTask(HitInfo _hitInfo)
     {
-        TakeDamage(_hitInfo);
-        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        await TakeDamage(_hitInfo);
         if (this.isDie)
         {
             this.battleManager.ShowText($"{this.name} 가 쓰러졌다!");

@@ -24,27 +24,29 @@ public class SkillSelectUI : UIBase
         this.skillUIData.onHide?.Invoke();
     }
 
-    public override void Initialization(UIData data)
+    public override void Initialization(UIData _data)
     {
-        SkillUIData t_skillUIData = data as SkillUIData;
+    }
+
+    public override void Show(UIData _data)
+    {
+
+        SkillUIData t_skillUIData = _data as SkillUIData;
         if (t_skillUIData == null)
         {
             Debug.Log("Invalid DataType in SkillSelectUI");
-            return;
+            return; 
         }
         for (int i = 0; i < skillUIs.Length; i++)
         {
             this.skillUIData = t_skillUIData;
             this.skillUIs[i].Initialization(t_skillUIData.battleCharacterBase, t_skillUIData.skills[i], t_skillUIData.action);
         }
-    }
-
-    public override void Show(UIData _data)
-    {
         this.contents.SetActive(true);
         this.actionSelects.SetActive(true);
         this.skillSelects.SetActive(false);
         this.isShow = true;
+
     }
 
     public void BaseAttack()
