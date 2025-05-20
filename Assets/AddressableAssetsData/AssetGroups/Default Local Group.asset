@@ -42,11 +42,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - TextAsset
-  - m_GUID: a25eac683addfc74981557c69466983d
-    m_Address: "Assets/TextAssets/DialogDataTable - \uBCF5\uC0AC\uBCF8.csv"
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - TextAsset
   - m_GUID: 17328a35dc67eb743b985d97eaad671c
     m_Address: Assets/SO/Skill/AttackSKills/Shadow/D003.asset
     m_ReadOnly: 0
@@ -197,6 +192,46 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - UIPrefab
+  - m_GUID: 67778c5f08e3b79449fc8292c13b7462
+    m_Address: Assets/Prefabs/Map/entrance.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MapPrefab
+  - m_GUID: 14812db7ce8e42a41a09eb2155d6fceb
+    m_Address: Assets/Prefabs/Map/Passage.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MapPrefab
+  - m_GUID: e6b169c03412dee4cbd56e179bf6643c
+    m_Address: Assets/Prefabs/Map/CrossRoad.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MapPrefab
+  - m_GUID: fe7e3b507b9572846900e2ef86d76b72
+    m_Address: Assets/Prefabs/Map/LowPoint.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MapPrefab
+  - m_GUID: 8637f9983294c174c8e22041ac3b8293
+    m_Address: Assets/Prefabs/Map/UpPoint.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MapPrefab
+  - m_GUID: deca1ad30977b344799af59a366db054
+    m_Address: Assets/Prefabs/Map/MiddlePoint 2.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MapPrefab
+  - m_GUID: 937607e568c81db4797cb8cffbfc72e3
+    m_Address: Assets/Prefabs/Map/BossRoom.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MapPrefab
+  - m_GUID: 7406dfb807e8e7c4a9fa1b56099a3a14
+    m_Address: Assets/Prefabs/Map/Exit.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - MapPrefab
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
   m_SchemaSet:

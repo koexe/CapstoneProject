@@ -109,7 +109,7 @@ public class DataLibrary : MonoBehaviour
 
     public async UniTask LoadDialogDataAsync()
     {
-        dialogHandle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/DialogDataTable - 복사본.csv");
+        dialogHandle = Addressables.LoadAssetAsync<TextAsset>("Assets/TextAssets/DialogDataTable.csv");
         var asset = await dialogHandle.Task;
         this.dialogData = CSVReader.ReadDialogData(asset);
     }
@@ -150,7 +150,7 @@ public class DataLibrary : MonoBehaviour
             }
             else
             {
-                LogUtil.Log($"중복된 맵 { t_map.GetID() }");
+                LogUtil.Log($"중복된 맵 {t_map.GetID()}");
             }
 
         });
@@ -249,6 +249,9 @@ public class DataLibrary : MonoBehaviour
     }
     public MapEntity GetMap(string _key) => this.mapData[_key];
     public List<MapEntity> GetMapAll() => this.mapData.Values.ToList();
+
+    public DialogData GetDialog(int _key) => this.dialogData[_key];
+    public Dictionary<int, DialogData> GetDialogTable() => this.dialogData;
     #endregion
 }
 

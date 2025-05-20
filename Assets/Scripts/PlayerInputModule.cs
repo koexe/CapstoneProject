@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerInputModule : MonoBehaviour
 {
     // Update is called once per frame
-    [SerializeField] float speed = 10;
+    [SerializeField] float speed = 5;
     [SerializeField] DynamicGravity2D gravity;
     private void Start()
     {
@@ -17,56 +17,16 @@ public class PlayerInputModule : MonoBehaviour
         IngameInputManager.instance.AddInput(KeyCode.M, IngameInputManager.InputEventType.Down, OpenMap);
     }
 
-    private void MoveLeft()
+    private void MoveLeft() => Move(Vector3.left);
+    private void MoveRight() => Move(Vector3.right);
+    private void MoveForward() => Move(Vector3.forward);
+    private void MoveBackward() => Move(Vector3.back);
+    private void Move(Vector3 _direction)
     {
-        Vector3 t_pos = transform.localPosition;
-        Vector3 t_movement = Vector3.zero;
+        Vector3 t_movement = _direction * speed * Time.deltaTime;
 
-        t_movement.x = -Time.deltaTime * speed;
-
-        Vector3 t_push = this.gravity.UpdateCheckWall(t_movement);
-        t_pos += (t_movement + t_push);
-
-        transform.localPosition = t_pos;
-    }
-
-    private void MoveRight()
-    {
-        Vector3 t_pos = transform.localPosition;
-        Vector3 t_movement = Vector3.zero;
-
-        t_movement.x = Time.deltaTime * speed;
-
-        Vector3 t_push = this.gravity.UpdateCheckWall(t_movement);
-        t_pos += (t_movement + t_push);
-
-        transform.localPosition = t_pos;
-    }
-
-    private void MoveForward()
-    {
-        Vector3 t_pos = transform.localPosition;
-        Vector3 t_movement = Vector3.zero;
-
-        t_movement.z = Time.deltaTime * speed;
-
-        Vector3 t_push = this.gravity.UpdateCheckWall(t_movement);
-        t_pos += (t_movement + t_push);
-
-        transform.localPosition = t_pos;
-    }
-
-    private void MoveBackward()
-    {
-        Vector3 t_pos = transform.localPosition;
-        Vector3 t_movement = Vector3.zero;
-
-        t_movement.z = -Time.deltaTime * speed;
-
-        Vector3 t_push = this.gravity.UpdateCheckWall(t_movement);
-        t_pos += (t_movement + t_push);
-
-        transform.localPosition = t_pos;
+        Vector3 t_push = gravity.UpdateCheckWall(t_movement);
+        transform.localPosition += (t_movement + t_push); // 벽에 닿은 축은 0이 돼서 미끄러지듯 이동
     }
 
     void OpenInventory()

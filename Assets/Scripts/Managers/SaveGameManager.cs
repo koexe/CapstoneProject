@@ -1,8 +1,9 @@
-using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.CompilerServices;
+using Cysharp.Threading.Tasks;
+using Newtonsoft.Json;
 using UnityEngine;
+using System;
 
 public class SaveGameManager : MonoBehaviour
 {
@@ -25,7 +26,6 @@ public class SaveGameManager : MonoBehaviour
         if(instance == null)
         {
             instance = this;
-            Initialization();
             DontDestroyOnLoad(this.gameObject);
             return;
         }
@@ -66,15 +66,18 @@ public class SaveGameManager : MonoBehaviour
         }
     }
 
-
-    public void Initialization()
+    public async UniTask Initialization()
     {
         if (isSaveDebug == true)
         {
             this.saveInFile = new SaveData();
-            this.saveInFile.currentMap = "Map7";
             this.saveInFile.chatacterDialogs = new Dictionary<int, bool>();
+            foreach (var t_dialog in DataLibrary.instance.GetDialogTable())
+            {
+                this.saveInFile.chatacterDialogs.Add(t_dialog.Key, false);
+            }
             this.saveInFile.mapItems = new Dictionary<string, List<bool>>();
+
             this.currentSaveData = this.saveInFile;
             //CheckMapItem();
         }
@@ -85,6 +88,7 @@ public class SaveGameManager : MonoBehaviour
             //this.currentSaveData = this.saveInFile;
 
         }
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
         return;
     }
 
@@ -100,9 +104,6 @@ public class SaveGameManager : MonoBehaviour
             //}
         }
     }
-
-
-
 
     public void SaveToJsonFile<T>(T data, string fileName)
     {
@@ -146,6 +147,11 @@ public class SaveGameManager : MonoBehaviour
         {
             LogUtil.Log("No Such Item");
         }
+    }
+
+    public bool CheckStoryIs(int _index)
+    {
+        return this.currentSaveData.chatacterDialogs[_index];
     }
 
     public void ResetSave()

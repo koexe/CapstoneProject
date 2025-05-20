@@ -40,7 +40,7 @@ public class CSVReader
 
         if (lines.Length <= 1) return list;
 
-        for (var i = 1; i < lines.Length; i++)
+        for (var i = 2; i < lines.Length; i++)
         {
             var values = Regex.Split(lines[i], SPLIT_RE);
             if (values.Length == 0 || values[0] == "") continue;
@@ -64,7 +64,7 @@ public class CSVReader
                 {
                     var t_temp = Regex.Split(t_dialogDetail[0], "\\#");
 
-                    var t_characterDetail = Regex.Split(t_temp[0], "\\,");
+                    var t_characterDetail = Regex.Split(t_temp[0], "\\@");
                     t_characters[j] = new (string, int)[t_characterDetail.Length];
 
                     for (int t_index = 0; t_index < t_characterDetail.Length; t_index++)

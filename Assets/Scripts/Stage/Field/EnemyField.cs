@@ -5,11 +5,13 @@ using UnityEngine;
 public class EnemyField : MonoBehaviour
 {
     [Header("설정값")]
-    public int[] enemyPool;
-    public Vector3 fieldSize = new Vector3(5, 2, 5);
-    public float checkInterval = 2f;
-    public float encounterChance = 0.2f;
-    public LayerMask playerLayer;
+    [SerializeField] int[] enemyPool;
+    [SerializeField] Vector3 fieldSize = new Vector3(5, 2, 5);
+    [SerializeField] float checkInterval = 2f;
+    [SerializeField] float encounterChance = 0.2f;
+    [SerializeField] LayerMask playerLayer;
+    [SerializeField] float minLevel;
+    [SerializeField] float maxLevel;
 
     private Coroutine checkCoroutine;
 

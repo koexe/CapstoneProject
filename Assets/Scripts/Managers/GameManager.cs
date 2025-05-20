@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using static GameManager;
 
@@ -55,6 +56,7 @@ public class GameManager : MonoBehaviour
     public async void Initialization()
     {
         await this.dataLibrary.Initialization();
+        await this.saveGameManager.Initialization();
         this.currentPlayer = DataLibrary.instance.GetSOCharacter(1);
         this.currentNPC = DataLibrary.instance.GetSOCharacter(2);
     }
