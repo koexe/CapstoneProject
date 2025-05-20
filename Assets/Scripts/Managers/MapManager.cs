@@ -37,6 +37,20 @@ public class MapManager : MonoBehaviour
 
         t_player.transform.position = this.currentMap.GetMapPoint(_path.linkedMapPoint).transform.position;
     }
+    public int GetItem(MapItem _mapitem)
+    {
+        int t_index = this.currentMap.GetMapItemIndex(_mapitem);
+        if (t_index < 0)
+        {
+            LogUtil.Log("No Such item!!!");
+            return -1;
+        }
+        else
+        {
+            return t_index;
+        }
+    }
+
 
     public void OnChangeToFieldScene()
     {

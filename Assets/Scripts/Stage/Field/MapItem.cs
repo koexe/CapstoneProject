@@ -17,6 +17,7 @@ public class MapItem : MonoBehaviour, IInteractable
     public void ExecuteAction()
     {
         this.item.GetItem();
+        SaveGameManager.instance.currentSaveData.mapItems[MapManager.instance.currentMap.GetID()][MapManager.instance.GetItem(this)] = true;
         Destroy(this.gameObject);
     }
 }
