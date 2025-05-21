@@ -4,36 +4,65 @@ using UnityEngine;
 
 public class PlayerInputModule : MonoBehaviour
 {
-    // Update is called once per frame
     [SerializeField] float speed = 5;
     [SerializeField] DynamicGravity2D gravity;
-    private void Start()
+
+    private Vector3 moveDirection;
+    private bool isInventoryKeyPressed;
+    private bool isMapKeyPressed;
+
+    private void Update()
     {
-        IngameInputManager.instance.AddInput(KeyCode.LeftArrow, IngameInputManager.InputEventType.Hold, MoveLeft);
-        IngameInputManager.instance.AddInput(KeyCode.RightArrow, IngameInputManager.InputEventType.Hold, MoveRight);
-        IngameInputManager.instance.AddInput(KeyCode.UpArrow, IngameInputManager.InputEventType.Hold, MoveForward);
-        IngameInputManager.instance.AddInput(KeyCode.DownArrow, IngameInputManager.InputEventType.Hold, MoveBackward);
-        IngameInputManager.instance.AddInput(KeyCode.I, IngameInputManager.InputEventType.Down, OpenInventory);
-        IngameInputManager.instance.AddInput(KeyCode.M, IngameInputManager.InputEventType.Down, OpenMap);
+        // 입력 처리
+        moveDirection = Vector3.zero;
+        
+        if (Input.GetKey(KeyCode.LeftArrow)) moveDirection += Vector3.left;
+        if (Input.GetKey(KeyCode.RightArrow)) moveDirection += Vector3.right;
+        if (Input.GetKey(KeyCode.UpArrow)) moveDirection += Vector3.forward;
+        if (Input.GetKey(KeyCode.DownArrow)) moveDirection += Vector3.back;
+
+        // 대각선 이동시 정규화
+        if (moveDirection.magnitude > 0.1f)
+        {
+            moveDirection.Normalize();
+        }
+
+        // UI 입력 처리
+        if (Input.GetKeyDown(KeyCode.I)) isInventoryKeyPressed = true;
+        if (Input.GetKeyDown(KeyCode.M)) isMapKeyPressed = true;
     }
 
-    private void MoveLeft() => Move(Vector3.left);
-    private void MoveRight() => Move(Vector3.right);
-    private void MoveForward() => Move(Vector3.forward);
-    private void MoveBackward() => Move(Vector3.back);
-    private void Move(Vector3 _direction)
+    private void FixedUpdate()
     {
-        Vector3 t_movement = _direction * speed * Time.deltaTime;
+        // 이동 처리
+        if (moveDirection.magnitude > 0.1f)
+        {
+            Vector3 t_movement = moveDirection * speed * Time.fixedDeltaTime;
+            Vector3 t_push = gravity.UpdateCheckWall(t_movement);
 
-        Vector3 t_push = gravity.UpdateCheckWall(t_movement);
-        transform.localPosition += (t_movement + t_push); // 벽에 닿은 축은 0이 돼서 미끄러지듯 이동
+            transform.position += t_push;    // 먼저 밀어내기 적용
+            transform.position += t_movement; // 그 다음 이동 적용
+        }
+
+        // UI 처리
+        if (isInventoryKeyPressed)
+        {
+            OpenInventory();
+            isInventoryKeyPressed = false;
+        }
+        if (isMapKeyPressed)
+        {
+            OpenMap();
+            isMapKeyPressed = false;
+        }
     }
 
-    void OpenInventory()
+    private void OpenInventory()
     {
         UIManager.instance.ShowUI<InventoryUI>(new InventoryUIData() { identifier = "InventoryUI", isAllowMultifle = false });
     }
-    void OpenMap()
+
+    private void OpenMap()
     {
         UIManager.instance.ShowUI<MapUI>(new UIData() { identifier = "MapUI", isAllowMultifle = false });
     }
