@@ -19,8 +19,9 @@ public class SOAtatckSkill : SOSkillBase
             Debug.LogError("No Target or Chracter!!!");
             return;
         }
-
+        GameManager.instance.GetCamera().SetTarget(this.character.transform);
         await this.character.AttackMotion();
+
         foreach (var t_target in this.target)
         {
             if (t_target.IsDie()) continue;
@@ -68,6 +69,7 @@ public class SOAtatckSkill : SOSkillBase
         }
         await this.character.ResetPosition();
         this.character.SetActionDone(true);
+        GameManager.instance.GetCamera().SetTarget(null);
     }
 }
 
