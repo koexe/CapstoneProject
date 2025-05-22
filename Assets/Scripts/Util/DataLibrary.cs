@@ -16,6 +16,7 @@ public class DataLibrary : MonoBehaviour
     [SerializeField] TextMeshProUGUI loadingInfoText;
 
     Dictionary<int, SOBattleCharacter> characterData = new Dictionary<int, SOBattleCharacter>();
+    Dictionary<int, SOItem> itemData = new Dictionary<int, SOItem>();
 
     Dictionary<int, BattleConversationData> battleConversationData = new Dictionary<int, BattleConversationData>();
 
@@ -27,7 +28,7 @@ public class DataLibrary : MonoBehaviour
 
     Dictionary<int, SOSkillBase> skillData = new Dictionary<int, SOSkillBase>();
 
-    Dictionary<string, MapEntity> mapData;
+    Dictionary<string, MapEntity> mapData = new Dictionary<string, MapEntity>();
 
     Dictionary<string, GameObject> uiPrefabData = new Dictionary<string, GameObject>();
 
@@ -61,7 +62,11 @@ public class DataLibrary : MonoBehaviour
         await LoadAllCharacterDataAsync();
         this.loadingInfoText.text = "Load Dialog Data";
         await LoadDialogDataAsync();
+        this.loadingInfoText.text = "Load Item Data";
+        await LoadAllItemDataAsync();
         this.loadingInfoText.text = "Load Portraits Data";
+        await LoadAllMapDataAsync();
+        this.loadingInfoText.text = "Load Map Data";
         await LoadAllPortraitsDataAsync();
         this.loadingInfoText.text = "Load Effect Data";
         await LoadEffectDataAsync();
@@ -95,7 +100,7 @@ public class DataLibrary : MonoBehaviour
     private AsyncOperationHandle<TextAsset> effectHandle;
     private AsyncOperationHandle<IList<SOSkillBase>> skillHandle;
     private AsyncOperationHandle<IList<SOBattleCharacter>> characterHandle;
-    private AsyncOperationHandle<IList<MapEntity>> mapHandle;
+    private AsyncOperationHandle<IList<GameObject>> mapHandle;
     private AsyncOperationHandle<IList<Sprite>> portraitHandle;
     private AsyncOperationHandle<IList<GameObject>> uiHandle;
 
@@ -142,15 +147,16 @@ public class DataLibrary : MonoBehaviour
     }
     public async UniTask LoadAllMapDataAsync()
     {
-        mapHandle = Addressables.LoadAssetsAsync<MapEntity>("MapPrefab", t_map =>
+        mapHandle = Addressables.LoadAssetsAsync<GameObject>("MapPrefab", t_map =>
         {
-            if (!this.mapData.ContainsKey(t_map.GetID()))
+            var t_mapComponent = t_map.GetComponent<MapEntity>();
+            if (!this.mapData.ContainsKey(t_mapComponent.GetID()))
             {
-                this.mapData.Add(t_map.GetID(), t_map);
+                this.mapData.Add(t_mapComponent.GetID(), t_mapComponent);
             }
             else
             {
-                LogUtil.Log($"중복된 맵 {t_map.GetID()}");
+                LogUtil.Log($"중복된 맵 {t_mapComponent.GetID()}");
             }
 
         });
@@ -176,6 +182,16 @@ public class DataLibrary : MonoBehaviour
             uiPrefabData[prefab.name] = prefab;
         });
         await uiHandle.Task;
+    }
+
+    public async UniTask LoadAllItemDataAsync()
+    {
+        var itemHandle = Addressables.LoadAssetsAsync<SOItem>("ItemSO", so =>
+        {
+            if (!itemData.ContainsKey(so.GetItemIndex()))
+                itemData.Add(so.GetItemIndex(), so);
+        });
+        await itemHandle.Task;
     }
 
     public void UnloadAllData()
@@ -252,6 +268,11 @@ public class DataLibrary : MonoBehaviour
 
     public DialogData GetDialog(int _key) => this.dialogData[_key];
     public Dictionary<int, DialogData> GetDialogTable() => this.dialogData;
+
+    public SOItem GetItemByIndex(int _index)
+    {
+        return this.itemData.TryGetValue(_index, out var t_item) ? t_item : null;
+    }
     #endregion
 }
 

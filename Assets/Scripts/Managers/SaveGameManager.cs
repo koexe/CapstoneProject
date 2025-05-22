@@ -8,18 +8,20 @@ using System;
 public class SaveGameManager : MonoBehaviour
 {
     public static SaveGameManager instance;
-    const string fileName = "SaveData";
+    const string fileNameFormat = "SaveData_{0}"; // 슬롯 번호를 포함한 파일 이름 형식
+    const int MAX_SLOTS = 9; // 최대 슬롯 수
 
     SaveData saveInFile;
     public SaveData currentSaveData;
     public SaveData GetCurrentSaveData() => this.currentSaveData;
     public void SetCurrentSaveData(SaveData _data) => this.currentSaveData = _data;
 
-
     public bool isSaveDebug;
-
+    public int currentSlot = 1; // 현재 선택된 슬롯
 
     SaveData previousSaveData { get; set; }
+
+    private float gameStartTime;
 
     private void Awake()
     {
@@ -34,35 +36,140 @@ public class SaveGameManager : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-#if UNITY_EDITOR
+
+    private void Start()
+    {
+        gameStartTime = Time.time;
+    }
+
     private void Update()
     {
+        if (currentSaveData != null)
+        {
+            currentSaveData.playTime = Time.time - gameStartTime;
+        }
+
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.F1))
         {
-            SavetoFile();
-        }
+            SavetoFile(currentSlot);
     }
 #endif
-    public void SavetoFile()
+    }
+
+    public void SavetoFile(int slotNumber)
     {
+        if (slotNumber < 1 || slotNumber > MAX_SLOTS)
+    {
+            Debug.LogError($"잘못된 슬롯 번호입니다. (1-{MAX_SLOTS} 사이의 값이어야 합니다)");
+            return;
+        }
+
+        // 저장하기 전에 임시 리스트 초기화
+        this.currentSaveData.itemNames.Clear();
+        
+        // 아이템 정보 저장
         foreach (var item in this.currentSaveData.items.Values)
         {
             this.currentSaveData.itemNames.Add(new SaveItemMinimal(item.GetItemIndex(), item.amount));
         }
+
+        // 저장 시간 업데이트
+        this.currentSaveData.saveDateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+        // 맵 아이템 상태 체크 및 업데이트
+        CheckMapItem();
+
+        try 
+        {
+            // 파일에 저장
+            string fileName = string.Format(fileNameFormat, slotNumber);
         SaveToJsonFile<SaveData>(this.currentSaveData, fileName);
         this.saveInFile = this.currentSaveData;
+            Debug.Log($"게임 데이터가 슬롯 {slotNumber}에 성공적으로 저장되었습니다.");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"저장 중 오류 발생: {e.Message}");
+        }
     }
 
-    void LoadToFile()
+    public void LoadFromSlot(int slotNumber)
     {
-        this.saveInFile = LoadFromJson<SaveData>(fileName);
-        this.saveInFile.items.Clear();
-        this.currentSaveData = this.saveInFile;
-
-        foreach (var item in this.currentSaveData.itemNames)
+        if (slotNumber < 1 || slotNumber > MAX_SLOTS)
         {
-            int index = item.index;
+            Debug.LogError($"잘못된 슬롯 번호입니다. (1-{MAX_SLOTS} 사이의 값이어야 합니다)");
+            return;
+        }
 
+        currentSlot = slotNumber;
+        LoadToFile(slotNumber);
+    }
+
+    void LoadToFile(int slotNumber)
+    {
+        try
+        {
+            string fileName = string.Format(fileNameFormat, slotNumber);
+        this.saveInFile = LoadFromJson<SaveData>(fileName);
+            
+            if (this.saveInFile == null)
+            {
+                Debug.Log($"슬롯 {slotNumber}에 새로운 세이브 데이터를 생성합니다.");
+                this.saveInFile = new SaveData();
+                this.currentSaveData = this.saveInFile;
+                return;
+            }
+
+            // 아이템 데이터 초기화 및 로드
+        this.saveInFile.items.Clear();
+            foreach (var itemMinimal in this.saveInFile.itemNames)
+            {
+                SOItem item = DataLibrary.instance.GetItemByIndex(itemMinimal.index);
+                if (item != null)
+                {
+                    SaveItem saveItem = new SaveItem(item, itemMinimal.amount);
+                    this.saveInFile.items.Add(itemMinimal.index, saveItem);
+                }
+            }
+
+            // 현재 세이브 데이터 설정
+            this.currentSaveData = this.saveInFile;
+            Debug.Log($"슬롯 {slotNumber}의 게임 데이터를 성공적으로 불러왔습니다.");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"로드 중 오류 발생: {e.Message}");
+            // 오류 발생 시 새로운 세이브 데이터 생성
+            this.saveInFile = new SaveData();
+        this.currentSaveData = this.saveInFile;
+        }
+    }
+
+    public bool DoesSaveExist(int slotNumber)
+    {
+        if (slotNumber < 1 || slotNumber > MAX_SLOTS) return false;
+        string fileName = string.Format(fileNameFormat, slotNumber);
+        string path = Path.Combine(Application.persistentDataPath, fileName);
+        return File.Exists(path);
+    }
+
+    public SaveData GetSaveInfo(int slotNumber)
+    {
+        if (!DoesSaveExist(slotNumber)) return null;
+        string fileName = string.Format(fileNameFormat, slotNumber);
+        return LoadFromJson<SaveData>(fileName);
+    }
+
+    public void DeleteSave(int slotNumber)
+        {
+        if (slotNumber < 1 || slotNumber > MAX_SLOTS) return;
+        string fileName = string.Format(fileNameFormat, slotNumber);
+        string path = Path.Combine(Application.persistentDataPath, fileName);
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            Debug.Log($"슬롯 {slotNumber}의 세이브 데이터가 삭제되었습니다.");
         }
     }
 
@@ -79,14 +186,10 @@ public class SaveGameManager : MonoBehaviour
             this.saveInFile.mapItems = new Dictionary<string, List<bool>>();
 
             this.currentSaveData = this.saveInFile;
-            //CheckMapItem();
         }
         else
         {
-            LoadToFile();
-            //this.saveInFile = LoadFromJson<SaveData>(fileName);
-            //this.currentSaveData = this.saveInFile;
-
+            LoadFromSlot(currentSlot);
         }
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
         return;
@@ -167,14 +270,19 @@ public class SaveData
     public Dictionary<int, SaveItem> items;
     public Dictionary<int, bool> chatacterDialogs;
     public List<SaveItemMinimal> itemNames;
-
-
     public Dictionary<string, List<bool>> mapItems;
+
+    // 시간 정보 추가
+    public float playTime;        // 플레이 시간 (초 단위)
+    public string saveDateTime;   // 저장 시간
+
     public SaveData()
     {
         this.items = new Dictionary<int, SaveItem>();
         this.itemNames = new List<SaveItemMinimal>();
         this.chatacterDialogs = new Dictionary<int, bool>();
+        this.playTime = 0f;
+        this.saveDateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
     }
 }
 

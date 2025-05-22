@@ -2,104 +2,127 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Cysharp.Threading.Tasks;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager instance;
-    Dictionary<string, UIBase> currentUIObjects;
-    Dictionary<string, GameObject> UIPrefabs;
 
     [SerializeField] Canvas canvas;
+    [SerializeField] Transform uiRoot; // UI들이 생성될 부모 Transform
 
-    static Dictionary<Type, string> staticKeys = new Dictionary<Type, string>
-{
-    { typeof(UIBase), "InventoryKey" },
-    { typeof(SkillSelectUI), "SkillSelectUI" },
-    { typeof(InventoryUI),"Inventory" },
-    { typeof(DialogUI) ,"DialogUI" },
-    { typeof(MapUI) ,"MapUI" }
-
-};
+    private Dictionary<string, UIBase> activeUIs = new Dictionary<string, UIBase>();
 
     private void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            this.currentUIObjects = new Dictionary<string, UIBase>();
             DontDestroyOnLoad(gameObject);
-            LoadAllUIs();
-            if (this.canvas == null)
-            {
-                this.canvas = this.transform.GetComponent<Canvas>();
-            }
+            
+            if (canvas == null)
+                canvas = GetComponent<Canvas>();
+            if (uiRoot == null)
+                uiRoot = canvas.transform;
+                
             return;
         }
-        else
-        {
             Destroy(gameObject);
         }
 
-    }
-
-    public void HideUI(string _identifier)
+    public void HideUI(string identifier)
     {
-        if (this.currentUIObjects.ContainsKey(_identifier))
+        if (activeUIs.TryGetValue(identifier, out var ui))
         {
-            this.currentUIObjects[_identifier].Hide();
-        }
-        else
-        {
-            Debug.Log("No Such Name UI");
+            ui.Hide();
         }
     }
 
-
-    public UIBase ShowUI<T>(UIData _data) where T : UIBase
+    public T ShowUI<T>(UIData data) where T : UIBase
     {
-        if (this.currentUIObjects.ContainsKey(_data.identifier) && !_data.isAllowMultifle)
+        // 이미 존재하는 UI 체크
+        if (activeUIs.TryGetValue(data.identifier, out var existingUI))
         {
-            Debug.Log("Same UI Already Added In Screen");
-            if (this.currentUIObjects[_data.identifier].isShow)
-                this.currentUIObjects[_data.identifier].Hide();
+            if (!data.isAllowMultifle)
+        {
+                if (existingUI.isShow)
+                {
+                    existingUI.Hide();
+                }
             else
             {
-                this.currentUIObjects[_data.identifier].Show(_data);
+                    existingUI.Show(data);
             }
-
-            return this.currentUIObjects[_data.identifier];
+                return existingUI as T;
+        }
         }
 
-        UIBase t_UIObject = GameObject.Instantiate(DataLibrary.instance.GetUI(staticKeys[typeof(T)])).GetComponent<UIBase>();
-        t_UIObject.transform.SetParent(this.canvas.transform, false);
-        t_UIObject.sortingGroup.sortingLayerName = "UIElements";
-        if (_data.order == -1)
+        // UI 프리팹 가져오기
+        GameObject uiPrefab = DataLibrary.instance.GetUI(typeof(T).Name);
+        if (uiPrefab == null)
         {
-            int t_MinOrder = 9999;
-            foreach (var obj in this.canvas.transform.GetComponentsInChildren<SortingGroup>())
+            Debug.LogError($"UI 프리팹을 찾을 수 없습니다: {typeof(T).Name}");
+            return null;
+        }
+
+        // UI 인스턴스 생성
+        T uiInstance = Instantiate(uiPrefab, uiRoot).GetComponent<T>();
+        if (uiInstance == null)
+        {
+            Debug.LogError($"UI 컴포넌트를 찾을 수 없습니다: {typeof(T).Name}");
+            return null;
+        }
+
+        uiInstance.sortingGroup.sortingLayerName = "UIElements";
+
+        // 정렬 순서 설정
+        if (data.order == -1)
+        {
+            int minOrder = 9999;
+            foreach (var sortingGroup in uiRoot.GetComponentsInChildren<SortingGroup>())
             {
-                if (obj.sortingOrder < t_MinOrder)
-                    t_MinOrder = obj.sortingOrder;
+                if (sortingGroup.sortingOrder < minOrder)
+                    minOrder = sortingGroup.sortingOrder;
             }
-            t_UIObject.sortingGroup.sortingOrder = t_MinOrder;
+            uiInstance.sortingGroup.sortingOrder = minOrder;
         }
         else
         {
-            t_UIObject.sortingGroup.sortingOrder = _data.order;
+            uiInstance.sortingGroup.sortingOrder = data.order;
         }
-        this.currentUIObjects.Add(_data.identifier, t_UIObject);
-        t_UIObject.Initialization(_data);
-        t_UIObject.Show(_data);
-        return t_UIObject;
+
+        // UI 초기화 및 표시
+        activeUIs[data.identifier] = uiInstance;
+        uiInstance.Initialization(data);
+        uiInstance.Show(data);
+
+        return uiInstance;
     }
-    void LoadAllUIs()
+
+    public void CleanupInactiveUIs()
     {
-        UIPrefabs = new Dictionary<string, GameObject>();
-        GameObject[] t_prefabs = Resources.LoadAll<GameObject>("Prefabs/UIBases");
-        foreach (var t_prefab in t_prefabs)
+        var inactiveUIs = new List<string>();
+        foreach (var kvp in activeUIs)
         {
-            UIPrefabs.Add(t_prefab.name, t_prefab);
+            if (!kvp.Value.isShow)
+            {
+                inactiveUIs.Add(kvp.Key);
+            }
         }
+
+        foreach (var key in inactiveUIs)
+        {
+            if (activeUIs.TryGetValue(key, out var ui))
+            {
+                Destroy(ui.gameObject);
+                activeUIs.Remove(key);
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        activeUIs.Clear();
     }
 }
 

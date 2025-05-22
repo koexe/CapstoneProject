@@ -4668,11 +4668,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3e4bd201c5159f4baeedf318f2e64c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapIdentifier: "\uB9F51"
+  mapIdentifier: "\uBCF4\uC2A4"
   mapPath:
   - {fileID: 4752265916116466864}
   - {fileID: 951739182643739530}
   items: {fileID: 1837445241528667664}
+  itemEntitys: []
 --- !u!1 &2055209307439998346
 GameObject:
   m_ObjectHideFlags: 0

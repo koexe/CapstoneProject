@@ -232,6 +232,21 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - MapPrefab
+  - m_GUID: f8a26f675eb0933489c3c059e1eaa125
+    m_Address: Assets/Prefabs/UI/SaveUI.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UIPrefab
+  - m_GUID: b36fae1feef47504db6344424f00805e
+    m_Address: Assets/SO/Item/Item_.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ItemSO
+  - m_GUID: 12737c956cea03c409e83e5b01dcd341
+    m_Address: Assets/Prefabs/UI/PopupUI.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UIPrefab
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
   m_SchemaSet:
