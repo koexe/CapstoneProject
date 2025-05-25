@@ -11,13 +11,13 @@ public class BattleCharacterManager
 {
     private List<BattleCharacterBase> allyCharacters = new List<BattleCharacterBase>();
     private List<BattleCharacterBase> enemyCharacters = new List<BattleCharacterBase>();
-    
+
     public BattleCharacterBase[] GetAllies() => allyCharacters.ToArray();
     public BattleCharacterBase[] GetEnemies() => enemyCharacters.ToArray();
-    
+
     public void AddAlly(BattleCharacterBase character) => allyCharacters.Add(character);
     public void AddEnemy(BattleCharacterBase character) => enemyCharacters.Add(character);
-    
+
     public bool IsAllyAllDie()
     {
         foreach (var ally in allyCharacters)
@@ -26,7 +26,7 @@ public class BattleCharacterManager
         }
         return true;
     }
-    
+
     public bool IsEnemyAllDie()
     {
         foreach (var enemy in enemyCharacters)
@@ -35,7 +35,7 @@ public class BattleCharacterManager
         }
         return true;
     }
-    
+
     public void Clear()
     {
         allyCharacters.Clear();
@@ -44,7 +44,7 @@ public class BattleCharacterManager
 
     public int AllyCount => allyCharacters.Count;
     public int EnemyCount => enemyCharacters.Count;
-    
+
     public BattleCharacterBase GetAlly(int index) => allyCharacters[index];
 }
 
@@ -53,14 +53,14 @@ public class BattleUIManager
     private TextMeshProUGUI battleText;
     private GameObject selectButtonGroup;
     private GameObject nextButton;
-    
+
     public BattleUIManager(TextMeshProUGUI battleText, GameObject selectButtonGroup, GameObject nextButton)
     {
         this.battleText = battleText;
         this.selectButtonGroup = selectButtonGroup;
         this.nextButton = nextButton;
     }
-    
+
     public void ShowText(string text) => battleText.text = text;
     public void SetSelectButtonGroupActive(bool isActive) => selectButtonGroup.SetActive(isActive);
     public void SetNextButtonActive(bool isActive) => nextButton.SetActive(isActive);
@@ -104,11 +104,20 @@ public class BattleManager : MonoBehaviour
 
     public Transform GetMiddlePoint() => this.middlePoint;
 
-    public Transform GetPlayerTranform(BattleCharacterBase _battleCharacterBase)
+    public Transform GetOriginTranform(BattleCharacterBase _battleCharacterBase)
     {
         var allies = characterManager.GetAllies();
-        int t_index = Array.IndexOf(allies, _battleCharacterBase);
-        return this.allyPositions[t_index];
+        var enemies = characterManager.GetEnemies();
+        if (allies.Contains(_battleCharacterBase))
+        {
+            int t_index = Array.IndexOf(allies, _battleCharacterBase);
+            return this.allyPositions[t_index];
+        }
+        else
+        {
+            int t_index = Array.IndexOf(enemies, _battleCharacterBase);
+            return this.enemyPositions[t_index];
+        }
     }
 
 #if UNITY_EDITOR
@@ -123,7 +132,7 @@ public class BattleManager : MonoBehaviour
     public void Initialization()
     {
         characterManager.Clear();
-        
+
         var battleSceneData = GameManager.instance.GetBattleSceneData();
         if (battleSceneData == null)
         {
@@ -173,12 +182,11 @@ public class BattleManager : MonoBehaviour
                     Destroy(ally);
                     continue;
                 }
-
-                allyComponent.Initialization(this, t_allys[i]);
                 ally.transform.position = allyPositions[i].position;
                 characterManager.AddAlly(allyComponent);
+                allyComponent.Initialization(this, t_allys[i]);
             }
-            
+
             for (int i = 0; i < enemyData.Length; i++)
             {
                 if (enemyData[i] == null)
@@ -197,14 +205,21 @@ public class BattleManager : MonoBehaviour
                 var enemyComponent = enemy.GetComponent<BattleCharacterBase>();
                 if (enemyComponent == null)
                 {
-                    Debug.LogError("BattleCharacterBase 컴포넌트를 찾을 수 없습니다.");
+                    Debug.LogError($"[{enemy.name}] BattleCharacterBase 컴포넌트를 찾을 수 없습니다.");
                     Destroy(enemy);
                     continue;
                 }
 
-                enemyComponent.Initialization(this, enemyData[i]);
+                if (enemyData[i] == null)
+                {
+                    Debug.LogError($"[{enemy.name}] enemyData[{i}]가 null입니다.");
+                    Destroy(enemy);
+                    continue;
+                }
+
                 enemy.transform.position = enemyPositions[i].position;
                 characterManager.AddEnemy(enemyComponent);
+                enemyComponent.Initialization(this, enemyData[i]);
             }
 
             turnSystem = new TurnSystem();
@@ -294,6 +309,16 @@ public class BattleManager : MonoBehaviour
         return characterManager.IsEnemyAllDie();
     }
 
+    public bool IsAlly(BattleCharacterBase _character)
+    {
+        return this.characterManager.GetAllies().Contains(_character);
+    }
+
+    public bool IsEnemy(BattleCharacterBase _character)
+    {
+        return this.characterManager.GetEnemies().Contains(_character);
+    }
+
     public async UniTask RunCheck()
     {
 
@@ -359,6 +384,7 @@ public class BattleManager : MonoBehaviour
         foreach (var t_character in characterManager.GetEnemies())
         {
             t_character.SetSelectedSkill(t_character.GetSkills()[0], characterManager.GetAllies());
+            t_character.SetAction(CharacterActionType.Skill);
         }
     }
 
@@ -453,6 +479,7 @@ public class BattleManager : MonoBehaviour
                 this.currentSelectedCharacter.SetAction(CharacterActionType.Skill);
                 UIManager.instance.ShowUI<SkillSelectUI>(new SkillUIData()
                 {
+                    battleManager = this,
                     battleCharacterBase = this.currentSelectedCharacter,
                     identifier = "BattleSkillUI",
                     skills = this.currentSelectedCharacter.GetSkills(),

@@ -7,6 +7,8 @@ public class CameraController : MonoBehaviour
     [SerializeField] Vector2 areaCenter = Vector2.zero;  // 제한 구역 중심
     [SerializeField] Vector2 areaSize = new Vector2(20f, 10f); // 제한 구역 크기
 
+    [SerializeField] Vector3 offset = new Vector3(0f, 0f, -10f);
+
     [SerializeField] float followSpeed = 5f;
 
     Camera cam;
@@ -19,11 +21,11 @@ public class CameraController : MonoBehaviour
 
     public void SetTarget(Transform _target) => this.currentTarget = _target;
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         Vector3 targetPosition = currentTarget != null ? currentTarget.position : Vector3.zero;
         targetPosition.y = transform.position.y;
-        targetPosition.z -= 10.0f;
+        targetPosition += offset;
 
         // 부드럽게 따라가기
         Vector3 smoothPosition = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);

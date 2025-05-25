@@ -1,0 +1,153 @@
+
+sarah01.png
+size: 664,269
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Arm_L
+  rotate: true
+  xy: 107, 2
+  size: 59, 101
+  orig: 59, 101
+  offset: 0, 0
+  index: -1
+Arm_R
+  rotate: true
+  xy: 2, 2
+  size: 59, 103
+  orig: 59, 103
+  offset: 0, 0
+  index: -1
+Hair_B
+  rotate: true
+  xy: 2, 63
+  size: 204, 185
+  orig: 204, 185
+  offset: 0, 0
+  index: -1
+Leg_L
+  rotate: true
+  xy: 588, 171
+  size: 41, 74
+  orig: 41, 75
+  offset: 0, 1
+  index: -1
+Leg_R
+  rotate: true
+  xy: 588, 129
+  size: 40, 73
+  orig: 40, 73
+  offset: 0, 0
+  index: -1
+Mouth_main
+  rotate: false
+  xy: 361, 2
+  size: 16, 7
+  orig: 18, 9
+  offset: 1, 1
+  index: -1
+Mouth_open
+  rotate: false
+  xy: 636, 111
+  size: 23, 16
+  orig: 25, 18
+  offset: 1, 1
+  index: -1
+bag
+  rotate: true
+  xy: 378, 11
+  size: 100, 96
+  orig: 102, 100
+  offset: 0, 3
+  index: -1
+body
+  rotate: true
+  xy: 339, 113
+  size: 154, 128
+  orig: 154, 128
+  offset: 0, 0
+  index: -1
+butt
+  rotate: true
+  xy: 596, 58
+  size: 69, 38
+  orig: 71, 40
+  offset: 1, 1
+  index: -1
+eye1
+  rotate: true
+  xy: 557, 127
+  size: 85, 29
+  orig: 85, 29
+  offset: 0, 0
+  index: -1
+eyeball_white
+  rotate: false
+  xy: 286, 69
+  size: 90, 42
+  orig: 92, 44
+  offset: 1, 1
+  index: -1
+eyebrow_1
+  rotate: true
+  xy: 361, 38
+  size: 29, 14
+  orig: 30, 14
+  offset: 1, 0
+  index: -1
+eyebrow_2
+  rotate: true
+  xy: 361, 15
+  size: 21, 14
+  orig: 23, 16
+  offset: 1, 1
+  index: -1
+eyelid
+  rotate: false
+  xy: 189, 69
+  size: 95, 42
+  orig: 97, 44
+  offset: 1, 1
+  index: -1
+face1
+  rotate: false
+  xy: 476, 4
+  size: 118, 120
+  orig: 118, 120
+  offset: 0, 0
+  index: -1
+hair_F
+  rotate: true
+  xy: 189, 113
+  size: 154, 148
+  orig: 154, 148
+  offset: 0, 0
+  index: -1
+highlight
+  rotate: true
+  xy: 349, 3
+  size: 64, 10
+  orig: 66, 13
+  offset: 1, 1
+  index: -1
+knife
+  rotate: false
+  xy: 210, 3
+  size: 137, 64
+  orig: 139, 66
+  offset: 1, 1
+  index: -1
+magic_wand
+  rotate: false
+  xy: 469, 126
+  size: 86, 141
+  orig: 90, 145
+  offset: 2, 2
+  index: -1
+scarf
+  rotate: false
+  xy: 557, 214
+  size: 93, 53
+  orig: 93, 54
+  offset: 0, 1
+  index: -1

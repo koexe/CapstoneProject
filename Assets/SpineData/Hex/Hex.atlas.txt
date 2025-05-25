@@ -1,0 +1,160 @@
+
+Hex.png
+size: 1141,411
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+1_H
+  rotate: true
+  xy: 973, 22
+  size: 38, 57
+  orig: 40, 59
+  offset: 1, 1
+  index: -1
+2_H
+  rotate: false
+  xy: 1075, 235
+  size: 37, 51
+  orig: 39, 53
+  offset: 1, 1
+  index: -1
+3_H
+  rotate: true
+  xy: 1106, 26
+  size: 39, 33
+  orig: 41, 35
+  offset: 1, 1
+  index: -1
+4_H
+  rotate: false
+  xy: 1050, 24
+  size: 54, 41
+  orig: 56, 43
+  offset: 1, 1
+  index: -1
+Attacked2_H
+  rotate: true
+  xy: 883, 26
+  size: 48, 88
+  orig: 50, 91
+  offset: 1, 1
+  index: -1
+AttackedEyes_H
+  rotate: false
+  xy: 458, 14
+  size: 109, 37
+  orig: 112, 40
+  offset: 2, 2
+  index: -1
+AttackedLip_H
+  rotate: true
+  xy: 675, 16
+  size: 35, 14
+  orig: 35, 14
+  offset: 0, 0
+  index: -1
+Body00
+  rotate: false
+  xy: 458, 167
+  size: 303, 242
+  orig: 500, 500
+  offset: 96, 130
+  index: -1
+EarL_H
+  rotate: false
+  xy: 1050, 67
+  size: 87, 166
+  orig: 87, 166
+  offset: 0, 0
+  index: -1
+EarR_H
+  rotate: false
+  xy: 933, 85
+  size: 115, 148
+  orig: 116, 148
+  offset: 1, 0
+  index: -1
+EyeMain_H
+  rotate: false
+  xy: 763, 17
+  size: 118, 57
+  orig: 121, 58
+  offset: 0, 0
+  index: -1
+HatB_H
+  rotate: false
+  xy: 458, 53
+  size: 247, 112
+  orig: 247, 112
+  offset: 0, 0
+  index: -1
+Hat_H
+  rotate: false
+  xy: 763, 235
+  size: 310, 174
+  orig: 311, 174
+  offset: 1, 0
+  index: -1
+Head_H
+  rotate: true
+  xy: 763, 76
+  size: 157, 168
+  orig: 157, 168
+  offset: 0, 0
+  index: -1
+LipClose_H
+  rotate: false
+  xy: 458, 2
+  size: 27, 10
+  orig: 27, 10
+  offset: 0, 0
+  index: -1
+LipMain_H
+  rotate: true
+  xy: 883, 2
+  size: 22, 18
+  orig: 22, 19
+  offset: 0, 1
+  index: -1
+NeckB_H
+  rotate: false
+  xy: 569, 9
+  size: 104, 42
+  orig: 107, 44
+  offset: 1, 1
+  index: -1
+attackEyes_H
+  rotate: true
+  xy: 707, 22
+  size: 143, 54
+  orig: 145, 56
+  offset: 1, 1
+  index: -1
+energe_H
+  rotate: false
+  xy: 2, 9
+  size: 454, 400
+  orig: 465, 415
+  offset: 1, 8
+  index: -1
+highlight_H
+  rotate: false
+  xy: 973, 62
+  size: 75, 21
+  orig: 77, 25
+  offset: 1, 2
+  index: -1
+neck_H
+  rotate: true
+  xy: 1075, 288
+  size: 121, 57
+  orig: 121, 57
+  offset: 0, 0
+  index: -1
+nose_H
+  rotate: true
+  xy: 1114, 266
+  size: 20, 11
+  orig: 23, 13
+  offset: 1, 1
+  index: -1

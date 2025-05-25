@@ -35,7 +35,7 @@ public class SkillSelectUI : UIBase
         if (t_skillUIData == null)
         {
             Debug.Log("Invalid DataType in SkillSelectUI");
-            return; 
+            return;
         }
         for (int i = 0; i < skillUIs.Length; i++)
         {
@@ -60,6 +60,7 @@ public class SkillSelectUI : UIBase
     {
         LogUtil.Log("방어 예정");
         this.skillUIData.battleCharacterBase.SetAction(CharacterActionType.Defence);
+        this.skillUIData.battleManager.CheckAllReady();
         UIManager.instance.HideUI("BattleSkillUI");
     }
     public void Skill()
@@ -76,6 +77,7 @@ public class SkillSelectUI : UIBase
 public class SkillUIData : UIData
 {
     public BattleCharacterBase battleCharacterBase;
+    public BattleManager battleManager;
     public SOSkillBase[] skills;
     public Action<BattleCharacterBase, SOSkillBase> action;
 }

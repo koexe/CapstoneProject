@@ -26,3 +26,8 @@ MonoBehaviour:
     baseAtk: 6
     baseDef: 3
     baseSpeed: 4
+  skeletonDataAsset: {fileID: 11400000, guid: a81d84e31f0ade84e92aa31c715d1505, type: 2}
+  basicAttackAnim: {fileID: 11400000, guid: 3f980b945de8950429f53dcc860ec82b, type: 2}
+  additionalAttackAnim: {fileID: 11400000, guid: 5a19556b57c2f944aa16038c5808ac1d, type: 2}
+  hitAnim: {fileID: 11400000, guid: c9e6b8c5a6c9d594490f1c8e053cc8f0, type: 2}
+  idleAnim: {fileID: 11400000, guid: b73b46e8fb3c58c48a08afc356e1bba6, type: 2}

@@ -67,18 +67,6 @@ public class Demo : MonoBehaviour
             Health.instance.RemoveImage();
     }
 
-    public void SetFillType(string type)
-    {
-        switch (type)
-        {
-            case "horizontal": Health.instance.SetFillType(Image.FillMethod.Horizontal); break;
-            case "vertical": Health.instance.SetFillType(Image.FillMethod.Vertical); break;
-            case "radial90": Health.instance.SetFillType(Image.FillMethod.Radial90); break;
-            case "radial180": Health.instance.SetFillType(Image.FillMethod.Radial180); break;
-            case "radial360": Health.instance.SetFillType(Image.FillMethod.Radial360); break;
-        }
-    }
-
     public void StartPoisonRegen(bool isRegen)
     {
         int.TryParse(poisonRegenValueInput.text, out value);

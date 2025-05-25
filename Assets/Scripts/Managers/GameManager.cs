@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using static GameManager;
@@ -10,13 +11,14 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameState gameState;
 
-    [SerializeField] GameStatics gameStatics;
     [SerializeField] DataLibrary dataLibrary;
     [SerializeField] GameObject player;
-
+    [SerializeField] GameObject playerPrefab;
 
     [SerializeField] SceneLoadManager sceneLoadManager;
     [SerializeField] SaveGameManager saveGameManager;
+
+    [SerializeField] MapManager mapManager;
 
     [SerializeField] SOBattleCharacter currentPlayer;
     [SerializeField] SOBattleCharacter currentNPC;
@@ -55,26 +57,35 @@ public class GameManager : MonoBehaviour
 
     public async void Initialization()
     {
+        if (this.player == null)
+        {
+            this.player = Instantiate(this.playerPrefab, Vector3.zero, Quaternion.identity, this.mapManager.transform);
+        }
         await this.dataLibrary.Initialization();
         await this.saveGameManager.Initialization();
+        await this.mapManager.Initialization(this.player);
         this.currentPlayer = DataLibrary.instance.GetSOCharacter(1);
         this.currentNPC = DataLibrary.instance.GetSOCharacter(2);
+        this.cameraController.SetTarget(this.player.transform);
+
     }
 
 
-    public void ChangeSceneToBattle(SOBattleCharacter[] enemys)
+    public async void ChangeSceneToBattle(SOBattleCharacter[] enemys)
     {
-        this.onChangeBattleSceneData.Set(this.currentPlayer, this.currentNPC, enemys);
-        this.sceneLoadManager.LoadScene_Async("BattleScene");
+        this.onChangeBattleSceneData.Set(this.currentPlayer, this.currentNPC, enemys, this.player.transform.position);
+        await this.sceneLoadManager.LoadScene_Async("BattleScene");
         MapManager.instance.OnChangeToBattleScene();
     }
-    public void ChangeSceneToField(SOBattleCharacter _currentPlayer, SOBattleCharacter _currentNpc)
+    public async void ChangeSceneToField(SOBattleCharacter _currentPlayer, SOBattleCharacter _currentNpc)
     {
         this.currentNPC = _currentNpc;
         this.currentPlayer = _currentPlayer;
+        this.player.transform.position = this.onChangeBattleSceneData.position;
         this.onChangeBattleSceneData.Reset();
-        this.sceneLoadManager.LoadScene_Async("FieldScene");
+        await this.sceneLoadManager.LoadScene_Async("FieldScene");
         MapManager.instance.OnChangeToFieldScene();
+        this.cameraController.SetTarget(this.player.transform);
     }
 
     public class OnChangeBattleSceneData
@@ -82,12 +93,14 @@ public class GameManager : MonoBehaviour
         [SerializeField] SOBattleCharacter currentPlayer;
         [SerializeField] SOBattleCharacter currentNPC;
         SOBattleCharacter[] enemys;
+        public Vector3 position;
 
-        public void Set(SOBattleCharacter _player, SOBattleCharacter _npc, SOBattleCharacter[] _enemys)
+        public void Set(SOBattleCharacter _player, SOBattleCharacter _npc, SOBattleCharacter[] _enemys, Vector3 _position)
         {
             this.currentPlayer = _player;
             this.currentNPC = _npc;
             this.enemys = _enemys;
+            this.position = _position;
         }
         public void Reset()
         {

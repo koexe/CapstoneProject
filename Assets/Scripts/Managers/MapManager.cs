@@ -1,9 +1,12 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class MapManager : MonoBehaviour
 {
     public static MapManager instance;
     public MapEntity currentMap;
+
+    public GameObject player;
 
 #if UNITY_EDITOR
     [SerializeField] MapEntity startMap;
@@ -18,12 +21,17 @@ public class MapManager : MonoBehaviour
 
         DontDestroyOnLoad(this.gameObject);
     }
-    private void Start()
+
+
+    public async UniTask Initialization(GameObject _player)
     {
 #if UNITY_EDITOR
         this.currentMap = Instantiate(startMap, this.transform);
 #endif
+        this.player = _player;
     }
+
+
 
     public void MoveMap(MapEntity.MapPath _path)
     {
@@ -55,9 +63,11 @@ public class MapManager : MonoBehaviour
     public void OnChangeToFieldScene()
     {
         this.currentMap.gameObject.SetActive(true);
+        this.player.SetActive(true);
     }
     public void OnChangeToBattleScene()
     {
         this.currentMap.gameObject.SetActive(false);
+        this.player.SetActive(false);
     }
 }

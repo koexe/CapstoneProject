@@ -16,6 +16,7 @@ public class BattleCharacterBase : MonoBehaviour
     [SerializeField] SOSkillBase selectedSkill;
     [SerializeField] protected BuffSystem buffSystem;
     [SerializeField] TextMeshPro hpText;
+
     [SerializeField] ParticleSystem hitParticle;
 
     [Header("정보")]
@@ -30,6 +31,7 @@ public class BattleCharacterBase : MonoBehaviour
     [SerializeField] CharacterActionType currentAction;
     [SerializeField] protected SOBattleCharacter soBattleCharacter;
 
+    [SerializeField] HealthPreferences healthPreferences;
     public RaceType raceType;
     #region Get/Set
     public float MaxHP() => this.maxHP;
@@ -54,10 +56,12 @@ public class BattleCharacterBase : MonoBehaviour
     public void RecalculateMaxHP()
     {
         this.maxHP = this.statBlock.GetStat(StatType.Hp);
+        this.healthPreferences.SetTotalHealth(maxHP);
 
         // 비율 유지
         float t_ratio = Mathf.Clamp01(this.currentHP / this.maxHP);
         this.currentHP = this.maxHP * t_ratio;
+        this.healthPreferences.SetCurrentHealth(currentHP);
     }
     public async UniTask Summary()
     {
@@ -67,10 +71,21 @@ public class BattleCharacterBase : MonoBehaviour
     public void Heal(float _amount)
     {
         this.currentHP = Mathf.Min(this.maxHP, this.currentHP + _amount);
+        this.healthPreferences.SetCurrentHealth(currentHP);
     }
     public void Initialization(BattleManager _battleManager, SOBattleCharacter _character)
     {
         this.battleManager = _battleManager;
+        if (_character.GetSkeletonDataAsset() != null)
+        {
+            var t_anim = _character.GetAnimations();
+            this.spineModelController.Initialization(
+                _character.GetSkeletonDataAsset(),
+                t_anim.Item1,
+                t_anim.Item2,
+                t_anim.Item3);
+        }
+
         this.buffSystem = new BuffSystem();
         this.soBattleCharacter = Instantiate(_character);
         this.characterName = soBattleCharacter.GetCharacterName();
@@ -80,8 +95,48 @@ public class BattleCharacterBase : MonoBehaviour
             this.skills[i] = Instantiate(_character.GetSkills()[i]);
         this.transform.name = _character.GetCharacterName();
         this.raceType = _character.GetRaceType();
-        this.hpText.text = this.currentHP.ToString();
+
+        // 체력 UI 초기화
+        if (this.healthPreferences == null)
+        {
+            Debug.LogError($"[{this.name}] HealthPreferences 컴포넌트가 없습니다.");
+            return;
+        }
+
+        this.healthPreferences.SetTotalHealth(maxHP);
+        this.healthPreferences.SetCurrentHealth(currentHP);
+
+        if (this.spineModelController == null)
+        {
+            Debug.LogError($"[{this.name}] SpineModelController 컴포넌트가 없습니다.");
+            return;
+        }
+        if (this.battleManager.IsAlly(this))
+        {
+            if (this.soBattleCharacter.IsModelBasicRight())
+            {
+                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
+            }
+            else
+            {
+                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
+            }
+        }
+        else
+        {
+            if (this.soBattleCharacter.IsModelBasicRight())
+            {
+                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
+            }
+            else
+            {
+                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
+
         this.spineModelController.PlayAnimation(AnimationType.idle);
+
+
         return;
     }
     public void SetSelectedSkill(SOSkillBase _skill, BattleCharacterBase[] _target)
@@ -148,7 +203,7 @@ public class BattleCharacterBase : MonoBehaviour
     {
         Debug.Log($"{name} has died.");
         this.isDie = true;
-        this.spineModelController.PlayAnimation(AnimationType.die);
+        //this.spineModelController.PlayAnimation(AnimationType.die);
     }
     public async UniTask OnTurnStart()
     {
@@ -187,7 +242,7 @@ public class BattleCharacterBase : MonoBehaviour
 
     public async UniTask ResetPosition()
     {
-        var t_position = this.battleManager.GetPlayerTranform(this).position;
+        var t_position = this.battleManager.GetOriginTranform(this).position;
         await MovePoint(t_position);
     }
 
@@ -217,16 +272,10 @@ public class BattleCharacterBase : MonoBehaviour
         await this.spineModelController.PlayAnimationAsync(AnimationType.hit);
         this.battleManager.ShowText($"{(int)t_finalDamage}의 데미지를 {this.name} 이 받았다!!");
         this.currentHP = Mathf.Max(0f, this.currentHP - (int)t_finalDamage);
-        SetHpText();
+        this.healthPreferences.SetCurrentHealth(currentHP);
         this.spineModelController.PlayAnimation(AnimationType.idle);
         if (this.currentHP <= 0f)
             Die();
-
-
-    }
-    void SetHpText()
-    {
-        this.hpText.text = this.currentHP.ToString();
     }
     public virtual async UniTask HitTask(HitInfo _hitInfo)
     {
@@ -349,8 +398,12 @@ public class BattleCharacterBase : MonoBehaviour
         float t_afterMaxHp = this.statBlock.GetStat(StatType.Hp);
         Debug.Log($"{t_afterMaxHp}        {t_beforeMaxHp}");
         Heal(t_afterMaxHp - t_beforeMaxHp);
-        SetHpText();
+        this.healthPreferences.SetCurrentHealth(currentHP);
+    }
 
+    public void UpdateSkills(SOSkillBase[] newSkills)
+    {
+        this.skills = newSkills;
     }
 
 }

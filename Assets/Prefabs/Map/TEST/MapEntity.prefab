@@ -4726,6 +4726,7 @@ MonoBehaviour:
   - {fileID: 7901727355787182879}
   - {fileID: 4752265916116466864}
   items: {fileID: 0}
+  itemEntitys: []
 --- !u!1 &2055209307439998346
 GameObject:
   m_ObjectHideFlags: 0
@@ -22125,8 +22126,28 @@ PrefabInstance:
     m_TransformParent: {fileID: 3561092987886999405}
     m_Modifications:
     - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
+      propertyPath: maxLevel
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
+      propertyPath: minLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: encounterChance
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
+      propertyPath: enemyPool.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
+      propertyPath: enemyPool.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
+      propertyPath: enemyPool.Array.data[1]
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4223886932415744022, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: m_Name
@@ -22134,7 +22155,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4223886932415744022, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6451850906530398435, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: m_RootOrder
