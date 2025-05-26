@@ -64,7 +64,7 @@ public class EnemyField : MonoBehaviour
             t_enemy[i] = DataLibrary.instance.GetSOCharacter(t_enemyID);
         }
 
-        GameManager.instance.ChangeSceneToBattle(t_enemy);
+        GameManager.instance.ChangeSceneFieldToBattle(t_enemy);
 
         // TODO: 전투 씬 진입 또는 조우 연출
     }

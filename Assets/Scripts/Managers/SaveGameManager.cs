@@ -25,7 +25,7 @@ public class SaveGameManager : MonoBehaviour
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(this.gameObject);
@@ -53,21 +53,21 @@ public class SaveGameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F1))
         {
             SavetoFile(currentSlot);
-    }
+        }
 #endif
     }
 
     public void SavetoFile(int slotNumber)
     {
         if (slotNumber < 1 || slotNumber > MAX_SLOTS)
-    {
+        {
             Debug.LogError($"잘못된 슬롯 번호입니다. (1-{MAX_SLOTS} 사이의 값이어야 합니다)");
             return;
         }
 
         // 저장하기 전에 임시 리스트 초기화
         this.currentSaveData.itemNames.Clear();
-        
+
         // 아이템 정보 저장
         foreach (var item in this.currentSaveData.items.Values)
         {
@@ -80,12 +80,12 @@ public class SaveGameManager : MonoBehaviour
         // 맵 아이템 상태 체크 및 업데이트
         CheckMapItem();
 
-        try 
+        try
         {
             // 파일에 저장
             string fileName = string.Format(fileNameFormat, slotNumber);
-        SaveToJsonFile<SaveData>(this.currentSaveData, fileName);
-        this.saveInFile = this.currentSaveData;
+            SaveToJsonFile<SaveData>(this.currentSaveData, fileName);
+            this.saveInFile = this.currentSaveData;
             Debug.Log($"게임 데이터가 슬롯 {slotNumber}에 성공적으로 저장되었습니다.");
         }
         catch (System.Exception e)
@@ -111,8 +111,8 @@ public class SaveGameManager : MonoBehaviour
         try
         {
             string fileName = string.Format(fileNameFormat, slotNumber);
-        this.saveInFile = LoadFromJson<SaveData>(fileName);
-            
+            this.saveInFile = LoadFromJson<SaveData>(fileName);
+
             if (this.saveInFile == null)
             {
                 Debug.Log($"슬롯 {slotNumber}에 새로운 세이브 데이터를 생성합니다.");
@@ -122,7 +122,7 @@ public class SaveGameManager : MonoBehaviour
             }
 
             // 아이템 데이터 초기화 및 로드
-        this.saveInFile.items.Clear();
+            this.saveInFile.items.Clear();
             foreach (var itemMinimal in this.saveInFile.itemNames)
             {
                 SOItem item = DataLibrary.instance.GetItemByIndex(itemMinimal.index);
@@ -142,8 +142,20 @@ public class SaveGameManager : MonoBehaviour
             Debug.LogError($"로드 중 오류 발생: {e.Message}");
             // 오류 발생 시 새로운 세이브 데이터 생성
             this.saveInFile = new SaveData();
-        this.currentSaveData = this.saveInFile;
+            this.currentSaveData = this.saveInFile;
         }
+    }
+
+    public bool DoesSaveExistAll()
+    {
+        for (int i = 1; i <= MAX_SLOTS; i++)
+        {
+            if (DoesSaveExist(i))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public bool DoesSaveExist(int slotNumber)
@@ -162,7 +174,7 @@ public class SaveGameManager : MonoBehaviour
     }
 
     public void DeleteSave(int slotNumber)
-        {
+    {
         if (slotNumber < 1 || slotNumber > MAX_SLOTS) return;
         string fileName = string.Format(fileNameFormat, slotNumber);
         string path = Path.Combine(Application.persistentDataPath, fileName);

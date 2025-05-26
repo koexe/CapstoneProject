@@ -13,8 +13,6 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] DataLibrary dataLibrary;
     [SerializeField] GameObject player;
-    [SerializeField] GameObject playerPrefab;
-
     [SerializeField] SceneLoadManager sceneLoadManager;
     [SerializeField] SaveGameManager saveGameManager;
 
@@ -24,6 +22,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] SOBattleCharacter currentNPC;
 
     [SerializeField] CameraController cameraController;
+
+    [SerializeField] FieldManager fieldManager;
     public CameraController GetCamera() => this.cameraController;
     public void SetCamera(CameraController _controller) => this.cameraController = _controller;
 
@@ -57,27 +57,33 @@ public class GameManager : MonoBehaviour
 
     public async void Initialization()
     {
-        if (this.player == null)
-        {
-            this.player = Instantiate(this.playerPrefab, Vector3.zero, Quaternion.identity, this.mapManager.transform);
-        }
         await this.dataLibrary.Initialization();
         await this.saveGameManager.Initialization();
-        await this.mapManager.Initialization(this.player);
+    }
+
+    public async UniTask MapInitialization()
+    {
+        await this.mapManager.Initialization();
         this.currentPlayer = DataLibrary.instance.GetSOCharacter(1);
         this.currentNPC = DataLibrary.instance.GetSOCharacter(2);
-        this.cameraController.SetTarget(this.player.transform);
+    }
 
+     public async UniTask ChangeSceneMainToField()
+    {
+        await this.sceneLoadManager.LoadScene_Async("FieldScene");
+        this.fieldManager.Initialization();
+        await this.MapInitialization();
+        MapManager.instance.OnChangeToFieldScene();
     }
 
 
-    public async void ChangeSceneToBattle(SOBattleCharacter[] enemys)
+    public async void ChangeSceneFieldToBattle(SOBattleCharacter[] enemys)
     {
         this.onChangeBattleSceneData.Set(this.currentPlayer, this.currentNPC, enemys, this.player.transform.position);
         await this.sceneLoadManager.LoadScene_Async("BattleScene");
         MapManager.instance.OnChangeToBattleScene();
     }
-    public async void ChangeSceneToField(SOBattleCharacter _currentPlayer, SOBattleCharacter _currentNpc)
+    public async void ChangeSceneBattleToField(SOBattleCharacter _currentPlayer, SOBattleCharacter _currentNpc)
     {
         this.currentNPC = _currentNpc;
         this.currentPlayer = _currentPlayer;
@@ -86,6 +92,11 @@ public class GameManager : MonoBehaviour
         await this.sceneLoadManager.LoadScene_Async("FieldScene");
         MapManager.instance.OnChangeToFieldScene();
         this.cameraController.SetTarget(this.player.transform);
+    }
+
+    public void LoadSaveData()
+    {
+        this.mapManager.LoadMap(this.saveGameManager.GetCurrentSaveData().currentMap);
     }
 
     public class OnChangeBattleSceneData
@@ -112,7 +123,10 @@ public class GameManager : MonoBehaviour
         public SOBattleCharacter GetPlayerData() => this.currentPlayer;
         public SOBattleCharacter GetNPCData() => this.currentNPC;
     }
-
+    public void SetPlayer(GameObject _player)
+    {
+        this.player = _player;
+    }
 
 }
 public enum GameState

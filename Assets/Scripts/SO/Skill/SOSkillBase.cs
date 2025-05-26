@@ -17,6 +17,10 @@ public class SOSkillBase : ScriptableObject
     public StatusEffectID statusEffect;
     public RaceType attackRaceType;
     public int requireMp;
+    public ParticleSystem attackParticle;
+    public ParticleSystem hitParticle;
+    public AudioClip attackSound;
+    public AudioClip hitSound;
 
     public enum AttackRangeType
     {

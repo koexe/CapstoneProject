@@ -819,13 +819,13 @@ MonoBehaviour:
   gameState: 0
   dataLibrary: {fileID: 1922772394}
   player: {fileID: 0}
-  playerPrefab: {fileID: 7435573240301218391, guid: 8d12bb23727bb7a4cbe2827e2ccaf99a, type: 3}
   sceneLoadManager: {fileID: 43031283}
   saveGameManager: {fileID: 1289851225}
   mapManager: {fileID: 1969255575}
   currentPlayer: {fileID: 0}
   currentNPC: {fileID: 0}
   cameraController: {fileID: 0}
+  fieldManager: {fileID: 0}
 --- !u!1 &1731429262
 GameObject:
   m_ObjectHideFlags: 0
@@ -1113,7 +1113,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentMap: {fileID: 0}
-  player: {fileID: 0}
   startMap: {fileID: 6202327555237461339, guid: 403f5fda3d6c4c5498f0899cb992c161, type: 3}
 --- !u!1 &2141549562
 GameObject:

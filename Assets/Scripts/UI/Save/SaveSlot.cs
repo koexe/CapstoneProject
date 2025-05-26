@@ -20,7 +20,7 @@ public class SaveSlot : MonoBehaviour
     Action onLoad;
     Action onDelete;
 
-    public void Initialize(int slotNumber, Action onSelect, Action onSave, Action onLoad, Action onDelete)
+    public void Initialize(int slotNumber, Action onSelect, Action onSave, Action onLoad, Action onDelete , bool _isLoadOnly = false)
     {
         this.SlotNumber = slotNumber;
         this.onSelect = onSelect;
@@ -32,6 +32,11 @@ public class SaveSlot : MonoBehaviour
         saveButton.onClick.AddListener(ShowSavePopup);
         loadButton.onClick.AddListener(ShowLoadPopup);
         deleteButton.onClick.AddListener(ShowDeletePopup);
+
+        if(_isLoadOnly)
+        {
+            saveButton.gameObject.SetActive(false);
+        }
 
         SetSelected(false);
     }

@@ -24,7 +24,16 @@ public class DialogUI : UIBase
 
     public override void Hide()
     {
-
+        this.contents.SetActive(false);
+        this.isShow = false;
+        SaveGameManager.instance.currentSaveData.chatacterDialogs[this.dialogData.index] = true;
+    }
+    public void ResetDialog()
+    {
+        this.currentLineIndex = 0;
+        this.isTyping = false;
+        this.fullText = "";
+        this.dialogText.text = "";
     }
 
     public override void Initialization(UIData _data)
@@ -40,6 +49,9 @@ public class DialogUI : UIBase
 
     public override void Show(UIData _data)
     {
+        ResetDialog();
+        this.contents.SetActive(true);
+        this.isShow = true;
         ShowCurrentLine();
     }
 
@@ -48,8 +60,15 @@ public class DialogUI : UIBase
         if (this.dialogData == null || this.currentLineIndex >= this.dialogData.dialogs.Length)
         {
             Debug.Log("다이얼로그 종료");
+            Hide();
             return;
         }
+        if(SaveGameManager.instance.currentSaveData.chatacterDialogs[this.dialogData.index] == true)
+        {
+            this.currentLineIndex = this.dialogData.dialogs.Length - 1;
+        }
+
+
         ShowPortraits(this.dialogData.characters[this.currentLineIndex]);
         var (t_speaker, t_line) = this.dialogData.dialogs[this.currentLineIndex];
 

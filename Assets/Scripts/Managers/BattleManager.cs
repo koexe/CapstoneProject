@@ -427,7 +427,7 @@ public class BattleManager : MonoBehaviour
 
     public void ChangeToFieldScene()
     {
-        GameManager.instance.ChangeSceneToField(characterManager.GetAllies()[0].GetBattleCharacter(), characterManager.GetAllies()[1].GetBattleCharacter());
+        GameManager.instance.ChangeSceneBattleToField(characterManager.GetAllies()[0].GetBattleCharacter(), characterManager.GetAllies()[1].GetBattleCharacter());
     }
 
 

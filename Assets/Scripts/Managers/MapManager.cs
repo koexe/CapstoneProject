@@ -6,10 +6,9 @@ public class MapManager : MonoBehaviour
     public static MapManager instance;
     public MapEntity currentMap;
 
-    public GameObject player;
-
 #if UNITY_EDITOR
     [SerializeField] MapEntity startMap;
+    [SerializeField] bool isDebugingMap;
 #endif
 
     private void Awake()
@@ -23,12 +22,25 @@ public class MapManager : MonoBehaviour
     }
 
 
-    public async UniTask Initialization(GameObject _player)
+    public async UniTask Initialization()
     {
 #if UNITY_EDITOR
-        this.currentMap = Instantiate(startMap, this.transform);
+        if (this.isDebugingMap)
+            this.currentMap = Instantiate(startMap, this.transform);
+        else
+        {
+            LoadMap(SaveGameManager.instance.GetCurrentSaveData().currentMap);
+        }
+#else
+        LoadMap(SaveGameManager.instance.GetCurrentSaveData().currentMap);
 #endif
-        this.player = _player;
+
+
+    }
+
+    public void LoadMap(string _mapName)
+    {
+        this.currentMap = Instantiate(DataLibrary.instance.GetMap(_mapName), this.transform);
     }
 
 
@@ -63,11 +75,11 @@ public class MapManager : MonoBehaviour
     public void OnChangeToFieldScene()
     {
         this.currentMap.gameObject.SetActive(true);
-        this.player.SetActive(true);
+        GameManager.instance.GetPlayer().SetActive(true);
     }
     public void OnChangeToBattleScene()
     {
         this.currentMap.gameObject.SetActive(false);
-        this.player.SetActive(false);
+        GameManager.instance.GetPlayer().SetActive(false);
     }
 }
