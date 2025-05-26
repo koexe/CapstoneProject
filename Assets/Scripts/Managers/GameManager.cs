@@ -132,8 +132,9 @@ public class GameManager : MonoBehaviour
 public enum GameState
 {
     None,
-    Menu,
+    Main,
     Loading,
+    Field,
     Ingame,
     Pause,
     Battle
