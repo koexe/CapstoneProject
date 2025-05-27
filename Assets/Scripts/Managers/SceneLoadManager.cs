@@ -57,7 +57,7 @@ public class SceneLoadManager : MonoBehaviour
         // 페이드 인
         this.fadePanel.gameObject.SetActive(true);
         float t_elapsed = 0f;
-        
+        UIManager.instance.HideAllUI();
         while (t_elapsed < this.fadeDuration)
         {
             t_elapsed += Time.deltaTime;

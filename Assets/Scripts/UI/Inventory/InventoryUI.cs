@@ -61,6 +61,7 @@ public class InventoryUI : UIBase
     public override void Show(UIData _data)
     {
         this.contents.SetActive(true);
+        this.items = SaveGameManager.instance.GetCurrentSaveData().items.Values.ToList();
         Refresh();
     }
 

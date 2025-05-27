@@ -19,16 +19,24 @@ public class UIManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            
+
             if (canvas == null)
                 canvas = GetComponent<Canvas>();
             if (uiRoot == null)
                 uiRoot = canvas.transform;
-                
+
             return;
         }
-            Destroy(gameObject);
+        Destroy(gameObject);
+    }
+
+    public void HideAllUI()
+    {
+        foreach (var ui in activeUIs)
+        {
+            ui.Value.Hide();
         }
+    }
 
     public void HideUI(string identifier)
     {
@@ -44,17 +52,17 @@ public class UIManager : MonoBehaviour
         if (activeUIs.TryGetValue(data.identifier, out var existingUI))
         {
             if (!data.isAllowMultifle)
-        {
+            {
                 if (existingUI.isShow)
                 {
                     existingUI.Hide();
                 }
-            else
-            {
+                else
+                {
                     existingUI.Show(data);
-            }
+                }
                 return existingUI as T;
-        }
+            }
         }
 
         // UI 프리팹 가져오기

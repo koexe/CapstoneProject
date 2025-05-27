@@ -143,6 +143,7 @@ public class BattleManager : MonoBehaviour
         var playerData = battleSceneData.GetPlayerData();
         var npcData = battleSceneData.GetNPCData();
         var enemyData = battleSceneData.GetEnemys();
+        var enemyLevels = battleSceneData.GetEnemyLevels();
 
         if (playerData == null || npcData == null)
         {
@@ -219,7 +220,7 @@ public class BattleManager : MonoBehaviour
 
                 enemy.transform.position = enemyPositions[i].position;
                 characterManager.AddEnemy(enemyComponent);
-                enemyComponent.Initialization(this, enemyData[i]);
+                enemyComponent.Initialization(this, enemyData[i], enemyLevels[i]);
             }
 
             turnSystem = new TurnSystem();

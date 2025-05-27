@@ -7,6 +7,8 @@ public class MapItem : MonoBehaviour, IInteractable
     [SerializeField] SOItem item;
     [SerializeField] SpriteRenderer spriteRenderer;
 
+    public bool isGeted = false;
+
 
     public void Start()
     {
@@ -17,7 +19,7 @@ public class MapItem : MonoBehaviour, IInteractable
     public void ExecuteAction()
     {
         this.item.GetItem();
-        //SaveGameManager.instance.currentSaveData.mapItems[MapManager.instance.currentMap.GetID()][MapManager.instance.GetItem(this)] = true;
+        SaveGameManager.instance.currentSaveData.mapItems[MapManager.instance.currentMap.GetID()][MapManager.instance.GetItem(this)] = true;
         Destroy(this.gameObject);
     }
 }

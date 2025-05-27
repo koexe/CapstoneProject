@@ -211,12 +211,12 @@ public class SaveGameManager : MonoBehaviour
     {
         foreach (var map in DataLibrary.instance.GetMapAll())
         {
-            //var Items = map.GetMapItems();
-            //this.currentSaveData.mapItems.Add(map.name, new List<bool>());
-            //foreach (var item in Items)
-            //{
-            //    this.currentSaveData.mapItems[map.name].Add(item.isGeted);
-            //}
+            var Items = map.GetItems();
+            this.currentSaveData.mapItems.Add(map.name, new List<bool>());
+            foreach (var item in Items)
+            {
+               this.currentSaveData.mapItems[map.name].Add(item.isGeted);
+            }
         }
     }
 
@@ -308,6 +308,7 @@ public class SaveItem
     public Sprite GetItemImage() => item.GetItemImage();
     public string GetItemName() => item.GetItemName();
     public string GetDescription() => item.GetItemDescription();
+    public int GetAmount() => amount;
 
     public SOItem GetSOItem() => item;
 

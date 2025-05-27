@@ -87,6 +87,7 @@ public class SaveUI : UIBase
     {
         SaveGameManager.instance.SavetoFile(slotNumber);
         UpdateSlotInfo(slotNumber);
+        Hide();
     }
 
     void LoadFromSlot(int slotNumber)
@@ -94,6 +95,7 @@ public class SaveUI : UIBase
         if (SaveGameManager.instance.DoesSaveExist(slotNumber))
         {
             SaveGameManager.instance.LoadFromSlot(slotNumber);
+            GameManager.instance.LoadSaveData();
             Hide();
         }
     }

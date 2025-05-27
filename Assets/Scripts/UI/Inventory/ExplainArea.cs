@@ -11,14 +11,14 @@ public class ExplainArea : MonoBehaviour
     [SerializeField] Image image;
     [SerializeField] TextMeshProUGUI descriptionText;
     [SerializeField] TextMeshProUGUI nameText;
-    [SerializeField] TextMeshProUGUI indexText;
+    [SerializeField] TextMeshProUGUI amountText;
 
     public void ChageExplainArea(SaveItem _Item)
     {
         this.image.sprite = _Item.GetItemImage();
         this.descriptionText.text = _Item.GetDescription();
         this.nameText.text = _Item.GetItemName();
-        this.indexText.text = _Item.amount.ToString();
+        this.amountText.text = _Item.GetAmount().ToString();
         return;
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MapEntity : MonoBehaviour
@@ -14,7 +15,10 @@ public class MapEntity : MonoBehaviour
     {
         return this.itemEntitys.FindIndex(x => x == _item);
     }
-    public List<MapItem> GetItems() => this.itemEntitys;
+    public List<MapItem> GetItems() 
+    {
+        return this.items.GetComponentsInChildren<MapItem>().ToList<MapItem>();
+    }
 
 
     [System.Serializable]

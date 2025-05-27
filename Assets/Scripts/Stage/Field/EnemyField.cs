@@ -10,8 +10,8 @@ public class EnemyField : MonoBehaviour
     [SerializeField] float checkInterval = 2f;
     [SerializeField] float encounterChance = 0.2f;
     [SerializeField] LayerMask playerLayer;
-    [SerializeField] float minLevel;
-    [SerializeField] float maxLevel;
+    [SerializeField] int minLevel;
+    [SerializeField] int maxLevel;
 
     private Coroutine checkCoroutine;
 
@@ -31,6 +31,10 @@ public class EnemyField : MonoBehaviour
         while (true)
         {
             yield return CoroutineUtil.WaitForSeconds(checkInterval);
+            while (GameManager.instance.GetGameState() != GameState.Field)
+            {
+                yield return CoroutineUtil.WaitForSeconds(checkInterval);
+            }
 
             Collider[] t_hits = Physics.OverlapBox(
                 center: transform.position,
@@ -57,16 +61,18 @@ public class EnemyField : MonoBehaviour
 
         Debug.Log($"[OverlapBox] 조우된 Enemy ID: {t_enemyID}");
 
-        SOBattleCharacter[] t_enemy = new SOBattleCharacter[Random.Range(1, 3)]; 
+        int t_enemyCount = Random.Range(1, 3);
 
-        for(int i  = 0; i < t_enemy.Length; i++)
+        SOBattleCharacter[] t_enemy = new SOBattleCharacter[t_enemyCount];
+        int[] t_level = new int[t_enemyCount];
+
+        for (int i = 0; i < t_enemy.Length; i++)
         {
             t_enemy[i] = DataLibrary.instance.GetSOCharacter(t_enemyID);
+            t_level[i] = Random.Range(this.minLevel, this.maxLevel);
         }
 
-        GameManager.instance.ChangeSceneFieldToBattle(t_enemy);
-
-        // TODO: 전투 씬 진입 또는 조우 연출
+        GameManager.instance.ChangeSceneFieldToBattle(t_enemy, t_level);
     }
 
     private void OnDrawGizmos()

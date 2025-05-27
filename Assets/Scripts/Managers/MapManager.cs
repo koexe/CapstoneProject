@@ -16,13 +16,13 @@ public class MapManager : MonoBehaviour
         if (instance == null)
             instance = this;
         else
-            Destroy(this);
+            Destroy(this.gameObject);
 
         DontDestroyOnLoad(this.gameObject);
     }
 
 
-    public async UniTask Initialization()
+    public void Initialization()
     {
 #if UNITY_EDITOR
         if (this.isDebugingMap)

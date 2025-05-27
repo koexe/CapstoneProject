@@ -1320,13 +1320,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 623359146}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 1877646217}
+        m_TargetAssemblyTypeName: MainScene, Assembly-CSharp
+        m_MethodName: OnClickLoadButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1640,6 +1640,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentMap: {fileID: 0}
   startMap: {fileID: 6202327555237461339, guid: 403f5fda3d6c4c5498f0899cb992c161, type: 3}
+  isDebugingMap: 0
 --- !u!4 &1958847839
 Transform:
   m_ObjectHideFlags: 0
