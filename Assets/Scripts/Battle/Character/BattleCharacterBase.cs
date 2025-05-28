@@ -22,6 +22,8 @@ public class BattleCharacterBase : MonoBehaviour
     [Header("정보")]
     [SerializeField] float maxHP;
     [SerializeField] float currentHP;
+    [SerializeField] float maxMp;
+    [SerializeField] float currentMp;
     [SerializeField] StatBlock statBlock;
     [SerializeField] int isUsedDefence;
     [SerializeField] bool isInDefence;
@@ -467,10 +469,14 @@ public class BattleCharacterBase : MonoBehaviour
         Heal(t_afterMaxHp - t_beforeMaxHp);
         this.healthPreferences.SetCurrentHealth(currentHP);
     }
-
     public void UpdateSkills(SOSkillBase[] newSkills)
     {
         this.skills = newSkills;
+    }
+
+    public void UseMp(float _amount)
+    {
+        this.currentMp -= _amount;
     }
 
 }

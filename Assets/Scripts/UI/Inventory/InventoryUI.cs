@@ -63,6 +63,7 @@ public class InventoryUI : UIBase
         this.contents.SetActive(true);
         this.items = SaveGameManager.instance.GetCurrentSaveData().items.Values.ToList();
         Refresh();
+        GameManager.instance.SetGameState(GameState.Pause);
     }
 
     public override void Hide()
@@ -77,8 +78,7 @@ public class InventoryUI : UIBase
             t_itemDictionary.Add(t_item.GetItemIndex(), t_item);
         }
         t_currentSaveData.items = t_itemDictionary;
-        SaveGameManager.instance.SetCurrentSaveData(t_currentSaveData);
-        GameManager.instance.SetGameState(GameState.Ingame);
+        SaveGameManager.instance.SetCurrentSaveData(t_currentSaveData); 
         return;
     }
 

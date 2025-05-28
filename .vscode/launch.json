@@ -4,23 +4,13 @@
         {
             "name": "Unity Editor",
             "type": "unity",
-            "path": "/c:/Users/82103/Documents/GitHub/CapstoneProject/Library/EditorInstance.json",
+            "path": "${workspaceFolder}/Library/EditorInstance.json",
             "request": "launch"
         },
         {
-            "name": "Windows Player",
+            "name": "Attach to Unity",
             "type": "unity",
-            "request": "launch"
-        },
-        {
-            "name": "OSX Player",
-            "type": "unity",
-            "request": "launch"
-        },
-        {
-            "name": "Linux Player",
-            "type": "unity",
-            "request": "launch"
+            "request": "attach"
         },
         {
             "name": "Attach to Unity",

@@ -57,8 +57,10 @@ public class GameManager : MonoBehaviour
 
     public async void Initialization()
     {
+        ChangeGameState(GameState.Loading);
         await this.dataLibrary.Initialization();
         await this.saveGameManager.Initialization();
+        ChangeGameState(GameState.Main);
     }
 
     public void MapInitialization()
@@ -74,6 +76,7 @@ public class GameManager : MonoBehaviour
         this.fieldManager.Initialization();
         MapInitialization();
         MapManager.instance.OnChangeToFieldScene();
+        ChangeGameState(GameState.Field);
     }
 
     public async void ChangeSceneFieldToBattle(SOBattleCharacter[] enemys, int[] _levels)
@@ -93,6 +96,46 @@ public class GameManager : MonoBehaviour
         MapManager.instance.OnChangeToFieldScene();
         this.cameraController.SetTarget(this.player.transform);
     }
+
+    public void ChangeGameState(GameState _gameState)
+    {
+        switch (this.gameState)
+        {
+            case GameState.None:
+                this.gameState = _gameState;
+                break;
+            case GameState.Main:
+                if (_gameState != GameState.Field)
+                {
+                    LogUtil.Log("not Allowed Change GameState");
+                }
+                else
+                {
+                    this.gameState = _gameState;
+                }
+                break;
+            case GameState.Loading:
+                if (_gameState != GameState.Main)
+                {
+                    LogUtil.Log("not Allowed Change GameState");
+                }
+                else
+                {
+                    this.gameState = _gameState;
+                }
+                break;
+            case GameState.Field:
+                this.gameState = _gameState;
+                break;
+            case GameState.Pause:
+                this.gameState = _gameState;
+                break;
+            case GameState.Battle:
+                this.gameState = _gameState;
+                break;
+        }
+    }
+
 
     public async void LoadSaveData()
     {
@@ -142,7 +185,6 @@ public enum GameState
     Main,
     Loading,
     Field,
-    Ingame,
     Pause,
     Battle
 }

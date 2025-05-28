@@ -53,6 +53,11 @@ public class PlayerInputModule : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (GameManager.instance.GetGameState() != GameState.Field)
+        {
+            SetAnimation(idle, true);
+            return;
+        }
         // 이동 처리
         if (moveDirection.magnitude > 0.1f)
         {
@@ -86,11 +91,17 @@ public class PlayerInputModule : MonoBehaviour
 
     private void OpenInventory()
     {
-        UIManager.instance.ShowUI<InventoryUI>(new InventoryUIData() { identifier = "InventoryUI", isAllowMultifle = false });
+        if (GameManager.instance.GetGameState() == GameState.Field)
+        {
+            UIManager.instance.ShowUI<InventoryUI>(new InventoryUIData() { identifier = "InventoryUI", isAllowMultifle = false });
+        }
     }
 
     private void OpenMap()
     {
-        UIManager.instance.ShowUI<MapUI>(new UIData() { identifier = "MapUI", isAllowMultifle = false });
+        if (GameManager.instance.GetGameState() == GameState.Field)
+        {
+            UIManager.instance.ShowUI<MapUI>(new UIData() { identifier = "MapUI", isAllowMultifle = false });
+        }
     }
 }
