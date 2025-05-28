@@ -72,10 +72,9 @@ public class GameManager : MonoBehaviour
     {
         await this.sceneLoadManager.LoadScene_Async("FieldScene");
         this.fieldManager.Initialization();
-        this.MapInitialization();
+        MapInitialization();
         MapManager.instance.OnChangeToFieldScene();
     }
-
 
     public async void ChangeSceneFieldToBattle(SOBattleCharacter[] enemys, int[] _levels)
     {
@@ -83,6 +82,7 @@ public class GameManager : MonoBehaviour
         await this.sceneLoadManager.LoadScene_Async("BattleScene");
         MapManager.instance.OnChangeToBattleScene();
     }
+
     public async void ChangeSceneBattleToField(SOBattleCharacter _currentPlayer, SOBattleCharacter _currentNpc)
     {
         this.currentNPC = _currentNpc;

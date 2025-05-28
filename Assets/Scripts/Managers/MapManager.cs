@@ -41,6 +41,7 @@ public class MapManager : MonoBehaviour
     public void LoadMap(string _mapName)
     {
         this.currentMap = Instantiate(DataLibrary.instance.GetMap(_mapName), this.transform);
+        this.currentMap.InitializeMap();
     }
 
 
@@ -49,7 +50,7 @@ public class MapManager : MonoBehaviour
     {
         Destroy(this.currentMap.gameObject);
         this.currentMap = Instantiate(_path.linkedMap, this.transform);
-
+        this.currentMap.InitializeMap();
         var t_player = GameManager.instance.GetPlayer();
         t_player.transform.SetParent(this.currentMap.transform);
 

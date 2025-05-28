@@ -76,10 +76,6 @@ public class SaveGameManager : MonoBehaviour
 
         // 저장 시간 업데이트
         this.currentSaveData.saveDateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-        // 맵 아이템 상태 체크 및 업데이트
-        CheckMapItem();
-
         try
         {
             // 파일에 저장
@@ -207,17 +203,28 @@ public class SaveGameManager : MonoBehaviour
         return;
     }
 
-    public void CheckMapItem()
+    public SaveData NewSaveData()
     {
+        var t_saveData = new SaveData();
+        t_saveData.items = new Dictionary<int, SaveItem>();
+        t_saveData.itemNames = new List<SaveItemMinimal>();
+        t_saveData.chatacterDialogs = new Dictionary<int, bool>();
+        foreach (var t_dialog in DataLibrary.instance.GetDialogTable())
+        {
+            t_saveData.chatacterDialogs.Add(t_dialog.Key, false);
+        }
+
+        t_saveData.mapItems = new Dictionary<string, List<bool>>();
         foreach (var map in DataLibrary.instance.GetMapAll())
         {
-            var Items = map.GetItems();
-            this.currentSaveData.mapItems.Add(map.name, new List<bool>());
-            foreach (var item in Items)
+            t_saveData.mapItems.Add(map.GetID(), new List<bool>());
+            foreach (var item in map.GetItems())
             {
-               this.currentSaveData.mapItems[map.name].Add(item.isGeted);
+                t_saveData.mapItems[map.GetID()].Add(false);
             }
         }
+        t_saveData.currentMap = "입구";
+        return t_saveData;
     }
 
     public void SaveToJsonFile<T>(T data, string fileName)

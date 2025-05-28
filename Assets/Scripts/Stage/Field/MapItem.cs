@@ -7,8 +7,6 @@ public class MapItem : MonoBehaviour, IInteractable
     [SerializeField] SOItem item;
     [SerializeField] SpriteRenderer spriteRenderer;
 
-    public bool isGeted = false;
-
 
     public void Start()
     {
