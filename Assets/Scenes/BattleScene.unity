@@ -7112,6 +7112,7 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   areaCenter: {x: 0, y: 0}
   areaSize: {x: 30, y: 20}
+  offset: {x: 0, y: 0, z: -5}
   followSpeed: 5
 --- !u!20 &519420031
 Camera:
@@ -18815,13 +18816,6 @@ MonoBehaviour:
       currentState: 0
   battleCharacterPrefab: {fileID: 8620806760606421821, guid: 9e7a0ec6532af0e4bacdc5d1f48384c5, type: 3}
   enemyCharacterPrefab: {fileID: 8226280681530266279, guid: 643d684020ffce14b96248c6e4e82130, type: 3}
-  allyCharacters:
-  - {fileID: 0}
-  - {fileID: 0}
-  enemyCharacters:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   selectButtonGroup: {fileID: 750343554}
   currentSelectedCharacter: {fileID: 0}
   nextButton: {fileID: 658839687}
