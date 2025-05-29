@@ -33,8 +33,13 @@ public class BattleCharacterBase : MonoBehaviour
     [SerializeField] CharacterActionType currentAction;
     [SerializeField] protected SOBattleCharacter soBattleCharacter;
 
+    
+
     [SerializeField] HealthPreferences healthPreferences;
-    public RaceType raceType;
+    [SerializeField] Vector3 hpBarOffset = new Vector3(0f, 1.5f, 0f); // HP 바의 오프셋 설정
+
+    [SerializeField] float moveTime = 1f;
+    public RaceType raceType; 
     #region Get/Set
     public float MaxHP() => this.maxHP;
     public float GetMp() => this.currentMp;
@@ -119,22 +124,22 @@ public class BattleCharacterBase : MonoBehaviour
         {
             if (this.soBattleCharacter.IsModelBasicRight())
             {
-                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
+                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
             }
             else
             {
-                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
+                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
             }
         }
         else
         {
             if (this.soBattleCharacter.IsModelBasicRight())
             {
-                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
+                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
             }
             else
             {
-                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
+                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
             }
         }
 
@@ -173,6 +178,8 @@ public class BattleCharacterBase : MonoBehaviour
             return;
         }
 
+        var t_screenHpPosition = Camera.main.WorldToScreenPoint(this.healthPreferences.transform.position);
+
         this.healthPreferences.SetTotalHealth(maxHP);
         this.healthPreferences.SetCurrentHealth(currentHP);
 
@@ -185,22 +192,22 @@ public class BattleCharacterBase : MonoBehaviour
         {
             if (this.soBattleCharacter.IsModelBasicRight())
             {
-                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
+                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
             }
             else
             {
-                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
+                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
             }
         }
         else
         {
             if (this.soBattleCharacter.IsModelBasicRight())
             {
-                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
+                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
             }
             else
             {
-                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
+                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
             }
         }
 
@@ -286,29 +293,55 @@ public class BattleCharacterBase : MonoBehaviour
 
     #region 턴 처리
     #region 공격/피격
-    public async UniTask AttackMovePoint()
+    public async UniTask MoveMiddlePoint()
     {
         Vector3 t_middlePoint = this.battleManager.GetMiddlePoint().position;
-        this.spineModelController.PlayAnimation(AnimationType.walk);
+        //this.spineModelController.PlayAnimation(AnimationType.walk);
         await MovePoint(t_middlePoint);
     }
     public async UniTask MovePoint(Vector3 _point)
     {
-        while (Vector3.Distance(this.transform.position, _point) >= 0.5f)
+        float t_time = 0f;
+        Vector3 startPos = this.transform.position;
+        float jumpHeight = 1.5f; // 점프 높이
+
+        while (t_time < moveTime)
         {
-            this.transform.position = Vector3.MoveTowards(this.transform.position, _point, Time.fixedDeltaTime * 10f);
+            float t_lerp = t_time / moveTime;
+            
+            // X와 Z축은 선형 보간
+            float t_xPos = Mathf.Lerp(startPos.x, _point.x, t_lerp);
+            float t_zPos = Mathf.Lerp(startPos.z, _point.z, t_lerp);
+            
+            // Y축은 포물선 형태로 보간 (sin 곡선 활용)
+            float t_yPos = Mathf.Lerp(startPos.y, _point.y, t_lerp) + (Mathf.Sin(t_lerp * Mathf.PI) * jumpHeight);
+            
+            this.transform.position = new Vector3(t_xPos, t_yPos, t_zPos);
+            t_time += Time.fixedDeltaTime;
             await UniTask.WaitForFixedUpdate();
         }
+
+        // 정확한 최종 위치 설정
+        this.transform.position = _point;
         return;
     }
 
-    public async UniTask AttackMotion()
+
+    public async UniTask AttackPosition()
     {
         this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
-        await AttackMovePoint();
+        await MoveMiddlePoint();
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
         await this.spineModelController.PlayAnimationAsync(AnimationType.meleeAttack);
     }
+    public async UniTask AttackPosition(Vector3 _position)
+    {
+        this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
+        await MovePoint(_position);
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        await this.spineModelController.PlayAnimationAsync(AnimationType.meleeAttack);
+    }
+
 
     public async UniTask ResetPosition()
     {
@@ -479,6 +512,7 @@ public class BattleCharacterBase : MonoBehaviour
     {
         this.currentMp -= _amount;
     }
+
 
 }
 public enum RaceType
