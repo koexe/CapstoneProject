@@ -37,6 +37,7 @@ public class BattleCharacterBase : MonoBehaviour
     public RaceType raceType;
     #region Get/Set
     public float MaxHP() => this.maxHP;
+    public float GetMp() => this.currentMp;
     public void SetActionDisabled(bool _isActionDisabled) => this.isActionDisabled = _isActionDisabled;
     public void SetAction(CharacterActionType _action) => this.currentAction = _action;
     public CharacterActionType GetAction() => this.currentAction;
