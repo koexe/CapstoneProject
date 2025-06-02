@@ -15,7 +15,10 @@ public class BattleCharacterBase : MonoBehaviour
     [SerializeField] SOSkillBase[] skills;
     [SerializeField] SOSkillBase selectedSkill;
     [SerializeField] protected BuffSystem buffSystem;
-    [SerializeField] TextMeshPro hpText;
+
+    [SerializeField] GameObject arrow;
+
+    [SerializeField] SpriteRenderer characterShadow;
 
     [SerializeField] ParticleSystem hitParticle;
 
@@ -33,13 +36,13 @@ public class BattleCharacterBase : MonoBehaviour
     [SerializeField] CharacterActionType currentAction;
     [SerializeField] protected SOBattleCharacter soBattleCharacter;
 
-    
+
 
     [SerializeField] HealthPreferences healthPreferences;
     [SerializeField] Vector3 hpBarOffset = new Vector3(0f, 1.5f, 0f); // HP 바의 오프셋 설정
 
     [SerializeField] float moveTime = 1f;
-    public RaceType raceType; 
+    public RaceType raceType;
     #region Get/Set
     public float MaxHP() => this.maxHP;
     public float GetMp() => this.currentMp;
@@ -59,6 +62,9 @@ public class BattleCharacterBase : MonoBehaviour
         return this.statBlock.GetStat(_type);
     }
     public BattleStatus GetStatus() => this.soBattleCharacter.GetStatus();
+
+    public void SetArrow(bool _is) => this.arrow.SetActive(_is);
+    public void SetShadow(bool _is) => this.characterShadow.gameObject.SetActive(_is);
     #endregion
     public SOSkillBase[] GetSkills() => this.skills;
     public void RecalculateMaxHP()
@@ -104,6 +110,7 @@ public class BattleCharacterBase : MonoBehaviour
             this.skills[i] = Instantiate(_character.GetSkills()[i]);
         this.transform.name = _character.GetCharacterName();
         this.raceType = _character.GetRaceType();
+        this.characterShadow.sprite = _character.GetBattleSprite();
 
         // 체력 UI 초기화
         if (this.healthPreferences == null)
@@ -170,7 +177,7 @@ public class BattleCharacterBase : MonoBehaviour
             this.skills[i] = Instantiate(_character.GetSkills()[i]);
         this.transform.name = _character.GetCharacterName();
         this.raceType = _character.GetRaceType();
-
+        this.characterShadow.sprite = _character.GetBattleSprite();
         // 체력 UI 초기화
         if (this.healthPreferences == null)
         {
@@ -308,14 +315,14 @@ public class BattleCharacterBase : MonoBehaviour
         while (t_time < moveTime)
         {
             float t_lerp = t_time / moveTime;
-            
+
             // X와 Z축은 선형 보간
             float t_xPos = Mathf.Lerp(startPos.x, _point.x, t_lerp);
             float t_zPos = Mathf.Lerp(startPos.z, _point.z, t_lerp);
-            
+
             // Y축은 포물선 형태로 보간 (sin 곡선 활용)
             float t_yPos = Mathf.Lerp(startPos.y, _point.y, t_lerp) + (Mathf.Sin(t_lerp * Mathf.PI) * jumpHeight);
-            
+
             this.transform.position = new Vector3(t_xPos, t_yPos, t_zPos);
             t_time += Time.fixedDeltaTime;
             await UniTask.WaitForFixedUpdate();
@@ -325,8 +332,6 @@ public class BattleCharacterBase : MonoBehaviour
         this.transform.position = _point;
         return;
     }
-
-
     public async UniTask AttackPosition()
     {
         this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
@@ -341,20 +346,17 @@ public class BattleCharacterBase : MonoBehaviour
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
         await this.spineModelController.PlayAnimationAsync(AnimationType.meleeAttack);
     }
-
-
     public async UniTask ResetPosition()
     {
         var t_position = this.battleManager.GetOriginTranform(this).position;
+        this.spineModelController.PlayAnimation(AnimationType.idle);
         await MovePoint(t_position);
     }
-
     public async UniTask AttackTask(HitInfo _hitInfo)
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
         await _hitInfo.target.HitTask(_hitInfo);
-        this.battleManager.ShowText($"다음차례!");
-        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
     }
     public async UniTask TakeDamage(HitInfo _hitInfo)
     {
@@ -373,7 +375,13 @@ public class BattleCharacterBase : MonoBehaviour
 
         this.hitParticle.Play();
         await this.spineModelController.PlayAnimationAsync(AnimationType.hit);
-        this.battleManager.ShowText($"{(int)t_finalDamage}의 데미지를 {this.name} 이 받았다!!");
+        string t_text = "";
+        if (_hitInfo.isCritical)
+        {
+            t_text += $"치명타! ";
+        }
+        t_text += $"{(int)t_finalDamage}의 데미지를 {this.name} 이 받았다!!";
+        this.battleManager.ShowText(t_text);
         this.currentHP = Mathf.Max(0f, this.currentHP - (int)t_finalDamage);
         this.healthPreferences.SetCurrentHealth(currentHP);
         this.spineModelController.PlayAnimation(AnimationType.idle);

@@ -52,18 +52,18 @@ public class BattleUIManager
 {
     private TextMeshProUGUI battleText;
     private GameObject selectButtonGroup;
-    private GameObject nextButton;
+    //private GameObject nextButton;
 
-    public BattleUIManager(TextMeshProUGUI battleText, GameObject selectButtonGroup, GameObject nextButton)
+    public BattleUIManager(TextMeshProUGUI battleText, GameObject selectButtonGroup)
     {
         this.battleText = battleText;
         this.selectButtonGroup = selectButtonGroup;
-        this.nextButton = nextButton;
+        //this.nextButton = nextButton;
     }
 
     public void ShowText(string text) => battleText.text = text;
     public void SetSelectButtonGroupActive(bool isActive) => selectButtonGroup.SetActive(isActive);
-    public void SetNextButtonActive(bool isActive) => nextButton.SetActive(isActive);
+    //public void SetNextButtonActive(bool isActive) => nextButton.SetActive(isActive);
 }
 
 public class BattleManager : MonoBehaviour
@@ -78,7 +78,7 @@ public class BattleManager : MonoBehaviour
 
     [SerializeField] BattleCharacterBase currentSelectedCharacter;
 
-    [SerializeField] GameObject nextButton;
+    //[SerializeField] GameObject nextButton;
 
     [SerializeField] TurnSequence.BattleSequenceType currentSequenceType;
 
@@ -95,7 +95,7 @@ public class BattleManager : MonoBehaviour
     private void Awake()
     {
         characterManager = new BattleCharacterManager();
-        uiManager = new BattleUIManager(battleText, selectButtonGroup, nextButton);
+        uiManager = new BattleUIManager(battleText, selectButtonGroup);
     }
 
     public void SetCurrentSequenceType(TurnSequence.BattleSequenceType _type) => this.currentSequenceType = _type;
@@ -273,12 +273,18 @@ public class BattleManager : MonoBehaviour
             () =>
             {
                 ActiveSelectButtonGroup(true);
-                this.nextButton.SetActive(false);
+                //this.nextButton.SetActive(false);
                 this.currentSelectedCharacter = characterManager.GetAlly(0);
                 GameManager.instance.GetCamera().SetTarget(this.currentSelectedCharacter.transform);
+                SetChooseSequenceState(ChooseSequence.ChooseState.None);
             },
             () =>
             {
+                SetAllyArrow(false);
+                SetEnemyArrow(false);
+                SetAllyShadow(false);
+                SetEnemyShadow(false);  
+
                 ActiveSelectButtonGroup(false);
                 GameManager.instance.GetCamera().SetTarget(null);
             }));
@@ -456,7 +462,8 @@ public class BattleManager : MonoBehaviour
         if (t_isAllReady == true)
         {
             EnemyAttackSelect();
-            uiManager.SetNextButtonActive(true);
+            //uiManager.SetNextButtonActive(true);
+            NextSequence();
         }
         else
         {
@@ -533,12 +540,56 @@ public class BattleManager : MonoBehaviour
     }
 
 
-    void SetChooseSequenceState(ChooseSequence.ChooseState _state)
+    public void SetChooseSequenceState(ChooseSequence.ChooseState _state)
     {
         var t_Sequence = this.turnSystem.GetCurrentSequence() as ChooseSequence;
         if (t_Sequence != null)
         {
+            if (_state == ChooseSequence.ChooseState.None)
+            {
+                SetAllyArrow(true);
+                SetEnemyArrow(false);
+            }
+            else if (_state == ChooseSequence.ChooseState.SelectEnemy)
+            {
+                SetAllyArrow(false);
+                SetEnemyArrow(true);
+            }
+            else
+            {
+                SetAllyArrow(false);
+                SetEnemyArrow(false);
+            }
             t_Sequence.state = _state;
+        }
+    }
+
+    public void SetAllyArrow(bool _is)
+    {
+        foreach (var t_character in characterManager.GetAllies())
+        {
+            t_character.SetArrow(_is);
+        }
+    }
+    public void SetEnemyArrow(bool _is)
+    {
+        foreach (var t_character in characterManager.GetEnemies())
+        {
+            t_character.SetArrow(_is);
+        }
+    }
+        public void SetEnemyShadow(bool _is)
+    {
+        foreach (var t_character in characterManager.GetEnemies())
+        {
+            t_character.SetShadow(_is);
+        }
+    }
+        public void SetAllyShadow(bool _is)
+    {
+        foreach (var t_character in characterManager.GetAllies())
+        {
+            t_character.SetShadow(_is);
         }
     }
 

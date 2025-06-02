@@ -137,15 +137,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public async void LoadSaveData()
-    {
-        this.mapManager.LoadMap(this.saveGameManager.GetCurrentSaveData().currentMap);
-        await this.sceneLoadManager.LoadScene_Async("FieldScene");
-        this.fieldManager.Initialization();
-        this.MapInitialization();
-        MapManager.instance.OnChangeToFieldScene();
-    }
-
     public class OnChangeBattleSceneData
     {
         [SerializeField] SOBattleCharacter currentPlayer;

@@ -301,6 +301,7 @@ public class StatBlock
         this.baseStats.Add(StatType.Atk, 10f);
         this.baseStats.Add(StatType.Def, 5f);
         this.baseStats.Add(StatType.Evasion, 5f);
+        this.baseStats.Add(StatType.CriticalChance, 10f);
         this.baseStats.Add(StatType.Acc, 95f);
         this.baseStats.Add(StatType.Spd, 10f);
         this.baseStats.Add(StatType.HealEffecincy, 100f);

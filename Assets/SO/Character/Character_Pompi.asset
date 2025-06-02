@@ -26,6 +26,7 @@ MonoBehaviour:
     baseAtk: 7
     baseDef: 2
     baseSpeed: 3
+  battleSprite: {fileID: 21300000, guid: f9721991af834c64ba3e3a40d421e607, type: 3}
   skeletonDataAsset: {fileID: 11400000, guid: 9c42a2d17315d09409592368ae0cd564, type: 2}
   basicAttackAnim: {fileID: 11400000, guid: 6c8ed8cd59d47f64d95dfc8c3d5e8ec2, type: 2}
   additionalAttackAnim: {fileID: 0}

@@ -26,22 +26,19 @@ public class MapManager : MonoBehaviour
     {
 #if UNITY_EDITOR
         if (this.isDebugingMap)
-            this.currentMap = Instantiate(startMap, this.transform);
+            LoadMap(this.startMap.GetID());
         else
-        {
             LoadMap(SaveGameManager.instance.GetCurrentSaveData().currentMap);
-        }
 #else
         LoadMap(SaveGameManager.instance.GetCurrentSaveData().currentMap);
 #endif
-
-
     }
 
     public void LoadMap(string _mapName)
     {
         this.currentMap = Instantiate(DataLibrary.instance.GetMap(_mapName), this.transform);
         this.currentMap.InitializeMap();
+        SaveGameManager.instance.GetCurrentSaveData().currentMap = _mapName;
     }
 
 
@@ -54,7 +51,7 @@ public class MapManager : MonoBehaviour
         var t_player = GameManager.instance.GetPlayer();
         t_player.transform.SetParent(this.currentMap.transform);
 
-
+        SaveGameManager.instance.GetCurrentSaveData().currentMap = this.currentMap.GetID();
 
         t_player.transform.position = this.currentMap.GetMapPoint(_path.linkedMapPoint).transform.position;
     }

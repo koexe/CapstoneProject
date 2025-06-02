@@ -9,7 +9,8 @@ public class SavePoint : MonoBehaviour, IInteractable
         {
             identifier = "SaveUI",
             isAllowMultifle = false,
-            order = 100
+            order = 100,
+            isLoadOnly = false
         });
     }
 } 

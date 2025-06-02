@@ -9,6 +9,7 @@ public class SOBattleCharacter : ScriptableObject
     [SerializeField] SOSkillBase[] skills;
     [SerializeField] string characterName;
     [SerializeField] BattleStatus status;
+    [SerializeField] Sprite battleSprite;
     [SerializeField] SkeletonDataAsset skeletonDataAsset;
     [SerializeField] AnimationReferenceAsset basicAttackAnim;
     [SerializeField] AnimationReferenceAsset additionalAttackAnim;
@@ -22,6 +23,7 @@ public class SOBattleCharacter : ScriptableObject
     public BattleStatus GetStatus() => status;
     public RaceType GetRaceType() => raceType;
     public bool IsModelBasicRight() => isModelBasicRight;
+    public Sprite GetBattleSprite() => battleSprite;
 
     public SkeletonDataAsset GetSkeletonDataAsset() => skeletonDataAsset;
     public (AnimationReferenceAsset, AnimationReferenceAsset, AnimationReferenceAsset) GetAnimations()

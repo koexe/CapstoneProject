@@ -79,6 +79,7 @@ public class InventoryUI : UIBase
         }
         t_currentSaveData.items = t_itemDictionary;
         SaveGameManager.instance.SetCurrentSaveData(t_currentSaveData); 
+        GameManager.instance.SetGameState(GameState.Field);
         return;
     }
 

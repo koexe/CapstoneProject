@@ -37,6 +37,10 @@ public class SaveSlot : MonoBehaviour
         {
             saveButton.gameObject.SetActive(false);
         }
+        else
+        {
+            saveButton.gameObject.SetActive(true);
+        }
 
         SetSelected(false);
     }
