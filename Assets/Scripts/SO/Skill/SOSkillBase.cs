@@ -33,7 +33,8 @@ public class SOSkillBase : ScriptableObject
 
     public virtual async UniTask Execute()
     {
-        await Task.Delay(3000); // 밀리초 단위 (3초)
+        await Task.Delay(1000); // 밀리초 단위 (3초)
         this.character.SetActionDone(true);
+        this.character.UseMp(this.requireMp);
     }
 }

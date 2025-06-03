@@ -25,7 +25,6 @@ public class SkillUI : MonoBehaviour
         {
             this.skillButton.interactable = false;
         }
-        this.skillButton.interactable = false;
         this.skillButton.onClick.AddListener(() => _action.Invoke(_character, _skill));
 
     }

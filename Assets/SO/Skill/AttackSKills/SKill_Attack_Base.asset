@@ -20,6 +20,10 @@ MonoBehaviour:
   attackRange: 0
   statusEffect: 11
   attackRaceType: 0
-  requireMp: 0
+  requireMp: 10
+  attackParticle: {fileID: 0}
+  hitParticle: {fileID: 0}
+  attackSound: {fileID: 0}
+  hitSound: {fileID: 0}
   attackModifier: 1
   selfPanlty: 0

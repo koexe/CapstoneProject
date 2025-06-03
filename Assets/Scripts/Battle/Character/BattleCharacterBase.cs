@@ -67,15 +67,19 @@ public class BattleCharacterBase : MonoBehaviour
     public void SetShadow(bool _is) => this.characterShadow.gameObject.SetActive(_is);
     #endregion
     public SOSkillBase[] GetSkills() => this.skills;
-    public void RecalculateMaxHP()
+    public void RecalculateMaxHPMP()
     {
         this.maxHP = this.statBlock.GetStat(StatType.Hp);
+        this.maxMp = this.statBlock.GetStat(StatType.Mp);
         this.healthPreferences.SetTotalHealth(maxHP);
 
         // 비율 유지
         float t_ratio = Mathf.Clamp01(this.currentHP / this.maxHP);
         this.currentHP = this.maxHP * t_ratio;
         this.healthPreferences.SetCurrentHealth(currentHP);
+
+        float t_ratioMp = Mathf.Clamp01(this.currentMp / this.maxMp);
+        this.currentMp = this.maxMp * t_ratioMp;
     }
     public async UniTask Summary()
     {
@@ -86,6 +90,14 @@ public class BattleCharacterBase : MonoBehaviour
     {
         this.currentHP = Mathf.Min(this.maxHP, this.currentHP + _amount);
         this.healthPreferences.SetCurrentHealth(currentHP);
+    }
+    public void HealMp(float _amount)
+    {
+        this.currentMp = Mathf.Min(this.maxMp, this.currentMp + _amount);
+    }
+    public void UseMp(float _amount)
+    {
+        this.currentMp = Mathf.Max(0f, this.currentMp - _amount);
     }
     public void Initialization(BattleManager _battleManager, SOBattleCharacter _character, int _level)
     {
@@ -351,6 +363,7 @@ public class BattleCharacterBase : MonoBehaviour
         var t_position = this.battleManager.GetOriginTranform(this).position;
         this.spineModelController.PlayAnimation(AnimationType.idle);
         await MovePoint(t_position);
+        this.spineModelController.PlayAnimation(AnimationType.idle);
     }
     public async UniTask AttackTask(HitInfo _hitInfo)
     {
@@ -477,7 +490,7 @@ public class BattleCharacterBase : MonoBehaviour
     {
         this.statBlock = new StatBlock(_status);
         this.maxHP = this.currentHP = this.statBlock.GetStat(StatType.Hp);
-
+        this.maxMp = this.currentMp = this.statBlock.GetStat(StatType.Mp);
     }
     #endregion
     public struct HitInfo
@@ -515,12 +528,6 @@ public class BattleCharacterBase : MonoBehaviour
     {
         this.skills = newSkills;
     }
-
-    public void UseMp(float _amount)
-    {
-        this.currentMp -= _amount;
-    }
-
 
 }
 public enum RaceType
