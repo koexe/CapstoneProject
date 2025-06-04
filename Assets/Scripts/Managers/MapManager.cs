@@ -34,6 +34,12 @@ public class MapManager : MonoBehaviour
 #endif
     }
 
+    public void Detialization()
+    {
+        Destroy(this.currentMap.gameObject);
+        this.currentMap = null;
+    }
+
     public void LoadMap(string _mapName)
     {
         this.currentMap = Instantiate(DataLibrary.instance.GetMap(_mapName), this.transform);

@@ -16,6 +16,7 @@ public class SOBattleCharacter : ScriptableObject
     [SerializeField] AnimationReferenceAsset hitAnim;
     [SerializeField] AnimationReferenceAsset idleAnim;
     [SerializeField] bool isModelBasicRight;
+    [SerializeField] ParticleSystem attackParticle;
 
     public int GetIdentifier() => identifier;
     public SOSkillBase[] GetSkills() => skills;

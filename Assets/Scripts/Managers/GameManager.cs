@@ -97,6 +97,13 @@ public class GameManager : MonoBehaviour
         this.cameraController.SetTarget(this.player.transform);
     }
 
+    public async UniTask GameOver()
+    {
+        
+        this.mapManager.Detialization();    
+        await this.sceneLoadManager.LoadScene_Async("MainScene");
+    }
+
     public void ChangeGameState(GameState _gameState)
     {
         switch (this.gameState)

@@ -346,7 +346,7 @@ public class EndSequence : TurnSequence
         base.SequenceAction();
         if (this.battleManager.IsAllyAllDie())
         {
-            //게임오버 작동 구현
+            await GameManager.instance.GameOver();
         }
         else if (this.battleManager.IsEnemyAllDie())
         {
