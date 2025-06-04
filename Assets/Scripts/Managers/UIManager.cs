@@ -34,8 +34,9 @@ public class UIManager : MonoBehaviour
     {
         foreach (var ui in activeUIs)
         {
-            ui.Value.Hide();
+            Destroy(ui.Value.gameObject);
         }
+        this.activeUIs.Clear();
     }
 
     public void HideUI(string identifier)

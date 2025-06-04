@@ -225,7 +225,6 @@ public class BattleManager : MonoBehaviour
 
             turnSystem = new TurnSystem();
             InitializeTurnSystem();
-            this.turnSystem.SequenceAction();
         }
         catch (Exception e)
         {
@@ -246,7 +245,6 @@ public class BattleManager : MonoBehaviour
         else
         {
             NewTurn();
-            this.turnSystem.SequenceAction();
         }
     }
 
@@ -272,8 +270,7 @@ public class BattleManager : MonoBehaviour
         this.turnSystem.AddSequence(new ChooseSequence(this, characterManager.GetAllies(), characterManager.GetEnemies(),
             () =>
             {
-                ActiveSelectButtonGroup(true);
-                //this.nextButton.SetActive(false);
+                this.selectButtonGroup.gameObject.SetActive(true);
                 this.currentSelectedCharacter = characterManager.GetAlly(0);
                 GameManager.instance.GetCamera().SetTarget(this.currentSelectedCharacter.transform);
                 SetChooseSequenceState(ChooseSequence.ChooseState.None);
@@ -283,14 +280,14 @@ public class BattleManager : MonoBehaviour
                 SetAllyArrow(false);
                 SetEnemyArrow(false);
                 SetAllyShadow(false);
-                SetEnemyShadow(false);  
-
-                ActiveSelectButtonGroup(false);
+                SetEnemyShadow(false);
                 GameManager.instance.GetCamera().SetTarget(null);
             }));
-        this.turnSystem.AddSequence(new ExecuteSequence(this, TurnCheck()));
+        this.turnSystem.AddSequence(new ExecuteSequence(this, TurnCheck(), _beforeAction: () => this.selectButtonGroup.gameObject.SetActive(false)));
         this.turnSystem.AddSequence(new SummarySequence(this, TurnCheck(), _afterAction: TurnEnd));
         this.turnSystem.AddSequence(new EndSequence(this));
+
+        this.turnSystem.SequenceAction();
     }
 
     #region 기능
@@ -300,7 +297,6 @@ public class BattleManager : MonoBehaviour
         uiManager.ShowText(_text);
     }
 
-    public void ActiveSelectButtonGroup(bool _is) => uiManager.SetSelectButtonGroupActive(_is);
 
     public void HidePlayerAction()
     {
@@ -462,7 +458,6 @@ public class BattleManager : MonoBehaviour
         if (t_isAllReady == true)
         {
             EnemyAttackSelect();
-            //uiManager.SetNextButtonActive(true);
             NextSequence();
         }
         else
@@ -485,6 +480,7 @@ public class BattleManager : MonoBehaviour
         {
             case CharacterActionType.Attack:
                 this.currentSelectedCharacter.SetAction(CharacterActionType.Skill);
+                this.selectButtonGroup.gameObject.SetActive(false);
                 UIManager.instance.ShowUI<SkillSelectUI>(new SkillUIData()
                 {
                     battleManager = this,
@@ -493,7 +489,12 @@ public class BattleManager : MonoBehaviour
                     skills = this.currentSelectedCharacter.GetSkills(),
                     isAllowMultifle = false,
                     order = 0,
-                    action = UISelectSkill
+                    action = UISelectSkill,
+                    onHide = () =>
+                    {
+                        
+                        this.selectButtonGroup.gameObject.SetActive(true);
+                    }
                 });
                 break;
             case CharacterActionType.Talk:
@@ -578,14 +579,14 @@ public class BattleManager : MonoBehaviour
             t_character.SetArrow(_is);
         }
     }
-        public void SetEnemyShadow(bool _is)
+    public void SetEnemyShadow(bool _is)
     {
         foreach (var t_character in characterManager.GetEnemies())
         {
             t_character.SetShadow(_is);
         }
     }
-        public void SetAllyShadow(bool _is)
+    public void SetAllyShadow(bool _is)
     {
         foreach (var t_character in characterManager.GetAllies())
         {

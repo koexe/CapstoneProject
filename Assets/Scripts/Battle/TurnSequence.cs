@@ -280,22 +280,22 @@ public class ExecuteSequence : TurnSequence
     }
     public async UniTask ActionTask()
     {
+        int t_defenceIndex = 0;
         for (int i = 0; i < battleCharacters.Count; i++)
         {
             if (battleCharacters[i].GetAction() == CharacterActionType.Defence)
             {
-                GameStatics.Swap(battleCharacters, i, 0);
+                GameStatics.Swap(battleCharacters, i, t_defenceIndex);
+                t_defenceIndex++;
             }
         }
 
-        foreach (var t_battleCharacter in battleCharacters)
+        for (int i = 0; i < battleCharacters.Count; i++)
         {
-            if (!t_battleCharacter.IsDie())
-                await t_battleCharacter.StartAction();
+
+            if (!this.battleCharacters[i].IsDie())
+                await this.battleCharacters[i].StartAction();
         }
-
-        battleManager.NextSequence();
-
     }
 }
 
@@ -324,10 +324,6 @@ public class SummarySequence : TurnSequence
             if (!t_battleCharacter.IsDie())
                 await t_battleCharacter.Summary();
         }
-
-        battleManager.NextSequence();
-
-
     }
 }
 
@@ -350,7 +346,7 @@ public class EndSequence : TurnSequence
         }
         else if (this.battleManager.IsEnemyAllDie())
         {
-            await EndTask();
+            await EndTask(); 
         }
         else
         {

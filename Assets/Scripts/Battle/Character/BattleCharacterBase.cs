@@ -374,7 +374,7 @@ public class BattleCharacterBase : MonoBehaviour
     public async UniTask TakeDamage(HitInfo _hitInfo)
     {
         float t_finalDamage = _hitInfo.hitDamage;
-        if (this.isInDefence)
+        if (!_hitInfo.isDotDamage && this.isInDefence)
         {
             if (_hitInfo.isRaceAdvantage == 1)
             {
@@ -382,7 +382,7 @@ public class BattleCharacterBase : MonoBehaviour
             }
             else
             {
-                t_finalDamage *= 0.75f;
+                t_finalDamage *= 0.25f;
             }
         }
 
@@ -438,6 +438,7 @@ public class BattleCharacterBase : MonoBehaviour
                 this.battleManager.ShowText($"하지만 실패했다!");
             }
         }
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
     }
     #endregion
     #region 도망
@@ -498,6 +499,7 @@ public class BattleCharacterBase : MonoBehaviour
         public bool isCritical;
         public int isRaceAdvantage;
         public float hitDamage;
+        public bool isDotDamage;
         public RaceType attackRace;
         public StatusEffectID statusEffect;
         public BattleCharacterBase target;
