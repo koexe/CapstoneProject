@@ -99,7 +99,7 @@ public class BattleCharacterBase : MonoBehaviour
     {
         this.currentMp = Mathf.Max(0f, this.currentMp - _amount);
     }
-    public void Initialization(BattleManager _battleManager, SOBattleCharacter _character, int _level)
+    public void EnemyInitialization(BattleManager _battleManager, SOBattleCharacter _character, int _level)
     {
         this.battleManager = _battleManager;
         if (_character.GetSkeletonDataAsset() != null)
@@ -167,7 +167,7 @@ public class BattleCharacterBase : MonoBehaviour
 
         return;
     }
-    public void Initialization(BattleManager _battleManager, SOBattleCharacter _character)
+    public void PlayerInitialization(BattleManager _battleManager, SOBattleCharacter _character , int _currentHp)
     {
         this.battleManager = _battleManager;
         if (_character.GetSkeletonDataAsset() != null)
@@ -184,6 +184,7 @@ public class BattleCharacterBase : MonoBehaviour
         this.soBattleCharacter = Instantiate(_character);
         this.characterName = soBattleCharacter.GetCharacterName();
         InitStats(soBattleCharacter.GetStatus());
+        this.currentHP = _currentHp;
         this.skills = new SOSkillBase[soBattleCharacter.GetSkills().Length];
         for (int i = 0; i < skills.Length; i++)
             this.skills[i] = Instantiate(_character.GetSkills()[i]);

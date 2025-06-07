@@ -281,21 +281,43 @@ public class ExecuteSequence : TurnSequence
     public async UniTask ActionTask()
     {
         int t_defenceIndex = 0;
+
         for (int i = 0; i < battleCharacters.Count; i++)
         {
             if (battleCharacters[i].GetAction() == CharacterActionType.Defence)
             {
-                GameStatics.Swap(battleCharacters, i, t_defenceIndex);
+                var t_character = battleCharacters[i];
+                battleCharacters.RemoveAt(i);
+                battleCharacters.Insert(t_defenceIndex, t_character);
                 t_defenceIndex++;
+                i = t_defenceIndex - 1; // 인덱스 재조정
             }
         }
-
         for (int i = 0; i < battleCharacters.Count; i++)
         {
-
             if (!this.battleCharacters[i].IsDie())
                 await this.battleCharacters[i].StartAction();
+
+            if (this.battleManager.IsAllyAllDie())
+            {
+                await GameManager.instance.GameOver();
+                break;
+            }
+            else if (this.battleManager.IsEnemyAllDie())
+            {
+                await EndTask();
+                break;
+            }
+
         }
+    }
+
+    async UniTask EndTask()
+    {
+        battleManager.ShowText("승리했다! 전투 종료!");
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        battleManager.ChangeToFieldScene();
+
     }
 }
 

@@ -185,7 +185,7 @@ public class BattleManager : MonoBehaviour
                 }
                 ally.transform.position = allyPositions[i].position;
                 characterManager.AddAlly(allyComponent);
-                allyComponent.Initialization(this, t_allys[i]);
+                allyComponent.PlayerInitialization(this, t_allys[i], i == 0 ? GameManager.instance.GetBattleSceneData().GetPlayerHp() : GameManager.instance.GetBattleSceneData().GetNpcHp());
             }
 
             for (int i = 0; i < enemyData.Length; i++)
@@ -220,7 +220,7 @@ public class BattleManager : MonoBehaviour
 
                 enemy.transform.position = enemyPositions[i].position;
                 characterManager.AddEnemy(enemyComponent);
-                enemyComponent.Initialization(this, enemyData[i], enemyLevels[i]);
+                enemyComponent.EnemyInitialization(this, enemyData[i], enemyLevels[i]);
             }
 
             turnSystem = new TurnSystem();
@@ -430,6 +430,7 @@ public class BattleManager : MonoBehaviour
 
     public void ChangeToFieldScene()
     {
+
         GameManager.instance.ChangeSceneBattleToField(characterManager.GetAllies()[0].GetBattleCharacter(), characterManager.GetAllies()[1].GetBattleCharacter());
     }
 
@@ -492,7 +493,7 @@ public class BattleManager : MonoBehaviour
                     action = UISelectSkill,
                     onHide = () =>
                     {
-                        
+
                         this.selectButtonGroup.gameObject.SetActive(true);
                     }
                 });

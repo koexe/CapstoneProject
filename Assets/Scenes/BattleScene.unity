@@ -28423,6 +28423,7 @@ GameObject:
   - component: {fileID: 979335115}
   - component: {fileID: 979335114}
   - component: {fileID: 979335116}
+  - component: {fileID: 979335117}
   m_Layer: 0
   m_Name: f9527f5c-d644-437b-a85a-75fcefede2d9
   m_TagString: Untagged
@@ -28508,6 +28509,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skin: {fileID: 979335115}
+--- !u!114 &979335117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 979335113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parallaxFactor: 0.5
 --- !u!1 &983745376
 GameObject:
   m_ObjectHideFlags: 0
