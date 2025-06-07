@@ -80,7 +80,10 @@ public class BattleStatus
 
         return t_levelUpOccurred;
     }
-    
+    public void SetLevel(int _level)
+    {
+        this.level = _level;
+    }
     public void GainExp(int _exp)
     {
         this.exp += _exp;

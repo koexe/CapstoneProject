@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
+using System.Linq;
 
 /// <summary>
 /// This class contains all settings and health update logic
@@ -19,43 +19,65 @@ public class HealthPreferences : MonoBehaviour
     public float baseHealth = 100;
     public float currentHealth;
 
+    [SerializeField] private Health.FillDirection fillDirection = Health.FillDirection.LeftToRight;
+    [SerializeField] private float heartSpacing = 0.5f;
+
     private float valuePerImage;
     private bool isInvincible = false;
 
-    public Image.FillMethod fillMethod;
-
-    [HideInInspector]
-    public Image.OriginHorizontal horizontalDirection;
-    [HideInInspector]
-    public Image.OriginVertical verticalDirection;
-    [HideInInspector]
-    public Image.Origin90 radial90Direction;
-    [HideInInspector]
-    public Image.Origin180 radial180Direction;
-    [HideInInspector]
-    public Image.Origin360 radial360Direction;
+    private SpriteRenderer[] fullHeartRenderers;
+    private SpriteRenderer[] emptyHeartRenderers;
+    private Material[] fullHeartMaterials;
 
     private Coroutine regenerationCoroutine = null, poisonCoroutine = null;
+
+    private void Awake()
+    {
+        InitializeArrays();
+    }
+
+    private void InitializeArrays()
+    {
+        if (fullHeartRenderers == null || fullHeartRenderers.Length != imagesAmount)
+        {
+            fullHeartRenderers = new SpriteRenderer[imagesAmount];
+            emptyHeartRenderers = new SpriteRenderer[imagesAmount];
+            fullHeartMaterials = new Material[imagesAmount];
+        }
+    }
 
     /// <summary>
     /// Update health object with inspector changes while not playing 
     /// </summary>
     private void OnValidate()
     {
+        if (!gameObject.scene.IsValid()) return;
+
         currentHealth = Mathf.Clamp(currentHealth, 0, baseHealth);
 
-        if (gameObject.scene.IsValid())
+        // 필수 컴포넌트 체크
+        if (fullHeartsContainer == null || emptyHeartsContainer == null || 
+            fullHeartSprite == null || emptyHeartSprite == null)
         {
-            if (!Application.isPlaying)
+            Debug.LogWarning("HealthPreferences: 필수 컴포넌트가 할당되지 않았습니다.");
+            return;
+        }
+
+        if (!Application.isPlaying)
+        {
+            InitializeArrays();
+            RemoveAll();
+
+#if UNITY_EDITOR
+            for (int i = 0; i < imagesAmount; i++)
             {
-                RemoveAll();
-#if UNITY_EDITOR
-                for (int i = 0; i < imagesAmount; i++)
-                    EditorApplication.delayCall += () => CreateImage(i);
-#endif
+                int index = i;
+                EditorApplication.delayCall += () => 
+                {
+                    if (this != null)
+                        CreateHeart(index);
+                };
             }
-#if UNITY_EDITOR
-            EditorApplication.delayCall += () => UpdateHealth();
 #endif
         }
     }
@@ -65,22 +87,43 @@ public class HealthPreferences : MonoBehaviour
     /// </summary>
     private void RemoveAll()
     {
+        if (fullHeartsContainer == null || emptyHeartsContainer == null) return;
+
         if (Application.isPlaying)
         {
             foreach(Transform child in fullHeartsContainer.transform)
                 Destroy(child.gameObject);
-
             foreach (Transform child in emptyHeartsContainer.transform)
                 Destroy(child.gameObject);
         }
         else
         {
 #if UNITY_EDITOR
-            foreach (Transform child in fullHeartsContainer.transform)
-                EditorApplication.delayCall += () => DestroyImmediate(child.gameObject);
+            // 프리팹 체크
+            bool isPrefab = PrefabUtility.IsPartOfPrefabInstance(gameObject);
 
-            foreach (Transform child in emptyHeartsContainer.transform)
-                EditorApplication.delayCall += () => DestroyImmediate(child.gameObject);
+            if (isPrefab)
+            {
+                // 프리팹인 경우 기존 하트들을 비활성화
+                foreach (Transform child in fullHeartsContainer.transform)
+                    if (child != null) child.gameObject.SetActive(false);
+                foreach (Transform child in emptyHeartsContainer.transform)
+                    if (child != null) child.gameObject.SetActive(false);
+            }
+            else
+            {
+                // 프리팹이 아닌 경우 직접 삭제
+                var fullHearts = fullHeartsContainer.transform.Cast<Transform>().ToList();
+                var emptyHearts = emptyHeartsContainer.transform.Cast<Transform>().ToList();
+
+                foreach (var child in fullHearts)
+                    if (child != null)
+                        EditorApplication.delayCall += () => DestroyImmediate(child.gameObject);
+                
+                foreach (var child in emptyHearts)
+                    if (child != null)
+                        EditorApplication.delayCall += () => DestroyImmediate(child.gameObject);
+            }
 #endif
         }
     }
@@ -91,35 +134,142 @@ public class HealthPreferences : MonoBehaviour
     public void Init(int amount)
     {
         imagesAmount = amount;
-
+        InitializeArrays();
         RemoveAll();
 
         for (int i = 0; i < imagesAmount; i++)
-            CreateImage(i);
+            CreateHeart(i);
+
+        UpdateHealth();
     }
 
     /// <summary>
     /// Create image sprite
     /// </summary>
-    private void CreateImage(int index)
+    private void CreateHeart(int index)
     {
-        GameObject heartFull = new GameObject();
-        heartFull.tag = "Heart Full";
-        Image imgFull = heartFull.AddComponent<Image>();
-        imgFull.sprite = fullHeartSprite;
-        heartFull.GetComponent<RectTransform>().SetParent(fullHeartsContainer.transform);
-        heartFull.transform.localScale = Vector3.one;
-
-        imgFull.type = Image.Type.Filled;
-        imgFull.fillMethod = fillMethod;
-        switch (fillMethod)
+        if (fullHeartsContainer == null || emptyHeartsContainer == null ||
+            fullHeartSprite == null || emptyHeartSprite == null ||
+            fullHeartRenderers == null || emptyHeartRenderers == null ||
+            fullHeartMaterials == null || index >= imagesAmount)
         {
-            case Image.FillMethod.Horizontal: imgFull.fillOrigin = (int)horizontalDirection; break;
-            case Image.FillMethod.Vertical: imgFull.fillOrigin = (int)verticalDirection; break;
-            case Image.FillMethod.Radial90: imgFull.fillOrigin = (int)radial90Direction; break;
-            case Image.FillMethod.Radial180: imgFull.fillOrigin = (int)radial180Direction; break;
-            case Image.FillMethod.Radial360: imgFull.fillOrigin = (int)radial360Direction; break;
+            return;
         }
+
+#if UNITY_EDITOR
+        bool isPrefab = PrefabUtility.IsPartOfPrefabInstance(gameObject);
+        Transform existingFullHeart = fullHeartsContainer.transform.Find($"HeartFull_{index}");
+        Transform existingEmptyHeart = emptyHeartsContainer.transform.Find($"HeartEmpty_{index}");
+        Vector3 heartPosition = new Vector3(index * 0.5f, 0, 0);
+
+        if (isPrefab)
+        {
+            if (existingFullHeart != null)
+            {
+                existingFullHeart.gameObject.SetActive(true);
+                existingFullHeart.localPosition = heartPosition;
+                SpriteRenderer rendererFull = existingFullHeart.GetComponent<SpriteRenderer>();
+                if (rendererFull != null)
+                {
+                    rendererFull.sprite = fullHeartSprite;
+                    rendererFull.sortingOrder = 1;
+                    fullHeartRenderers[index] = rendererFull;
+
+                    if (!Application.isPlaying)
+                    {
+                        if (rendererFull.sharedMaterial == null)
+                        {
+                            Material matFull = new Material(Shader.Find("Sprites/Fill"));
+                            matFull.SetFloat("_FillAmount", 1);
+                            rendererFull.sharedMaterial = matFull;
+                        }
+                        fullHeartMaterials[index] = rendererFull.sharedMaterial;
+                    }
+                    else
+                    {
+                        Material matFull = new Material(Shader.Find("Sprites/Fill"));
+                        matFull.SetFloat("_FillAmount", 1);
+                        rendererFull.material = matFull;
+                        fullHeartMaterials[index] = matFull;
+                    }
+                }
+            }
+
+            if (existingEmptyHeart != null)
+            {
+                existingEmptyHeart.gameObject.SetActive(true);
+                existingEmptyHeart.localPosition = heartPosition;
+                SpriteRenderer rendererEmpty = existingEmptyHeart.GetComponent<SpriteRenderer>();
+                if (rendererEmpty != null)
+                {
+                    rendererEmpty.sprite = emptyHeartSprite;
+                    rendererEmpty.sortingOrder = 0;
+                    emptyHeartRenderers[index] = rendererEmpty;
+                }
+            }
+        }
+        else
+        {
+            GameObject heartFull = new GameObject($"HeartFull_{index}");
+            if (heartFull != null && fullHeartsContainer != null)
+            {
+                heartFull.transform.SetParent(fullHeartsContainer.transform, false);
+                heartFull.transform.localPosition = heartPosition;
+                SpriteRenderer rendererFull = heartFull.AddComponent<SpriteRenderer>();
+                rendererFull.sprite = fullHeartSprite;
+                rendererFull.sortingOrder = 1;
+
+                if (!Application.isPlaying)
+                {
+                    Material matFull = new Material(Shader.Find("Sprites/Fill"));
+                    matFull.SetFloat("_FillAmount", 1);
+                    rendererFull.sharedMaterial = matFull;
+                    fullHeartMaterials[index] = matFull;
+                }
+                else
+                {
+                    Material matFull = new Material(Shader.Find("Sprites/Fill"));
+                    matFull.SetFloat("_FillAmount", 1);
+                    rendererFull.material = matFull;
+                    fullHeartMaterials[index] = matFull;
+                }
+                
+                fullHeartRenderers[index] = rendererFull;
+            }
+
+            GameObject heartEmpty = new GameObject($"HeartEmpty_{index}");
+            if (heartEmpty != null && emptyHeartsContainer != null)
+            {
+                heartEmpty.transform.SetParent(emptyHeartsContainer.transform, false);
+                heartEmpty.transform.localPosition = heartPosition;
+                SpriteRenderer rendererEmpty = heartEmpty.AddComponent<SpriteRenderer>();
+                rendererEmpty.sprite = emptyHeartSprite;
+                rendererEmpty.sortingOrder = 0;
+                
+                emptyHeartRenderers[index] = rendererEmpty;
+            }
+        }
+#else
+        // 런타임 코드는 그대로 유지
+        GameObject heartFull = new GameObject($"HeartFull_{index}");
+        if (heartFull != null && fullHeartsContainer != null)
+        {
+            heartFull.transform.SetParent(fullHeartsContainer.transform, false);
+            heartFull.transform.localPosition = new Vector3(index * 0.5f, 0, 0);
+            SpriteRenderer rendererFull = heartFull.AddComponent<SpriteRenderer>();
+            rendererFull.sprite = fullHeartSprite;
+            rendererFull.sortingOrder = 1;
+
+            Material matFull = new Material(Shader.Find("Sprites/Fill"));
+            matFull.SetFloat("_FillAmount", 1);
+            rendererFull.material = matFull;
+            
+            fullHeartRenderers[index] = rendererFull;
+            fullHeartMaterials[index] = matFull;
+        }
+#endif
+
+        ApplyFillDirection();
 
         valuePerImage = baseHealth / imagesAmount;
 
@@ -127,22 +277,37 @@ public class HealthPreferences : MonoBehaviour
         {
             float temp = (index + 1) * valuePerImage - currentHealth;
             float value = 1 - temp / valuePerImage;
-
-            imgFull.fillAmount = value;
+            if (fullHeartMaterials[index] != null)
+                fullHeartMaterials[index].SetFloat("_FillAmount", value);
         }
-        else
-            imgFull.fillAmount = 1;
-
+        
         if (index * valuePerImage >= currentHealth)
-            imgFull.fillAmount = 0;
+        {
+            fullHeartMaterials[index].SetFloat("_FillAmount", 0);
+        }
+    }
 
-
-        GameObject heartEmpty = new GameObject();
-        heartEmpty.tag = "Heart Empty";
-        Image imgEmpty = heartEmpty.AddComponent<Image>();
-        imgEmpty.sprite = emptyHeartSprite;
-        heartEmpty.GetComponent<RectTransform>().SetParent(emptyHeartsContainer.transform);
-        heartEmpty.transform.localScale = Vector3.one;
+    private void ApplyFillDirection()
+    {
+        switch (fillDirection)
+        {
+            case Health.FillDirection.LeftToRight:
+                transform.localScale = new Vector3(1, 1, 1);
+                transform.localRotation = Quaternion.identity;
+                break;
+            case Health.FillDirection.RightToLeft:
+                transform.localScale = new Vector3(-1, 1, 1);
+                transform.localRotation = Quaternion.identity;
+                break;
+            case Health.FillDirection.TopToBottom:
+                transform.localScale = new Vector3(1, 1, 1);
+                transform.localRotation = Quaternion.Euler(0, 0, 90);
+                break;
+            case Health.FillDirection.BottomToTop:
+                transform.localScale = new Vector3(1, 1, 1);
+                transform.localRotation = Quaternion.Euler(0, 0, -90);
+                break;
+        }
     }
 
     /// <summary>
@@ -150,22 +315,44 @@ public class HealthPreferences : MonoBehaviour
     /// </summary>
     private void UpdateHealth()
     {
-        valuePerImage = baseHealth / imagesAmount;
+        if (fullHeartRenderers == null || fullHeartMaterials == null)
+        {
+            InitializeArrays();
+            return;
+        }
 
+        valuePerImage = baseHealth / imagesAmount;
+        
         for (int i = 0; i < imagesAmount; i++)
         {
-            if ((i + 1) * valuePerImage > currentHealth)
-            {
-                float temp = (i + 1) * valuePerImage - currentHealth;
-                float value = 1 - temp / valuePerImage;
+            if (fullHeartRenderers[i] == null || fullHeartMaterials[i] == null) continue;
 
-                fullHeartsContainer.transform.GetChild(i).GetComponent<Image>().fillAmount = value;
+            float heartStartHealth = i * valuePerImage;
+            float heartEndHealth = (i + 1) * valuePerImage;
+            float fillAmount;
+
+            if (currentHealth >= heartEndHealth)
+            {
+                fillAmount = 1f;
+            }
+            else if (currentHealth <= heartStartHealth)
+            {
+                fillAmount = 0f;
             }
             else
-                fullHeartsContainer.transform.GetChild(i).GetComponent<Image>().fillAmount = 1;
-
-            if (i * valuePerImage >= currentHealth)
-                fullHeartsContainer.transform.GetChild(i).GetComponent<Image>().fillAmount = 0;
+            {
+                fillAmount = (currentHealth - heartStartHealth) / valuePerImage;
+            }
+            
+            if (!Application.isPlaying)
+            {
+                if (fullHeartRenderers[i].sharedMaterial != null)
+                    fullHeartRenderers[i].sharedMaterial.SetFloat("_FillAmount", fillAmount);
+            }
+            else
+            {
+                fullHeartMaterials[i].SetFloat("_FillAmount", fillAmount);
+            }
         }
     }
 
@@ -250,7 +437,8 @@ public class HealthPreferences : MonoBehaviour
     public void SetTotalHealth(float amount) 
     {
         baseHealth = amount;
-        UpdateHealth();
+        InitializeArrays();
+        Init(imagesAmount);
     }
 
     /// <summary>
@@ -305,15 +493,6 @@ public class HealthPreferences : MonoBehaviour
     }
 
     /// <summary>
-    /// Select images fill method
-    /// </summary>
-    public void SetFillType(Image.FillMethod type)
-    {
-        fillMethod = type;
-        Init(imagesAmount);
-    }
-
-    /// <summary>
     /// Enable invincible mode 
     /// </summary>
     public void EnableInvincibility(bool enable)
@@ -332,7 +511,6 @@ public class HealthPreferences : MonoBehaviour
         imagesAmount = 3;
         baseHealth = 100;
         currentHealth = 100;
-        fillMethod = Image.FillMethod.Horizontal;
         Init(imagesAmount);
     }
 }

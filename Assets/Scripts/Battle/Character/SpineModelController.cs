@@ -12,6 +12,20 @@ public class SpineModelController : MonoBehaviour
     [SerializeField] SkeletonAnimation skeletonAnimation;
     [SerializeField] AnimationReferenceAsset idle, walk, meleeAttack, magicAttack, hit, die;
 
+    public void Initialization(
+        SkeletonDataAsset _skeletonAnimation, 
+        AnimationReferenceAsset _idle,
+        AnimationReferenceAsset _attack,
+        AnimationReferenceAsset _hit)
+    {
+        this.skeletonAnimation.skeletonDataAsset = _skeletonAnimation;
+        this.idle = _idle;
+        this.meleeAttack = _attack;
+        this.hit = _hit;
+        this.skeletonAnimation.Initialize(true);
+    }
+
+
     public async UniTask PlayAnimationAsync(AnimationType _type)
     {
         AnimationReferenceAsset t_animName = _type switch

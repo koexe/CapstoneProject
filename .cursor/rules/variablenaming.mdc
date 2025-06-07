@@ -1,0 +1,6 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+전역변수는 사용할 때 앞에 this. 붙이기, 매개변수는 앞에 _붙이기, 지역변수는 앞에 t_붙이기

@@ -12,6 +12,14 @@ public class Health : MonoBehaviour
     private HealthPreferences prefs;
     private Pulse pulse;
 
+    public enum FillDirection
+    {
+        LeftToRight,
+        RightToLeft,
+        TopToBottom,
+        BottomToTop
+    }
+
     void Start()
     {
         instance = this;
@@ -133,17 +141,33 @@ public class Health : MonoBehaviour
     }
 
     /// <summary>
-    /// Set images fill method
-    /// </summary>
-    public void SetFillType(Image.FillMethod type) {
-        prefs.SetFillType(type);
-    }
-
-    /// <summary>
     /// Reset all settings to default
     /// </summary>
     public void Reset()
     {
         prefs.Reset();
+    }
+
+    /// <summary>
+    /// Set fill direction for hearts
+    /// </summary>
+    public void SetFillType(FillDirection direction) 
+    {
+        // SpriteRenderer에서는 방향만 설정
+        switch (direction)
+        {
+            case FillDirection.LeftToRight:
+                prefs.transform.localScale = new Vector3(1, 1, 1);
+                break;
+            case FillDirection.RightToLeft:
+                prefs.transform.localScale = new Vector3(-1, 1, 1);
+                break;
+            case FillDirection.TopToBottom:
+                prefs.transform.localRotation = Quaternion.Euler(0, 0, 90);
+                break;
+            case FillDirection.BottomToTop:
+                prefs.transform.localRotation = Quaternion.Euler(0, 0, -90);
+                break;
+        }
     }
 }

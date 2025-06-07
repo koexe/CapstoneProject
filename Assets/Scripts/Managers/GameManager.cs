@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using static GameManager;
@@ -10,24 +11,25 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameState gameState;
 
-    [SerializeField] GameStatics gameStatics;
     [SerializeField] DataLibrary dataLibrary;
     [SerializeField] GameObject player;
-
-
     [SerializeField] SceneLoadManager sceneLoadManager;
     [SerializeField] SaveGameManager saveGameManager;
+
+    [SerializeField] MapManager mapManager;
 
     [SerializeField] SOBattleCharacter currentPlayer;
     [SerializeField] SOBattleCharacter currentNPC;
 
     [SerializeField] CameraController cameraController;
+
+    [SerializeField] FieldManager fieldManager;
     public CameraController GetCamera() => this.cameraController;
     public void SetCamera(CameraController _controller) => this.cameraController = _controller;
 
-    OnChangeBattleSceneData onChangeBattleSceneData = new OnChangeBattleSceneData();
+    BattleData onChangeBattleSceneData = new BattleData();
 
-    public OnChangeBattleSceneData GetBattleSceneData() => this.onChangeBattleSceneData;
+    public BattleData GetBattleSceneData() => this.onChangeBattleSceneData;
 
     public GameState GetGameState() => this.gameState;
     public void SetGameState(GameState _gameState) => this.gameState = _gameState;
@@ -55,40 +57,121 @@ public class GameManager : MonoBehaviour
 
     public async void Initialization()
     {
+        ChangeGameState(GameState.Loading);
         await this.dataLibrary.Initialization();
         await this.saveGameManager.Initialization();
+        ChangeGameState(GameState.Main);
+    }
+
+    public void MapInitialization()
+    {
+        this.mapManager.Initialization();
         this.currentPlayer = DataLibrary.instance.GetSOCharacter(1);
         this.currentNPC = DataLibrary.instance.GetSOCharacter(2);
+        this.onChangeBattleSceneData.currentPlayerHp = this.currentPlayer.GetStatus().GetHp();
+        this.onChangeBattleSceneData.currentNPCHp = this.currentNPC.GetStatus().GetHp();
     }
 
-
-    public void ChangeSceneToBattle(SOBattleCharacter[] enemys)
+    public async UniTask ChangeSceneMainToField()
     {
-        this.onChangeBattleSceneData.Set(this.currentPlayer, this.currentNPC, enemys);
-        this.sceneLoadManager.LoadScene_Async("BattleScene");
+        await this.sceneLoadManager.LoadScene_Async("FieldScene");
+        this.fieldManager.Initialization();
+        MapInitialization();
+        MapManager.instance.OnChangeToFieldScene();
+        ChangeGameState(GameState.Field);
+    }
+
+    public async void ChangeSceneFieldToBattle(SOBattleCharacter[] enemys, int[] _levels)
+    {
+        this.onChangeBattleSceneData.FieldToBattle(this.currentPlayer, this.currentNPC, enemys, this.player.transform.position, _levels);
+        await this.sceneLoadManager.LoadScene_Async("BattleScene");
         MapManager.instance.OnChangeToBattleScene();
     }
-    public void ChangeSceneToField(SOBattleCharacter _currentPlayer, SOBattleCharacter _currentNpc)
+
+    public async void ChangeSceneBattleToField(SOBattleCharacter _currentPlayer, SOBattleCharacter _currentNpc)
     {
         this.currentNPC = _currentNpc;
         this.currentPlayer = _currentPlayer;
+        this.player.transform.position = this.onChangeBattleSceneData.position;
         this.onChangeBattleSceneData.Reset();
-        this.sceneLoadManager.LoadScene_Async("FieldScene");
+        await this.sceneLoadManager.LoadScene_Async("FieldScene");
         MapManager.instance.OnChangeToFieldScene();
+        this.cameraController.SetTarget(this.player.transform);
     }
 
-    public class OnChangeBattleSceneData
+    public async UniTask GameOver()
+    {
+
+        this.mapManager.Detialization();
+        await this.sceneLoadManager.LoadScene_Async("MainScene");
+    }
+
+    public void ChangeGameState(GameState _gameState)
+    {
+        switch (this.gameState)
+        {
+            case GameState.None:
+                this.gameState = _gameState;
+                break;
+            case GameState.Main:
+                if (_gameState != GameState.Field)
+                {
+                    LogUtil.Log("not Allowed Change GameState");
+                }
+                else
+                {
+                    this.gameState = _gameState;
+                }
+                break;
+            case GameState.Loading:
+                if (_gameState != GameState.Main)
+                {
+                    LogUtil.Log("not Allowed Change GameState");
+                }
+                else
+                {
+                    this.gameState = _gameState;
+                }
+                break;
+            case GameState.Field:
+                this.gameState = _gameState;
+                break;
+            case GameState.Pause:
+                this.gameState = _gameState;
+                break;
+            case GameState.Battle:
+                this.gameState = _gameState;
+                break;
+        }
+    }
+
+
+    public class BattleData
     {
         [SerializeField] SOBattleCharacter currentPlayer;
         [SerializeField] SOBattleCharacter currentNPC;
+        public int currentPlayerHp;
+        public int currentNPCHp;
         SOBattleCharacter[] enemys;
+        public Vector3 position;
+        public int[] enemyLevels;
 
-        public void Set(SOBattleCharacter _player, SOBattleCharacter _npc, SOBattleCharacter[] _enemys)
+        public void FieldToBattle(SOBattleCharacter _player, SOBattleCharacter _npc, SOBattleCharacter[] _enemys, Vector3 _position, int[] _levels)
         {
             this.currentPlayer = _player;
             this.currentNPC = _npc;
             this.enemys = _enemys;
+            this.position = _position;
+            this.enemyLevels = _levels;
         }
+        public void BattleToField(SOBattleCharacter _player, SOBattleCharacter _npc, int _playerHp, int _npcHp)
+        {
+            this.currentPlayer = _player;
+            this.currentNPC = _npc;
+            this.currentNPCHp = _npcHp;
+            this.currentPlayerHp = _playerHp;
+        }
+
         public void Reset()
         {
             this.currentPlayer = null;
@@ -96,18 +179,26 @@ public class GameManager : MonoBehaviour
             this.enemys = null;
         }
         public SOBattleCharacter[] GetEnemys() => this.enemys;
+        public int[] GetEnemyLevels() => this.enemyLevels;
         public SOBattleCharacter GetPlayerData() => this.currentPlayer;
         public SOBattleCharacter GetNPCData() => this.currentNPC;
-    }
 
+        public int GetPlayerHp() => this.currentPlayerHp;
+
+        public int GetNpcHp() => this.currentNPCHp;
+    }
+    public void SetPlayer(GameObject _player)
+    {
+        this.player = _player;
+    }
 
 }
 public enum GameState
 {
     None,
-    Menu,
+    Main,
     Loading,
-    Ingame,
+    Field,
     Pause,
     Battle
 }

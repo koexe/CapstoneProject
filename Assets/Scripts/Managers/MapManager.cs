@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class MapManager : MonoBehaviour
@@ -7,6 +8,7 @@ public class MapManager : MonoBehaviour
 
 #if UNITY_EDITOR
     [SerializeField] MapEntity startMap;
+    [SerializeField] bool isDebugingMap;
 #endif
 
     private void Awake()
@@ -14,26 +16,48 @@ public class MapManager : MonoBehaviour
         if (instance == null)
             instance = this;
         else
-            Destroy(this);
+            Destroy(this.gameObject);
 
         DontDestroyOnLoad(this.gameObject);
     }
-    private void Start()
+
+
+    public void Initialization()
     {
 #if UNITY_EDITOR
-        this.currentMap = Instantiate(startMap, this.transform);
+        if (this.isDebugingMap)
+            LoadMap(this.startMap.GetID());
+        else
+            LoadMap(SaveGameManager.instance.GetCurrentSaveData().currentMap);
+#else
+        LoadMap(SaveGameManager.instance.GetCurrentSaveData().currentMap);
 #endif
     }
+
+    public void Detialization()
+    {
+        Destroy(this.currentMap.gameObject);
+        this.currentMap = null;
+    }
+
+    public void LoadMap(string _mapName)
+    {
+        this.currentMap = Instantiate(DataLibrary.instance.GetMap(_mapName), this.transform);
+        this.currentMap.InitializeMap();
+        SaveGameManager.instance.GetCurrentSaveData().currentMap = _mapName;
+    }
+
+
 
     public void MoveMap(MapEntity.MapPath _path)
     {
         Destroy(this.currentMap.gameObject);
         this.currentMap = Instantiate(_path.linkedMap, this.transform);
-
+        this.currentMap.InitializeMap();
         var t_player = GameManager.instance.GetPlayer();
         t_player.transform.SetParent(this.currentMap.transform);
 
-
+        SaveGameManager.instance.GetCurrentSaveData().currentMap = this.currentMap.GetID();
 
         t_player.transform.position = this.currentMap.GetMapPoint(_path.linkedMapPoint).transform.position;
     }
@@ -55,9 +79,11 @@ public class MapManager : MonoBehaviour
     public void OnChangeToFieldScene()
     {
         this.currentMap.gameObject.SetActive(true);
+        GameManager.instance.GetPlayer().SetActive(true);
     }
     public void OnChangeToBattleScene()
     {
         this.currentMap.gameObject.SetActive(false);
+        GameManager.instance.GetPlayer().SetActive(false);
     }
 }

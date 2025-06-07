@@ -6,6 +6,8 @@ using System;
 public class SaveUI : UIBase
 {
     [Header("Save Slot Prefab")]
+
+    SaveUIData uiData;
     [SerializeField] GameObject slotPrefab;
     [SerializeField] Transform slotsContainer;
 
@@ -14,6 +16,10 @@ public class SaveUI : UIBase
 
     public override void Initialization(UIData _data)
     {
+        if (_data is SaveUIData saveUIData)
+        {
+            uiData = saveUIData;
+        }
         InitializeSaveSlots();
         UpdateAllSlots();
     }
@@ -32,13 +38,15 @@ public class SaveUI : UIBase
             GameObject slotObj = Instantiate(slotPrefab, slotsContainer);
             SaveSlot slot = slotObj.GetComponent<SaveSlot>();
             int slotNumber = i + 1;
-            
-            slot.Initialize(slotNumber, 
+
+            slot.Initialize(slotNumber,
                 () => SelectSlot(slotNumber),
                 () => SaveToSlot(slotNumber),
                 () => LoadFromSlot(slotNumber),
-                () => DeleteSlot(slotNumber));
-            
+                () => DeleteSlot(slotNumber),
+                uiData.isLoadOnly
+                );
+
             saveSlots[i] = slot;
         }
     }
@@ -55,7 +63,7 @@ public class SaveUI : UIBase
     {
         SaveSlot slot = saveSlots[slotNumber - 1];
         bool exists = SaveGameManager.instance.DoesSaveExist(slotNumber);
-        
+
         if (exists)
         {
             SaveData saveData = SaveGameManager.instance.GetSaveInfo(slotNumber);
@@ -66,7 +74,6 @@ public class SaveUI : UIBase
             slot.UpdateInfo($"슬롯 {slotNumber}", "비어있음", false);
         }
     }
-
     void SelectSlot(int slotNumber)
     {
         selectedSlot = slotNumber;
@@ -80,13 +87,15 @@ public class SaveUI : UIBase
     {
         SaveGameManager.instance.SavetoFile(slotNumber);
         UpdateSlotInfo(slotNumber);
+        Hide();
     }
 
-    void LoadFromSlot(int slotNumber)
+    async void LoadFromSlot(int slotNumber)
     {
         if (SaveGameManager.instance.DoesSaveExist(slotNumber))
         {
             SaveGameManager.instance.LoadFromSlot(slotNumber);
+            await GameManager.instance.ChangeSceneMainToField();
             Hide();
         }
     }
@@ -99,7 +108,13 @@ public class SaveUI : UIBase
 
     public override void Show(UIData _data)
     {
+        if (_data is SaveUIData saveUIData)
+        {
+            uiData = saveUIData;
+        }
         this.contents.SetActive(true);
+
+        InitializeSaveSlots();
         UpdateAllSlots();
     }
 
@@ -107,4 +122,4 @@ public class SaveUI : UIBase
     {
         this.contents.SetActive(false);
     }
-} 
+}

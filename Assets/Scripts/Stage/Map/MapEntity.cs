@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class MapEntity : MonoBehaviour
@@ -14,7 +16,23 @@ public class MapEntity : MonoBehaviour
     {
         return this.itemEntitys.FindIndex(x => x == _item);
     }
-    public List<MapItem> GetItems() => this.itemEntitys;
+    public List<MapItem> GetItems()
+    {
+        return this.items.GetComponentsInChildren<MapItem>().ToList<MapItem>();
+    }
+
+    public void InitializeMap()
+    {
+        List<bool> t_itemInfo = SaveGameManager.instance.currentSaveData.mapItems[this.mapIdentifier];
+        if(t_itemInfo.Count!= this.itemEntitys.Count)
+        {
+            LogUtil.Log("Not Matching Item Count With Savefile!");
+        }
+        for (int i = 0; i < this.itemEntitys.Count; i++)
+        {
+            this.itemEntitys[i].gameObject.SetActive(!t_itemInfo[i]);
+        }
+    }
 
 
     [System.Serializable]

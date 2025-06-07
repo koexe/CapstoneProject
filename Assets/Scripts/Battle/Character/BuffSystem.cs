@@ -116,6 +116,7 @@ public class StatusEffectInstance
                              hitDamage = t_dmg,
                              isCritical = false,
                              isRaceAdvantage = 0,
+                             isDotDamage = true,
                              attackRace = RaceType.None,
 
                          });
@@ -216,7 +217,7 @@ public class StatusEffectInstance
                             isCritical = false,
                             isRaceAdvantage = 0,
                             attackRace = RaceType.None,
-
+                            isDotDamage = true,
                         });
 
                     Debug.Log($"{_target.name} is split and takes {t_splitDmg} self-damage");
@@ -244,7 +245,7 @@ public class StatusEffectInstance
                        isCritical = false,
                        isRaceAdvantage = 0,
                        attackRace = RaceType.None,
-
+                       isDotDamage = true,
                    });
                     Debug.Log($"{_target.name} is hit by Mark of Doom explosion! {t_explosion} damage");
                 }
@@ -301,6 +302,7 @@ public class StatBlock
         this.baseStats.Add(StatType.Atk, 10f);
         this.baseStats.Add(StatType.Def, 5f);
         this.baseStats.Add(StatType.Evasion, 5f);
+        this.baseStats.Add(StatType.CriticalChance, 10f);
         this.baseStats.Add(StatType.Acc, 95f);
         this.baseStats.Add(StatType.Spd, 10f);
         this.baseStats.Add(StatType.HealEffecincy, 100f);

@@ -19,8 +19,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 460869358919ab741bfef33568a0dbc0, type: 2}
   characterName: "\uD5E5\uC2A4"
   status:
+    level: 0
+    exp: 0
     baseHp: 20
     baseMp: 8
     baseAtk: 4
     baseDef: 3
     baseSpeed: 2
+  battleSprite: {fileID: 21300000, guid: bbdb62552f7b4e349bec348b510a5b47, type: 3}
+  skeletonDataAsset: {fileID: 11400000, guid: 5b9e48fa83d6eba4d94d546b8debbc18, type: 2}
+  basicAttackAnim: {fileID: 11400000, guid: 35d3d0f785455f0428ca4acdaa0c74e7, type: 2}
+  additionalAttackAnim: {fileID: 0}
+  hitAnim: {fileID: 11400000, guid: 928d7df3c498e254a9f606f8d0d32d2e, type: 2}
+  idleAnim: {fileID: 11400000, guid: c63b7d79adc02e241b0ca72f1ef4f051, type: 2}
+  isModelBasicRight: 0

@@ -43,7 +43,7 @@ public class TurnSequence
 
     }
 
-    public virtual void SequenceAction()
+    public virtual async void SequenceAction()
     {
         this.currentState = SequenceState.InAction;
 
@@ -81,11 +81,12 @@ public class InitializeSequence : TurnSequence
         this.battleManager.SetCurrentSequenceType(this.sequenceType);
     }
 
-    public override void SequenceAction()
+    public override async void SequenceAction()
     {
         base.SequenceAction();
         this.battleManager.ShowText("초기화 진행중");
-
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+        this.battleManager.NextSequence();
     }
 }
 
@@ -118,8 +119,10 @@ public class ChooseSequence : TurnSequence
     public override void SequenceUpdate()
     {
         base.SequenceUpdate();
+
         if (this.state == ChooseState.None)
         {
+            ShadowUpdate(LayerMask.GetMask("Player"));
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 this.currentPlayerIndex += 1;
@@ -142,7 +145,7 @@ public class ChooseSequence : TurnSequence
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    if (hit.transform.TryGetComponent<BattleCharacterBase>(out var t_character))
+                    if (hit.transform.parent.TryGetComponent<BattleCharacterBase>(out var t_character))
                     {
                         if (this.players.Contains(t_character))
                         {
@@ -164,6 +167,7 @@ public class ChooseSequence : TurnSequence
         }
         else if (this.state == ChooseState.SelectEnemy)
         {
+            ShadowUpdate(LayerMask.GetMask("Enemy"));
             if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 this.currentEnemyIndex += 1;
@@ -191,7 +195,7 @@ public class ChooseSequence : TurnSequence
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    if (hit.transform.TryGetComponent<BattleCharacterBase>(out var t_character))
+                    if (hit.transform.parent.TryGetComponent<BattleCharacterBase>(out var t_character))
                     {
                         if (this.enemys.Contains(t_character))
                         {
@@ -201,7 +205,9 @@ public class ChooseSequence : TurnSequence
 
                             this.players[this.currentPlayerIndex].GetSelectedSkill().target = new BattleCharacterBase[] { t_character };
                             GameManager.instance.GetCamera().SetTarget(null);
-                            this.state = ChooseState.None;
+                            this.battleManager.SetChooseSequenceState(ChooseState.None);
+                            this.battleManager.SetAllyArrow(false);
+                            this.battleManager.SetEnemyArrow(false);
                             this.battleManager.CheckAllReady();
                         }
 
@@ -210,6 +216,41 @@ public class ChooseSequence : TurnSequence
             }
         }
 
+    }
+
+    void ShadowUpdate(LayerMask _layerMask)
+    {
+        // 모든 그림자 초기화
+        foreach (var player in players)
+        {
+            player.SetShadow(false);
+        }
+        foreach (var enemy in enemys)
+        {
+            enemy.SetShadow(false);
+        }
+
+        // 마우스 호버 체크
+        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits = Physics.RaycastAll(mouseRay, Mathf.Infinity, _layerMask);
+
+        foreach (var hit in hits)
+        {
+            var parent = hit.transform;
+            while (parent != null)
+            {
+                if (parent.TryGetComponent<BattleCharacterBase>(out var character))
+                {
+                    if ((state == ChooseState.None && players.Contains(character)) ||
+                        (state == ChooseState.SelectEnemy && enemys.Contains(character)))
+                    {
+                        character.SetShadow(true);
+                        break;
+                    }
+                }
+                parent = parent.parent;
+            }
+        }
     }
 
     public override void SequenceAction()
@@ -230,28 +271,52 @@ public class ExecuteSequence : TurnSequence
 
         this.battleManager.SetCurrentSequenceType(this.sequenceType);
     }
-    public override void SequenceAction()
+    public override async void SequenceAction()
     {
         base.SequenceAction();
-        ActionTask();
+        await ActionTask();
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+        this.battleManager.NextSequence();
     }
-    public async void ActionTask()
+    public async UniTask ActionTask()
     {
+        int t_defenceIndex = 0;
+
         for (int i = 0; i < battleCharacters.Count; i++)
         {
             if (battleCharacters[i].GetAction() == CharacterActionType.Defence)
             {
-                GameStatics.Swap(battleCharacters, i, 0);
+                var t_character = battleCharacters[i];
+                battleCharacters.RemoveAt(i);
+                battleCharacters.Insert(t_defenceIndex, t_character);
+                t_defenceIndex++;
+                i = t_defenceIndex - 1; // 인덱스 재조정
             }
         }
-
-        foreach (var t_battleCharacter in battleCharacters)
+        for (int i = 0; i < battleCharacters.Count; i++)
         {
-            if (!t_battleCharacter.IsDie())
-                await t_battleCharacter.StartAction();
-        }
+            if (!this.battleCharacters[i].IsDie())
+                await this.battleCharacters[i].StartAction();
 
-        battleManager.NextSequence();
+            if (this.battleManager.IsAllyAllDie())
+            {
+                await GameManager.instance.GameOver();
+                break;
+            }
+            else if (this.battleManager.IsEnemyAllDie())
+            {
+                await EndTask();
+                break;
+            }
+
+        }
+    }
+
+    async UniTask EndTask()
+    {
+        battleManager.ShowText("승리했다! 전투 종료!");
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        battleManager.ChangeToFieldScene();
 
     }
 }
@@ -267,22 +332,20 @@ public class SummarySequence : TurnSequence
 
         this.battleManager.SetCurrentSequenceType(this.sequenceType);
     }
-    public override void SequenceAction()
+    public override async void SequenceAction()
     {
         base.SequenceAction();
-        SummaryTask();
+        await SummaryTask();
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+        this.battleManager.NextSequence();
     }
-    async void SummaryTask()
+    async UniTask SummaryTask()
     {
         foreach (var t_battleCharacter in battleCharacters)
         {
             if (!t_battleCharacter.IsDie())
                 await t_battleCharacter.Summary();
         }
-
-        battleManager.NextSequence();
-
-
     }
 }
 
@@ -296,24 +359,29 @@ public class EndSequence : TurnSequence
 
         this.battleManager.SetCurrentSequenceType(this.sequenceType);
     }
-    public override void SequenceAction()
+    public override async void SequenceAction()
     {
         base.SequenceAction();
         if (this.battleManager.IsAllyAllDie())
         {
-            //게임오버 작동 구현
+            await GameManager.instance.GameOver();
         }
         else if (this.battleManager.IsEnemyAllDie())
         {
-            EndTask();
+            await EndTask(); 
+        }
+        else
+        {
+            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+            this.battleManager.NextSequence();
         }
 
     }
-    async void EndTask()
+    async UniTask EndTask()
     {
         battleManager.ShowText("승리했다! 전투 종료!");
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
         battleManager.ChangeToFieldScene();
-        
+
     }
 }

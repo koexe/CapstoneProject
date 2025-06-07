@@ -15,12 +15,18 @@ public class BattleCharacterBase : MonoBehaviour
     [SerializeField] SOSkillBase[] skills;
     [SerializeField] SOSkillBase selectedSkill;
     [SerializeField] protected BuffSystem buffSystem;
-    [SerializeField] TextMeshPro hpText;
+
+    [SerializeField] GameObject arrow;
+
+    [SerializeField] SpriteRenderer characterShadow;
+
     [SerializeField] ParticleSystem hitParticle;
 
     [Header("정보")]
     [SerializeField] float maxHP;
     [SerializeField] float currentHP;
+    [SerializeField] float maxMp;
+    [SerializeField] float currentMp;
     [SerializeField] StatBlock statBlock;
     [SerializeField] int isUsedDefence;
     [SerializeField] bool isInDefence;
@@ -30,9 +36,16 @@ public class BattleCharacterBase : MonoBehaviour
     [SerializeField] CharacterActionType currentAction;
     [SerializeField] protected SOBattleCharacter soBattleCharacter;
 
+
+
+    [SerializeField] HealthPreferences healthPreferences;
+    [SerializeField] Vector3 hpBarOffset = new Vector3(0f, 1.5f, 0f); // HP 바의 오프셋 설정
+
+    [SerializeField] float moveTime = 1f;
     public RaceType raceType;
     #region Get/Set
     public float MaxHP() => this.maxHP;
+    public float GetMp() => this.currentMp;
     public void SetActionDisabled(bool _isActionDisabled) => this.isActionDisabled = _isActionDisabled;
     public void SetAction(CharacterActionType _action) => this.currentAction = _action;
     public CharacterActionType GetAction() => this.currentAction;
@@ -49,15 +62,24 @@ public class BattleCharacterBase : MonoBehaviour
         return this.statBlock.GetStat(_type);
     }
     public BattleStatus GetStatus() => this.soBattleCharacter.GetStatus();
+
+    public void SetArrow(bool _is) => this.arrow.SetActive(_is);
+    public void SetShadow(bool _is) => this.characterShadow.gameObject.SetActive(_is);
     #endregion
     public SOSkillBase[] GetSkills() => this.skills;
-    public void RecalculateMaxHP()
+    public void RecalculateMaxHPMP()
     {
         this.maxHP = this.statBlock.GetStat(StatType.Hp);
+        this.maxMp = this.statBlock.GetStat(StatType.Mp);
+        this.healthPreferences.SetTotalHealth(maxHP);
 
         // 비율 유지
         float t_ratio = Mathf.Clamp01(this.currentHP / this.maxHP);
         this.currentHP = this.maxHP * t_ratio;
+        this.healthPreferences.SetCurrentHealth(currentHP);
+
+        float t_ratioMp = Mathf.Clamp01(this.currentMp / this.maxMp);
+        this.currentMp = this.maxMp * t_ratioMp;
     }
     public async UniTask Summary()
     {
@@ -67,12 +89,32 @@ public class BattleCharacterBase : MonoBehaviour
     public void Heal(float _amount)
     {
         this.currentHP = Mathf.Min(this.maxHP, this.currentHP + _amount);
+        this.healthPreferences.SetCurrentHealth(currentHP);
     }
-    public void Initialization(BattleManager _battleManager, SOBattleCharacter _character)
+    public void HealMp(float _amount)
+    {
+        this.currentMp = Mathf.Min(this.maxMp, this.currentMp + _amount);
+    }
+    public void UseMp(float _amount)
+    {
+        this.currentMp = Mathf.Max(0f, this.currentMp - _amount);
+    }
+    public void EnemyInitialization(BattleManager _battleManager, SOBattleCharacter _character, int _level)
     {
         this.battleManager = _battleManager;
+        if (_character.GetSkeletonDataAsset() != null)
+        {
+            var t_anim = _character.GetAnimations();
+            this.spineModelController.Initialization(
+                _character.GetSkeletonDataAsset(),
+                t_anim.Item1,
+                t_anim.Item2,
+                t_anim.Item3);
+        }
+
         this.buffSystem = new BuffSystem();
         this.soBattleCharacter = Instantiate(_character);
+        this.soBattleCharacter.GetStatus().SetLevel(_level);
         this.characterName = soBattleCharacter.GetCharacterName();
         InitStats(soBattleCharacter.GetStatus());
         this.skills = new SOSkillBase[soBattleCharacter.GetSkills().Length];
@@ -80,8 +122,118 @@ public class BattleCharacterBase : MonoBehaviour
             this.skills[i] = Instantiate(_character.GetSkills()[i]);
         this.transform.name = _character.GetCharacterName();
         this.raceType = _character.GetRaceType();
-        this.hpText.text = this.currentHP.ToString();
+        this.characterShadow.sprite = _character.GetBattleSprite();
+
+        // 체력 UI 초기화
+        if (this.healthPreferences == null)
+        {
+            Debug.LogError($"[{this.name}] HealthPreferences 컴포넌트가 없습니다.");
+            return;
+        }
+
+        this.healthPreferences.SetTotalHealth(maxHP);
+        this.healthPreferences.SetCurrentHealth(currentHP);
+
+        if (this.spineModelController == null)
+        {
+            Debug.LogError($"[{this.name}] SpineModelController 컴포넌트가 없습니다.");
+            return;
+        }
+        if (this.battleManager.IsAlly(this))
+        {
+            if (this.soBattleCharacter.IsModelBasicRight())
+            {
+                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
+            }
+            else
+            {
+                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
+        else
+        {
+            if (this.soBattleCharacter.IsModelBasicRight())
+            {
+                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
+            }
+            else
+            {
+                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
+            }
+        }
+
         this.spineModelController.PlayAnimation(AnimationType.idle);
+
+
+        return;
+    }
+    public void PlayerInitialization(BattleManager _battleManager, SOBattleCharacter _character , int _currentHp)
+    {
+        this.battleManager = _battleManager;
+        if (_character.GetSkeletonDataAsset() != null)
+        {
+            var t_anim = _character.GetAnimations();
+            this.spineModelController.Initialization(
+                _character.GetSkeletonDataAsset(),
+                t_anim.Item1,
+                t_anim.Item2,
+                t_anim.Item3);
+        }
+
+        this.buffSystem = new BuffSystem();
+        this.soBattleCharacter = Instantiate(_character);
+        this.characterName = soBattleCharacter.GetCharacterName();
+        InitStats(soBattleCharacter.GetStatus());
+        this.currentHP = _currentHp;
+        this.skills = new SOSkillBase[soBattleCharacter.GetSkills().Length];
+        for (int i = 0; i < skills.Length; i++)
+            this.skills[i] = Instantiate(_character.GetSkills()[i]);
+        this.transform.name = _character.GetCharacterName();
+        this.raceType = _character.GetRaceType();
+        this.characterShadow.sprite = _character.GetBattleSprite();
+        // 체력 UI 초기화
+        if (this.healthPreferences == null)
+        {
+            Debug.LogError($"[{this.name}] HealthPreferences 컴포넌트가 없습니다.");
+            return;
+        }
+
+        var t_screenHpPosition = Camera.main.WorldToScreenPoint(this.healthPreferences.transform.position);
+
+        this.healthPreferences.SetTotalHealth(maxHP);
+        this.healthPreferences.SetCurrentHealth(currentHP);
+
+        if (this.spineModelController == null)
+        {
+            Debug.LogError($"[{this.name}] SpineModelController 컴포넌트가 없습니다.");
+            return;
+        }
+        if (this.battleManager.IsAlly(this))
+        {
+            if (this.soBattleCharacter.IsModelBasicRight())
+            {
+                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
+            }
+            else
+            {
+                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
+        else
+        {
+            if (this.soBattleCharacter.IsModelBasicRight())
+            {
+                this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
+            }
+            else
+            {
+                this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
+            }
+        }
+
+        this.spineModelController.PlayAnimation(AnimationType.idle);
+
+
         return;
     }
     public void SetSelectedSkill(SOSkillBase _skill, BattleCharacterBase[] _target)
@@ -148,7 +300,7 @@ public class BattleCharacterBase : MonoBehaviour
     {
         Debug.Log($"{name} has died.");
         this.isDie = true;
-        this.spineModelController.PlayAnimation(AnimationType.die);
+        //this.spineModelController.PlayAnimation(AnimationType.die);
     }
     public async UniTask OnTurnStart()
     {
@@ -161,47 +313,69 @@ public class BattleCharacterBase : MonoBehaviour
 
     #region 턴 처리
     #region 공격/피격
-    public async UniTask AttackMovePoint()
+    public async UniTask MoveMiddlePoint()
     {
         Vector3 t_middlePoint = this.battleManager.GetMiddlePoint().position;
-        this.spineModelController.PlayAnimation(AnimationType.walk);
+        //this.spineModelController.PlayAnimation(AnimationType.walk);
         await MovePoint(t_middlePoint);
     }
     public async UniTask MovePoint(Vector3 _point)
     {
-        while (Vector3.Distance(this.transform.position, _point) >= 0.5f)
+        float t_time = 0f;
+        Vector3 startPos = this.transform.position;
+        float jumpHeight = 1.5f; // 점프 높이
+
+        while (t_time < moveTime)
         {
-            this.transform.position = Vector3.MoveTowards(this.transform.position, _point, Time.fixedDeltaTime * 10f);
+            float t_lerp = t_time / moveTime;
+
+            // X와 Z축은 선형 보간
+            float t_xPos = Mathf.Lerp(startPos.x, _point.x, t_lerp);
+            float t_zPos = Mathf.Lerp(startPos.z, _point.z, t_lerp);
+
+            // Y축은 포물선 형태로 보간 (sin 곡선 활용)
+            float t_yPos = Mathf.Lerp(startPos.y, _point.y, t_lerp) + (Mathf.Sin(t_lerp * Mathf.PI) * jumpHeight);
+
+            this.transform.position = new Vector3(t_xPos, t_yPos, t_zPos);
+            t_time += Time.fixedDeltaTime;
             await UniTask.WaitForFixedUpdate();
         }
+
+        // 정확한 최종 위치 설정
+        this.transform.position = _point;
         return;
     }
-
-    public async UniTask AttackMotion()
+    public async UniTask AttackPosition()
     {
         this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
-        await AttackMovePoint();
+        await MoveMiddlePoint();
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
         await this.spineModelController.PlayAnimationAsync(AnimationType.meleeAttack);
     }
-
+    public async UniTask AttackPosition(Vector3 _position)
+    {
+        this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
+        await MovePoint(_position);
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        await this.spineModelController.PlayAnimationAsync(AnimationType.meleeAttack);
+    }
     public async UniTask ResetPosition()
     {
-        var t_position = this.battleManager.GetPlayerTranform(this).position;
+        var t_position = this.battleManager.GetOriginTranform(this).position;
+        this.spineModelController.PlayAnimation(AnimationType.idle);
         await MovePoint(t_position);
+        this.spineModelController.PlayAnimation(AnimationType.idle);
     }
-
     public async UniTask AttackTask(HitInfo _hitInfo)
     {
-        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
         await _hitInfo.target.HitTask(_hitInfo);
-        this.battleManager.ShowText($"다음차례!");
-        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
     }
     public async UniTask TakeDamage(HitInfo _hitInfo)
     {
         float t_finalDamage = _hitInfo.hitDamage;
-        if (this.isInDefence)
+        if (!_hitInfo.isDotDamage && this.isInDefence)
         {
             if (_hitInfo.isRaceAdvantage == 1)
             {
@@ -209,24 +383,24 @@ public class BattleCharacterBase : MonoBehaviour
             }
             else
             {
-                t_finalDamage *= 0.75f;
+                t_finalDamage *= 0.25f;
             }
         }
 
         this.hitParticle.Play();
         await this.spineModelController.PlayAnimationAsync(AnimationType.hit);
-        this.battleManager.ShowText($"{(int)t_finalDamage}의 데미지를 {this.name} 이 받았다!!");
+        string t_text = "";
+        if (_hitInfo.isCritical)
+        {
+            t_text += $"치명타! ";
+        }
+        t_text += $"{(int)t_finalDamage}의 데미지를 {this.name} 이 받았다!!";
+        this.battleManager.ShowText(t_text);
         this.currentHP = Mathf.Max(0f, this.currentHP - (int)t_finalDamage);
-        SetHpText();
+        this.healthPreferences.SetCurrentHealth(currentHP);
         this.spineModelController.PlayAnimation(AnimationType.idle);
         if (this.currentHP <= 0f)
             Die();
-
-
-    }
-    void SetHpText()
-    {
-        this.hpText.text = this.currentHP.ToString();
     }
     public virtual async UniTask HitTask(HitInfo _hitInfo)
     {
@@ -265,6 +439,7 @@ public class BattleCharacterBase : MonoBehaviour
                 this.battleManager.ShowText($"하지만 실패했다!");
             }
         }
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
     }
     #endregion
     #region 도망
@@ -317,7 +492,7 @@ public class BattleCharacterBase : MonoBehaviour
     {
         this.statBlock = new StatBlock(_status);
         this.maxHP = this.currentHP = this.statBlock.GetStat(StatType.Hp);
-
+        this.maxMp = this.currentMp = this.statBlock.GetStat(StatType.Mp);
     }
     #endregion
     public struct HitInfo
@@ -325,6 +500,7 @@ public class BattleCharacterBase : MonoBehaviour
         public bool isCritical;
         public int isRaceAdvantage;
         public float hitDamage;
+        public bool isDotDamage;
         public RaceType attackRace;
         public StatusEffectID statusEffect;
         public BattleCharacterBase target;
@@ -349,8 +525,11 @@ public class BattleCharacterBase : MonoBehaviour
         float t_afterMaxHp = this.statBlock.GetStat(StatType.Hp);
         Debug.Log($"{t_afterMaxHp}        {t_beforeMaxHp}");
         Heal(t_afterMaxHp - t_beforeMaxHp);
-        SetHpText();
-
+        this.healthPreferences.SetCurrentHealth(currentHP);
+    }
+    public void UpdateSkills(SOSkillBase[] newSkills)
+    {
+        this.skills = newSkills;
     }
 
 }

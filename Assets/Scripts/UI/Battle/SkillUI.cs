@@ -17,6 +17,14 @@ public class SkillUI : MonoBehaviour
         this.skillName.text = _skill.skillName;
         this.skillIcon.sprite = _skill.skillIcon;
         this.skillButton.onClick.RemoveAllListeners();
+        if (_character.GetMp() >= _skill.requireMp)
+        {
+            this.skillButton.interactable = true;
+        }
+        else
+        {
+            this.skillButton.interactable = false;
+        }
         this.skillButton.onClick.AddListener(() => _action.Invoke(_character, _skill));
 
     }

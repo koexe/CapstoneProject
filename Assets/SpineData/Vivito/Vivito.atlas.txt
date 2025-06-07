@@ -1,0 +1,83 @@
+
+Vivito.png
+size: 1314,267
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+AttackEye_V
+  rotate: true
+  xy: 1260, 159
+  size: 106, 39
+  orig: 109, 41
+  offset: 1, 1
+  index: -1
+Body_V
+  rotate: false
+  xy: 1226, 38
+  size: 86, 89
+  orig: 86, 92
+  offset: 0, 0
+  index: -1
+EyeMain_V
+  rotate: false
+  xy: 2, 5
+  size: 82, 13
+  orig: 86, 17
+  offset: 2, 2
+  index: -1
+L1_V
+  rotate: true
+  xy: 2, 20
+  size: 245, 369
+  orig: 245, 369
+  offset: 0, 0
+  index: -1
+L2_V
+  rotate: true
+  xy: 682, 22
+  size: 243, 182
+  orig: 243, 182
+  offset: 0, 0
+  index: -1
+Mouth_V
+  rotate: false
+  xy: 86, 4
+  size: 26, 14
+  orig: 28, 17
+  offset: 1, 2
+  index: -1
+R1_V
+  rotate: true
+  xy: 373, 2
+  size: 263, 307
+  orig: 264, 307
+  offset: 1, 0
+  index: -1
+R2_V
+  rotate: false
+  xy: 866, 121
+  size: 276, 144
+  orig: 276, 146
+  offset: 0, 2
+  index: -1
+earB_V
+  rotate: true
+  xy: 866, 20
+  size: 99, 177
+  orig: 99, 177
+  offset: 0, 0
+  index: -1
+earF_V
+  rotate: true
+  xy: 1045, 29
+  size: 90, 179
+  orig: 90, 179
+  offset: 0, 0
+  index: -1
+head_V
+  rotate: true
+  xy: 1144, 129
+  size: 136, 114
+  orig: 142, 114
+  offset: 0, 0
+  index: -1

@@ -20,11 +20,23 @@ public class SOAtatckSkill : SOSkillBase
             return;
         }
         GameManager.instance.GetCamera().SetTarget(this.character.transform);
-        await this.character.AttackMotion();
+        if (this.attackRange == AttackRangeType.All)
+        {
+            await this.character.AttackPosition();
+        }
 
         foreach (var t_target in this.target)
         {
             if (t_target.IsDie()) continue;
+
+            if (this.attackRange != AttackRangeType.All)
+            {
+                Vector3 t_position = t_target.transform.position;
+                Vector3 t_offset = new Vector3(
+                    this.character.transform.position.x - t_target.transform.position.x > 0f ? 
+                    2.5f : -2.5f, 0, 0);
+                await this.character.AttackPosition(t_position + t_offset);
+            }
 
 
             BattleCharacterBase.HitInfo t_hitInfo = new BattleCharacterBase.HitInfo();

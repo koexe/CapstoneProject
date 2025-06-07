@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Cysharp.Threading.Tasks;
 
 public class SceneLoadManager : MonoBehaviour
 {
@@ -46,40 +47,33 @@ public class SceneLoadManager : MonoBehaviour
         }
     }
 
-    public void LoadScene_Async(string _sceneName)
+    public async UniTask LoadScene_Async(string _sceneName)
     {
-        StopAllCoroutines();
-        StartCoroutine(ChangeScene_Async(_sceneName));
+        await ChangeScene_Async(_sceneName);
     }
 
-    IEnumerator ChangeScene_Async(string _sceneName)
+    private async UniTask ChangeScene_Async(string _sceneName)
     {
         // 페이드 인
         this.fadePanel.gameObject.SetActive(true);
         float t_elapsed = 0f;
-        
+        UIManager.instance.HideAllUI();
         while (t_elapsed < this.fadeDuration)
         {
             t_elapsed += Time.deltaTime;
             this.fadePanel.color = new Color(0, 0, 0, t_elapsed / this.fadeDuration);
-            yield return null;
+            await UniTask.Yield();
         }
 
         // 씬 로드
-        AsyncOperation t_asyncLoad = SceneManager.LoadSceneAsync(_sceneName);
+        var t_asyncLoad = SceneManager.LoadSceneAsync(_sceneName);
         t_asyncLoad.allowSceneActivation = false;
 
-        while (t_asyncLoad.progress < 0.9f)
-        {
-            yield return null;
-        }
+        await UniTask.WaitUntil(() => t_asyncLoad.progress >= 0.9f);
 
         t_asyncLoad.allowSceneActivation = true;
         
-        while (!t_asyncLoad.isDone)
-        {
-            yield return null;
-        }
+        await UniTask.WaitUntil(() => t_asyncLoad.isDone);
 
         // 페이드 아웃
         t_elapsed = this.fadeDuration;
@@ -87,7 +81,7 @@ public class SceneLoadManager : MonoBehaviour
         {
             t_elapsed -= Time.deltaTime;
             this.fadePanel.color = new Color(0, 0, 0, t_elapsed / this.fadeDuration);
-            yield return null;
+            await UniTask.Yield();
         }
 
         this.fadePanel.gameObject.SetActive(false);

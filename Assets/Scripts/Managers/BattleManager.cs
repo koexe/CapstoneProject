@@ -11,13 +11,13 @@ public class BattleCharacterManager
 {
     private List<BattleCharacterBase> allyCharacters = new List<BattleCharacterBase>();
     private List<BattleCharacterBase> enemyCharacters = new List<BattleCharacterBase>();
-    
+
     public BattleCharacterBase[] GetAllies() => allyCharacters.ToArray();
     public BattleCharacterBase[] GetEnemies() => enemyCharacters.ToArray();
-    
+
     public void AddAlly(BattleCharacterBase character) => allyCharacters.Add(character);
     public void AddEnemy(BattleCharacterBase character) => enemyCharacters.Add(character);
-    
+
     public bool IsAllyAllDie()
     {
         foreach (var ally in allyCharacters)
@@ -26,7 +26,7 @@ public class BattleCharacterManager
         }
         return true;
     }
-    
+
     public bool IsEnemyAllDie()
     {
         foreach (var enemy in enemyCharacters)
@@ -35,7 +35,7 @@ public class BattleCharacterManager
         }
         return true;
     }
-    
+
     public void Clear()
     {
         allyCharacters.Clear();
@@ -44,7 +44,7 @@ public class BattleCharacterManager
 
     public int AllyCount => allyCharacters.Count;
     public int EnemyCount => enemyCharacters.Count;
-    
+
     public BattleCharacterBase GetAlly(int index) => allyCharacters[index];
 }
 
@@ -52,18 +52,18 @@ public class BattleUIManager
 {
     private TextMeshProUGUI battleText;
     private GameObject selectButtonGroup;
-    private GameObject nextButton;
-    
-    public BattleUIManager(TextMeshProUGUI battleText, GameObject selectButtonGroup, GameObject nextButton)
+    //private GameObject nextButton;
+
+    public BattleUIManager(TextMeshProUGUI battleText, GameObject selectButtonGroup)
     {
         this.battleText = battleText;
         this.selectButtonGroup = selectButtonGroup;
-        this.nextButton = nextButton;
+        //this.nextButton = nextButton;
     }
-    
+
     public void ShowText(string text) => battleText.text = text;
     public void SetSelectButtonGroupActive(bool isActive) => selectButtonGroup.SetActive(isActive);
-    public void SetNextButtonActive(bool isActive) => nextButton.SetActive(isActive);
+    //public void SetNextButtonActive(bool isActive) => nextButton.SetActive(isActive);
 }
 
 public class BattleManager : MonoBehaviour
@@ -78,7 +78,7 @@ public class BattleManager : MonoBehaviour
 
     [SerializeField] BattleCharacterBase currentSelectedCharacter;
 
-    [SerializeField] GameObject nextButton;
+    //[SerializeField] GameObject nextButton;
 
     [SerializeField] TurnSequence.BattleSequenceType currentSequenceType;
 
@@ -95,7 +95,7 @@ public class BattleManager : MonoBehaviour
     private void Awake()
     {
         characterManager = new BattleCharacterManager();
-        uiManager = new BattleUIManager(battleText, selectButtonGroup, nextButton);
+        uiManager = new BattleUIManager(battleText, selectButtonGroup);
     }
 
     public void SetCurrentSequenceType(TurnSequence.BattleSequenceType _type) => this.currentSequenceType = _type;
@@ -104,11 +104,20 @@ public class BattleManager : MonoBehaviour
 
     public Transform GetMiddlePoint() => this.middlePoint;
 
-    public Transform GetPlayerTranform(BattleCharacterBase _battleCharacterBase)
+    public Transform GetOriginTranform(BattleCharacterBase _battleCharacterBase)
     {
         var allies = characterManager.GetAllies();
-        int t_index = Array.IndexOf(allies, _battleCharacterBase);
-        return this.allyPositions[t_index];
+        var enemies = characterManager.GetEnemies();
+        if (allies.Contains(_battleCharacterBase))
+        {
+            int t_index = Array.IndexOf(allies, _battleCharacterBase);
+            return this.allyPositions[t_index];
+        }
+        else
+        {
+            int t_index = Array.IndexOf(enemies, _battleCharacterBase);
+            return this.enemyPositions[t_index];
+        }
     }
 
 #if UNITY_EDITOR
@@ -123,7 +132,7 @@ public class BattleManager : MonoBehaviour
     public void Initialization()
     {
         characterManager.Clear();
-        
+
         var battleSceneData = GameManager.instance.GetBattleSceneData();
         if (battleSceneData == null)
         {
@@ -134,6 +143,7 @@ public class BattleManager : MonoBehaviour
         var playerData = battleSceneData.GetPlayerData();
         var npcData = battleSceneData.GetNPCData();
         var enemyData = battleSceneData.GetEnemys();
+        var enemyLevels = battleSceneData.GetEnemyLevels();
 
         if (playerData == null || npcData == null)
         {
@@ -173,12 +183,11 @@ public class BattleManager : MonoBehaviour
                     Destroy(ally);
                     continue;
                 }
-
-                allyComponent.Initialization(this, t_allys[i]);
                 ally.transform.position = allyPositions[i].position;
                 characterManager.AddAlly(allyComponent);
+                allyComponent.PlayerInitialization(this, t_allys[i], i == 0 ? GameManager.instance.GetBattleSceneData().GetPlayerHp() : GameManager.instance.GetBattleSceneData().GetNpcHp());
             }
-            
+
             for (int i = 0; i < enemyData.Length; i++)
             {
                 if (enemyData[i] == null)
@@ -197,19 +206,25 @@ public class BattleManager : MonoBehaviour
                 var enemyComponent = enemy.GetComponent<BattleCharacterBase>();
                 if (enemyComponent == null)
                 {
-                    Debug.LogError("BattleCharacterBase 컴포넌트를 찾을 수 없습니다.");
+                    Debug.LogError($"[{enemy.name}] BattleCharacterBase 컴포넌트를 찾을 수 없습니다.");
                     Destroy(enemy);
                     continue;
                 }
 
-                enemyComponent.Initialization(this, enemyData[i]);
+                if (enemyData[i] == null)
+                {
+                    Debug.LogError($"[{enemy.name}] enemyData[{i}]가 null입니다.");
+                    Destroy(enemy);
+                    continue;
+                }
+
                 enemy.transform.position = enemyPositions[i].position;
                 characterManager.AddEnemy(enemyComponent);
+                enemyComponent.EnemyInitialization(this, enemyData[i], enemyLevels[i]);
             }
 
             turnSystem = new TurnSystem();
             InitializeTurnSystem();
-            this.turnSystem.SequenceAction();
         }
         catch (Exception e)
         {
@@ -230,7 +245,6 @@ public class BattleManager : MonoBehaviour
         else
         {
             NewTurn();
-            this.turnSystem.SequenceAction();
         }
     }
 
@@ -256,19 +270,24 @@ public class BattleManager : MonoBehaviour
         this.turnSystem.AddSequence(new ChooseSequence(this, characterManager.GetAllies(), characterManager.GetEnemies(),
             () =>
             {
-                ActiveSelectButtonGroup(true);
-                this.nextButton.SetActive(false);
+                this.selectButtonGroup.gameObject.SetActive(true);
                 this.currentSelectedCharacter = characterManager.GetAlly(0);
                 GameManager.instance.GetCamera().SetTarget(this.currentSelectedCharacter.transform);
+                SetChooseSequenceState(ChooseSequence.ChooseState.None);
             },
             () =>
             {
-                ActiveSelectButtonGroup(false);
+                SetAllyArrow(false);
+                SetEnemyArrow(false);
+                SetAllyShadow(false);
+                SetEnemyShadow(false);
                 GameManager.instance.GetCamera().SetTarget(null);
             }));
-        this.turnSystem.AddSequence(new ExecuteSequence(this, TurnCheck()));
+        this.turnSystem.AddSequence(new ExecuteSequence(this, TurnCheck(), _beforeAction: () => this.selectButtonGroup.gameObject.SetActive(false)));
         this.turnSystem.AddSequence(new SummarySequence(this, TurnCheck(), _afterAction: TurnEnd));
         this.turnSystem.AddSequence(new EndSequence(this));
+
+        this.turnSystem.SequenceAction();
     }
 
     #region 기능
@@ -278,7 +297,6 @@ public class BattleManager : MonoBehaviour
         uiManager.ShowText(_text);
     }
 
-    public void ActiveSelectButtonGroup(bool _is) => uiManager.SetSelectButtonGroupActive(_is);
 
     public void HidePlayerAction()
     {
@@ -292,6 +310,16 @@ public class BattleManager : MonoBehaviour
     public bool IsEnemyAllDie()
     {
         return characterManager.IsEnemyAllDie();
+    }
+
+    public bool IsAlly(BattleCharacterBase _character)
+    {
+        return this.characterManager.GetAllies().Contains(_character);
+    }
+
+    public bool IsEnemy(BattleCharacterBase _character)
+    {
+        return this.characterManager.GetEnemies().Contains(_character);
     }
 
     public async UniTask RunCheck()
@@ -359,6 +387,7 @@ public class BattleManager : MonoBehaviour
         foreach (var t_character in characterManager.GetEnemies())
         {
             t_character.SetSelectedSkill(t_character.GetSkills()[0], characterManager.GetAllies());
+            t_character.SetAction(CharacterActionType.Skill);
         }
     }
 
@@ -401,7 +430,8 @@ public class BattleManager : MonoBehaviour
 
     public void ChangeToFieldScene()
     {
-        GameManager.instance.ChangeSceneToField(characterManager.GetAllies()[0].GetBattleCharacter(), characterManager.GetAllies()[1].GetBattleCharacter());
+
+        GameManager.instance.ChangeSceneBattleToField(characterManager.GetAllies()[0].GetBattleCharacter(), characterManager.GetAllies()[1].GetBattleCharacter());
     }
 
 
@@ -429,7 +459,7 @@ public class BattleManager : MonoBehaviour
         if (t_isAllReady == true)
         {
             EnemyAttackSelect();
-            uiManager.SetNextButtonActive(true);
+            NextSequence();
         }
         else
         {
@@ -451,14 +481,21 @@ public class BattleManager : MonoBehaviour
         {
             case CharacterActionType.Attack:
                 this.currentSelectedCharacter.SetAction(CharacterActionType.Skill);
+                this.selectButtonGroup.gameObject.SetActive(false);
                 UIManager.instance.ShowUI<SkillSelectUI>(new SkillUIData()
                 {
+                    battleManager = this,
                     battleCharacterBase = this.currentSelectedCharacter,
                     identifier = "BattleSkillUI",
                     skills = this.currentSelectedCharacter.GetSkills(),
                     isAllowMultifle = false,
                     order = 0,
-                    action = UISelectSkill
+                    action = UISelectSkill,
+                    onHide = () =>
+                    {
+
+                        this.selectButtonGroup.gameObject.SetActive(true);
+                    }
                 });
                 break;
             case CharacterActionType.Talk:
@@ -505,12 +542,56 @@ public class BattleManager : MonoBehaviour
     }
 
 
-    void SetChooseSequenceState(ChooseSequence.ChooseState _state)
+    public void SetChooseSequenceState(ChooseSequence.ChooseState _state)
     {
         var t_Sequence = this.turnSystem.GetCurrentSequence() as ChooseSequence;
         if (t_Sequence != null)
         {
+            if (_state == ChooseSequence.ChooseState.None)
+            {
+                SetAllyArrow(true);
+                SetEnemyArrow(false);
+            }
+            else if (_state == ChooseSequence.ChooseState.SelectEnemy)
+            {
+                SetAllyArrow(false);
+                SetEnemyArrow(true);
+            }
+            else
+            {
+                SetAllyArrow(false);
+                SetEnemyArrow(false);
+            }
             t_Sequence.state = _state;
+        }
+    }
+
+    public void SetAllyArrow(bool _is)
+    {
+        foreach (var t_character in characterManager.GetAllies())
+        {
+            t_character.SetArrow(_is);
+        }
+    }
+    public void SetEnemyArrow(bool _is)
+    {
+        foreach (var t_character in characterManager.GetEnemies())
+        {
+            t_character.SetArrow(_is);
+        }
+    }
+    public void SetEnemyShadow(bool _is)
+    {
+        foreach (var t_character in characterManager.GetEnemies())
+        {
+            t_character.SetShadow(_is);
+        }
+    }
+    public void SetAllyShadow(bool _is)
+    {
+        foreach (var t_character in characterManager.GetAllies())
+        {
+            t_character.SetShadow(_is);
         }
     }
 
