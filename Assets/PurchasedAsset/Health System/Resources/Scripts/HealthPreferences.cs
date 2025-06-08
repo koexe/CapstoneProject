@@ -20,6 +20,7 @@ public class HealthPreferences : MonoBehaviour
     public float currentHealth;
 
     [SerializeField] private Health.FillDirection fillDirection = Health.FillDirection.LeftToRight;
+    [SerializeField] private float heartSpacing = 0.5f;
 
     private float valuePerImage;
     private bool isInvincible = false;
