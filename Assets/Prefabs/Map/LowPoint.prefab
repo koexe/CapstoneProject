@@ -16657,6 +16657,7 @@ MonoBehaviour:
     linkedMap: {fileID: 6202327555237461339, guid: deca1ad30977b344799af59a366db054, type: 3}
     linkedMapPoint: 1
   currentWaitTime: 0
+  spawnPoint: {fileID: 0}
   coll: {fileID: 7712637472635755041}
 --- !u!54 &6916601983206407614
 Rigidbody:
