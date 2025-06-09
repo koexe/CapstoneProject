@@ -51,15 +51,22 @@ public class MapManager : MonoBehaviour
 
     public void MoveMap(MapEntity.MapPath _path)
     {
-        Destroy(this.currentMap.gameObject);
-        this.currentMap = Instantiate(_path.linkedMap, this.transform);
-        this.currentMap.InitializeMap();
         var t_player = GameManager.instance.GetPlayer();
+        t_player.transform.SetParent(null);
+        Destroy(this.currentMap.gameObject);
+
+        this.currentMap = Instantiate(_path.linkedMap, this.transform);
         t_player.transform.SetParent(this.currentMap.transform);
 
         SaveGameManager.instance.GetCurrentSaveData().currentMap = this.currentMap.GetID();
 
         t_player.transform.position = this.currentMap.GetMapPoint(_path.linkedMapPoint).GetSpawnPoint().position;
+
+        GameManager.instance.GetCamera().SetPosition(t_player.transform.position);
+
+        this.currentMap.InitializeMap(); 
+
+
     }
     public int GetItem(MapItem _mapitem)
     {

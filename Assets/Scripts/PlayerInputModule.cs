@@ -15,8 +15,6 @@ public class PlayerInputModule : MonoBehaviour
 
 
     private Vector3 moveDirection;
-    private bool isInventoryKeyPressed;
-    private bool isMapKeyPressed;
     private bool isFacingRight = true;
 
     private void Start()
@@ -80,7 +78,10 @@ public class PlayerInputModule : MonoBehaviour
 
 
     }
-
+    private void OnDisable()
+    {
+        Debug.Log("꺼짐");
+    }
     private void SetAnimation(AnimationReferenceAsset anim, bool loop)
     {
         if (skeletonAnimation.AnimationName != anim.name)

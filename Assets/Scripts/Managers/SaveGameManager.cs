@@ -99,10 +99,10 @@ public class SaveGameManager : MonoBehaviour
         }
 
         currentSlot = slotNumber;
-        LoadToFile(slotNumber);
+        LoadFromFile(slotNumber);
     }
 
-    void LoadToFile(int slotNumber)
+    void LoadFromFile(int slotNumber)
     {
         try
         {

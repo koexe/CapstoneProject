@@ -9,6 +9,8 @@ public class CameraController : MonoBehaviour
 
     [SerializeField] Vector3 offset = new Vector3(0f, 0f, -10f);
 
+    [SerializeField] float basicOffsetY;
+
     [SerializeField] float followSpeed = 5f;
 
     Camera cam;
@@ -18,13 +20,13 @@ public class CameraController : MonoBehaviour
         cam = Camera.main;
         GameManager.instance.SetCamera(this);
     }
-
+    public void SetPosition(Vector3 _position) => this.transform.position = new Vector3(_position.x, this.basicOffsetY, _position.z);
     public void SetTarget(Transform _target) => this.currentTarget = _target;
 
     private void FixedUpdate()
     {
         Vector3 targetPosition = currentTarget != null ? currentTarget.position : Vector3.zero;
-        targetPosition.y = transform.position.y;
+        targetPosition.y = this.basicOffsetY;
         targetPosition += offset;
 
         // 부드럽게 따라가기

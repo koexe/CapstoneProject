@@ -15090,6 +15090,7 @@ MonoBehaviour:
   areaCenter: {x: 0, y: 0}
   areaSize: {x: 30, y: 20}
   offset: {x: 0, y: 10, z: -10}
+  basicOffsetY: 1.9
   followSpeed: 5
 --- !u!20 &519420031
 Camera:
@@ -28522,6 +28523,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parallaxFactor: 0.5
+  isApplyZaxis: 1
+  initialPosition: {x: 0, y: 0.49, z: 10.45}
+  initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &983745376
 GameObject:
   m_ObjectHideFlags: 0

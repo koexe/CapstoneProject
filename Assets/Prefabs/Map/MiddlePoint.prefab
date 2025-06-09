@@ -9881,6 +9881,7 @@ MonoBehaviour:
   - {fileID: 4752265916116466864}
   - {fileID: 951739182643739530}
   items: {fileID: 1837445241528667664}
+  parallaxObject: {fileID: 7328798981135383329}
   itemEntitys: []
 --- !u!1 &2055209307439998346
 GameObject:
