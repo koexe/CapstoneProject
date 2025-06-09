@@ -59,7 +59,7 @@ public class MapManager : MonoBehaviour
 
         SaveGameManager.instance.GetCurrentSaveData().currentMap = this.currentMap.GetID();
 
-        t_player.transform.position = this.currentMap.GetMapPoint(_path.linkedMapPoint).transform.position;
+        t_player.transform.position = this.currentMap.GetMapPoint(_path.linkedMapPoint).GetSpawnPoint().position;
     }
     public int GetItem(MapItem _mapitem)
     {

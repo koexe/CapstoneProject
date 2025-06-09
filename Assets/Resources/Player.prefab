@@ -242,4 +242,4 @@ MonoBehaviour:
   coll3D: {fileID: 7435573240301218397}
   wallMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128

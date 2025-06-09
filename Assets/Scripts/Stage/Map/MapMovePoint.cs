@@ -8,7 +8,10 @@ public class MapMovePoint : MonoBehaviour
     [SerializeField] MapEntity.MapPath path;
     const float waitTime = 1.0f;
     [SerializeField] float currentWaitTime;
+    [SerializeField] Transform spawnPoint;
     [SerializeField] Collider coll;
+
+    public Transform GetSpawnPoint() => this.spawnPoint;
 
     private void Start()
     {
