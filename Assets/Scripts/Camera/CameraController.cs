@@ -4,14 +4,25 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] Transform currentTarget;
 
-    [SerializeField] Vector2 areaCenter = Vector2.zero;  // 제한 구역 중심
-    [SerializeField] Vector2 areaSize = new Vector2(20f, 10f); // 제한 구역 크기
+    [SerializeField] Vector3 areaCenter = Vector3.zero;  // 제한 구역 중심
+    [SerializeField] Vector3 areaSize = new Vector3(20f, 10f, 10f); // 제한 구역 크기
+
+    public void SetAreaSize(Vector3 _areaCenter, Vector3 _areaSize)
+    {
+        this.areaCenter = _areaCenter;
+        this.areaSize = _areaSize;
+    }
+
+    float viewDistance =10f;
 
     [SerializeField] Vector3 offset = new Vector3(0f, 0f, -10f);
 
     [SerializeField] float basicOffsetY;
 
     [SerializeField] float followSpeed = 5f;
+
+    [SerializeField] Vector2 cameraAreaCenter = Vector2.zero;
+    [SerializeField] Vector2 cameraAreaSize = new Vector2(20f, 10f);
 
     Camera cam;
 
@@ -23,6 +34,9 @@ public class CameraController : MonoBehaviour
     public void SetPosition(Vector3 _position) => this.transform.position = new Vector3(_position.x, this.basicOffsetY, _position.z);
     public void SetTarget(Transform _target) => this.currentTarget = _target;
 
+    public Vector2 GetCameraAreaCenter() => cameraAreaCenter;
+    public Vector2 GetCameraAreaSize() => cameraAreaSize;
+
     private void FixedUpdate()
     {
         Vector3 targetPosition = currentTarget != null ? currentTarget.position : Vector3.zero;
@@ -32,27 +46,26 @@ public class CameraController : MonoBehaviour
         // 부드럽게 따라가기
         Vector3 smoothPosition = Vector3.Lerp(transform.position, targetPosition, followSpeed * Time.deltaTime);
 
-        // 카메라 화면 반 크기
-        float halfHeight = cam.orthographicSize;
-        float halfWidth = halfHeight * cam.aspect;
+        // 제한 영역 계산 (xz축만)
+        float minX = areaCenter.x - areaSize.x * 0.5f;
+        float maxX = areaCenter.x + areaSize.x * 0.5f;
 
-        // 제한 영역의 경계 계산
-        float minX = areaCenter.x - areaSize.x * 0.5f + halfWidth;
-        float maxX = areaCenter.x + areaSize.x * 0.5f - halfWidth;
-        float minY = areaCenter.y - areaSize.y * 0.5f + halfHeight;
-        float maxY = areaCenter.y + areaSize.y * 0.5f - halfHeight;
+        float minZ = areaCenter.z - areaSize.z * 0.5f;
+        float maxZ = areaCenter.z + areaSize.z * 0.5f;
 
-        // 카메라 중심 위치 클램프
+        // x, z 클램프
         float clampedX = Mathf.Clamp(smoothPosition.x, minX, maxX);
-        float clampedY = Mathf.Clamp(smoothPosition.y, minY, maxY);
+        float clampedZ = Mathf.Clamp(smoothPosition.z, minZ, maxZ);
 
-        transform.position = new Vector3(clampedX, clampedY, smoothPosition.z);
+        // y는 그대로
+        transform.position = new Vector3(clampedX, smoothPosition.y, clampedZ);
     }
+
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
-        Vector3 center = new Vector3(areaCenter.x, areaCenter.y, 0f);
+        Vector3 center = new Vector3(areaCenter.x, areaCenter.y, areaCenter.z);
         Vector3 size = new Vector3(areaSize.x, areaSize.y, 0f);
         Gizmos.DrawWireCube(center, size);
     }

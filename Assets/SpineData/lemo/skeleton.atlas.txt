@@ -1,0 +1,62 @@
+
+skeleton.png
+size: 841,509
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+어디든씨 눈
+  rotate: true
+  xy: 385, 107
+  size: 55, 16
+  orig: 500, 500
+  offset: 221, 299
+  index: -1
+어디든씨 모자
+  rotate: true
+  xy: 567, 114
+  size: 393, 182
+  orig: 500, 500
+  offset: 51, 271
+  index: -1
+어디든씨 모자 풀
+  rotate: true
+  xy: 751, 180
+  size: 327, 88
+  orig: 500, 500
+  offset: 71, 374
+  index: -1
+어디든씨 모자_1
+  rotate: false
+  xy: 2, 2
+  size: 381, 160
+  orig: 500, 500
+  offset: 58, 242
+  index: -1
+어디든씨 몸통
+  rotate: false
+  xy: 2, 164
+  size: 450, 343
+  orig: 500, 500
+  offset: 23, 19
+  index: -1
+어디든씨 손
+  rotate: true
+  xy: 751, 98
+  size: 80, 78
+  orig: 500, 500
+  offset: 295, 114
+  index: -1
+어디든씨 수염
+  rotate: false
+  xy: 567, 8
+  size: 240, 88
+  orig: 500, 500
+  offset: 128, 205
+  index: -1
+어디든씨 지팡이
+  rotate: false
+  xy: 454, 52
+  size: 111, 455
+  orig: 500, 500
+  offset: 318, 19
+  index: -1

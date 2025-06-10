@@ -3097,6 +3097,7 @@ MonoBehaviour:
     linkedMap: {fileID: 6202327555237461339, guid: 7f697b54280ff664381449e53a422463, type: 3}
     linkedMapPoint: 0
   currentWaitTime: 0
+  spawnPoint: {fileID: 0}
   coll: {fileID: 4517467868313827744}
 --- !u!54 &4695820775528527791
 Rigidbody:
@@ -3833,6 +3834,7 @@ MonoBehaviour:
     linkedMap: {fileID: 6202327555237461339, guid: 7f697b54280ff664381449e53a422463, type: 3}
     linkedMapPoint: 1
   currentWaitTime: 0
+  spawnPoint: {fileID: 0}
   coll: {fileID: 7712637472635755041}
 --- !u!54 &6916601983206407614
 Rigidbody:
@@ -4728,6 +4730,7 @@ MonoBehaviour:
   - {fileID: 7901727355787182879}
   - {fileID: 4752265916116466864}
   items: {fileID: 1837445241528667664}
+  parallaxObject: {fileID: 0}
   itemEntitys:
   - {fileID: 5231039182354711016}
   - {fileID: 7790958381834858758}
@@ -22376,7 +22379,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4223886932415744022, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6451850906530398435, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: m_RootOrder

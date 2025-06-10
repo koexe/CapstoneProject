@@ -7664,6 +7664,8 @@ MonoBehaviour:
   - {fileID: 2898465937899728176}
   items: {fileID: 1837445241528667664}
   itemEntitys: []
+  cameraAreaCenter: {x: 0, y: 0, z: 0}
+  cameraAreaSize: {x: 20, y: 10, z: 10}
 --- !u!1 &2053124636282176620
 GameObject:
   m_ObjectHideFlags: 0

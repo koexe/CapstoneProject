@@ -11,8 +11,13 @@ public class MapEntity : MonoBehaviour
     public MapMovePoint GetMapPoint(int _index) => this.mapPath[_index];
     public string GetID() => this.mapIdentifier;
     [SerializeField] Transform items;
-    [SerializeField] Transform parallaxObject;
     [SerializeField] List<MapItem> itemEntitys;
+
+    [SerializeField] Vector3 cameraAreaCenter = Vector3.zero;
+    [SerializeField] Vector3 cameraAreaSize = new Vector3(20f, 10f, 0f);
+
+    public Vector3 GetCameraAreaCenter() => cameraAreaCenter;
+    public Vector3 GetCameraAreaSize() => cameraAreaSize;
     public int GetMapItemIndex(MapItem _item)
     {
         if (this.itemEntitys == null)
@@ -29,6 +34,7 @@ public class MapEntity : MonoBehaviour
         if (this.itemEntitys == null)
             this.itemEntitys = this.items.GetComponentsInChildren<MapItem>().ToList<MapItem>();
         List<bool> t_itemInfo = SaveGameManager.instance.currentSaveData.mapItems[this.mapIdentifier];
+        GameManager.instance.GetCamera().SetAreaSize(this.cameraAreaCenter, this.cameraAreaSize);
         if (t_itemInfo.Count != this.itemEntitys.Count)
         {
             LogUtil.Log("Not Matching Item Count With Savefile!");
@@ -37,10 +43,7 @@ public class MapEntity : MonoBehaviour
         {
             this.itemEntitys[i].gameObject.SetActive(!t_itemInfo[i]);
         }
-        foreach (var t_obj in this.parallaxObject.GetComponentsInChildren<ParallaxObject>())
-        {
-            t_obj.Initialization();
-        }
+
     }
 
 
@@ -54,6 +57,10 @@ public class MapEntity : MonoBehaviour
 
     public void OnDrawGizmos()
     {
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(this.cameraAreaCenter, this.cameraAreaSize);
+
         if (Application.isPlaying) return;
 
         if (this.itemEntitys == null)

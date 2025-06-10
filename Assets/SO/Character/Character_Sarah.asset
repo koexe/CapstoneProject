@@ -15,8 +15,9 @@ MonoBehaviour:
   identifier: 1
   raceType: 0
   skills:
-  - {fileID: 11400000, guid: 460869358919ab741bfef33568a0dbc0, type: 2}
-  - {fileID: 11400000, guid: 460869358919ab741bfef33568a0dbc0, type: 2}
+  - {fileID: 11400000, guid: 33a45b200c8fdc04baadeb7f41fb377e, type: 2}
+  - {fileID: 11400000, guid: 2b7f6900594e0bb4d95215fbe9071408, type: 2}
+  - {fileID: 11400000, guid: e9ac87b43c5adea4eb1e68dd972f5fc0, type: 2}
   characterName: "\uC0AC\uB77C"
   status:
     level: 0
@@ -33,3 +34,4 @@ MonoBehaviour:
   hitAnim: {fileID: 11400000, guid: c9e6b8c5a6c9d594490f1c8e053cc8f0, type: 2}
   idleAnim: {fileID: 11400000, guid: b73b46e8fb3c58c48a08afc356e1bba6, type: 2}
   isModelBasicRight: 0
+  attackParticle: {fileID: 0}

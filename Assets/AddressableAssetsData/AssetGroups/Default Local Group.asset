@@ -62,16 +62,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - SkillSO
-  - m_GUID: 36fbae4e65cfcef4882e09ff16a27030
-    m_Address: Assets/SO/Skill/SKill_Base1 1.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SkillSO
-  - m_GUID: 422e972f0b9b2c3469d6a4e065c88ac3
-    m_Address: Assets/SO/Skill/SKill_Base2.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SkillSO
   - m_GUID: 823cee0226951404d852df765dbc94cf
     m_Address: Assets/SO/Skill/AttackSKills/Shadow/1008.asset
     m_ReadOnly: 0
