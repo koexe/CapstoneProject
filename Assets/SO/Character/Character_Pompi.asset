@@ -35,3 +35,5 @@ MonoBehaviour:
   idleAnim: {fileID: 11400000, guid: 4e4c41928f59e754a9da8de89e41e11c, type: 2}
   isModelBasicRight: 1
   attackParticle: {fileID: 0}
+  effectOffset: {x: 0, y: 0}
+  effectTiming: 0.7

@@ -123,21 +123,21 @@ public class ChooseSequence : TurnSequence
         if (this.state == ChooseState.None)
         {
             ShadowUpdate(LayerMask.GetMask("Player"));
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                this.currentPlayerIndex += 1;
-                if (this.currentPlayerIndex >= this.players.Length) this.currentPlayerIndex = 0;
-                GameManager.instance.GetCamera().SetTarget(this.players[this.currentPlayerIndex].transform);
-                this.battleManager.SetSelectedCharacter(this.players[this.currentPlayerIndex]);
+            //if (Input.GetKeyDown(KeyCode.UpArrow))
+            //{
+            //    this.currentPlayerIndex += 1;
+            //    if (this.currentPlayerIndex >= this.players.Length) this.currentPlayerIndex = 0;
+            //    GameManager.instance.GetCamera().SetTarget(this.players[this.currentPlayerIndex].transform);
+            //    this.battleManager.SetSelectedCharacter(this.players[this.currentPlayerIndex]);
 
-            }
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                this.currentPlayerIndex -= 1;
-                if (this.currentPlayerIndex < 0) this.currentPlayerIndex = 1;
-                GameManager.instance.GetCamera().SetTarget(this.players[this.currentPlayerIndex].transform);
-                this.battleManager.SetSelectedCharacter(this.players[this.currentPlayerIndex]);
-            }
+            //}
+            //if (Input.GetKeyDown(KeyCode.DownArrow))
+            //{
+            //    this.currentPlayerIndex -= 1;
+            //    if (this.currentPlayerIndex < 0) this.currentPlayerIndex = 1;
+            //    GameManager.instance.GetCamera().SetTarget(this.players[this.currentPlayerIndex].transform);
+            //    this.battleManager.SetSelectedCharacter(this.players[this.currentPlayerIndex]);
+            //}
 
 
             if (Input.GetMouseButtonDown(0))
@@ -162,34 +162,34 @@ public class ChooseSequence : TurnSequence
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 this.battleManager.HidePlayerAction();
-                this.state = ChooseState.None;
+                this.battleManager.SetChooseSequenceState(ChooseState.None);
             }
         }
         else if (this.state == ChooseState.SelectEnemy)
         {
             ShadowUpdate(LayerMask.GetMask("Enemy"));
-            if (Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                this.currentEnemyIndex += 1;
-                if (this.currentEnemyIndex >= this.enemys.Length) this.currentEnemyIndex = 0;
-                GameManager.instance.GetCamera().SetTarget(this.enemys[this.currentEnemyIndex].transform);
-                this.battleManager.SetSelectedCharacter(this.enemys[this.currentEnemyIndex]);
+            //if (Input.GetKeyDown(KeyCode.UpArrow))
+            //{
+            //    this.currentEnemyIndex += 1;
+            //    if (this.currentEnemyIndex >= this.enemys.Length) this.currentEnemyIndex = 0;
+            //    GameManager.instance.GetCamera().SetTarget(this.enemys[this.currentEnemyIndex].transform);
+            //    this.battleManager.SetSelectedCharacter(this.enemys[this.currentEnemyIndex]);
 
-            }
-            if (Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                this.currentEnemyIndex -= 1;
-                if (this.currentEnemyIndex < 0) this.currentEnemyIndex = this.enemys.Length - 1;
-                GameManager.instance.GetCamera().SetTarget(this.enemys[this.currentEnemyIndex].transform);
-                this.battleManager.SetSelectedCharacter(this.enemys[this.currentEnemyIndex]);
-            }
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                this.players[this.currentPlayerIndex].GetSelectedSkill().target = new BattleCharacterBase[] { this.enemys[this.currentEnemyIndex] };
-                GameManager.instance.GetCamera().SetTarget(null);
-                this.state = ChooseState.None;
-                this.battleManager.CheckAllReady();
-            }
+            //}
+            //if (Input.GetKeyDown(KeyCode.DownArrow))
+            //{
+            //    this.currentEnemyIndex -= 1;
+            //    if (this.currentEnemyIndex < 0) this.currentEnemyIndex = this.enemys.Length - 1;
+            //    GameManager.instance.GetCamera().SetTarget(this.enemys[this.currentEnemyIndex].transform);
+            //    this.battleManager.SetSelectedCharacter(this.enemys[this.currentEnemyIndex]);
+            //}
+            //if (Input.GetKeyDown(KeyCode.Space))
+            //{
+            //    this.players[this.currentPlayerIndex].GetSelectedSkill().target = new BattleCharacterBase[] { this.enemys[this.currentEnemyIndex] };
+            //    GameManager.instance.GetCamera().SetTarget(null);
+            //    this.state = ChooseState.None;
+            //    this.battleManager.CheckAllReady();
+            //}
             if (Input.GetMouseButtonDown(0))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

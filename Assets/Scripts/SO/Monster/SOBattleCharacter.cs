@@ -17,6 +17,8 @@ public class SOBattleCharacter : ScriptableObject
     [SerializeField] AnimationReferenceAsset idleAnim;
     [SerializeField] bool isModelBasicRight;
     [SerializeField] ParticleSystem attackParticle;
+    [SerializeField] Vector2 effectOffset;
+    [SerializeField] float effectTiming;
 
     public int GetIdentifier() => identifier;
     public SOSkillBase[] GetSkills() => skills;
@@ -25,6 +27,9 @@ public class SOBattleCharacter : ScriptableObject
     public RaceType GetRaceType() => raceType;
     public bool IsModelBasicRight() => isModelBasicRight;
     public Sprite GetBattleSprite() => battleSprite;
+    public Vector2 GetEffectOffset() => this.effectOffset;
+
+    public float GetEffectTiming() => this.effectTiming;    
 
     public SkeletonDataAsset GetSkeletonDataAsset() => skeletonDataAsset;
     public (AnimationReferenceAsset, AnimationReferenceAsset, AnimationReferenceAsset) GetAnimations()

@@ -4730,10 +4730,11 @@ MonoBehaviour:
   - {fileID: 7901727355787182879}
   - {fileID: 4752265916116466864}
   items: {fileID: 1837445241528667664}
-  parallaxObject: {fileID: 0}
   itemEntitys:
   - {fileID: 5231039182354711016}
   - {fileID: 7790958381834858758}
+  cameraAreaCenter: {x: 0, y: 0, z: 0}
+  cameraAreaSize: {x: 20, y: 10, z: 0}
 --- !u!1 &2055209307439998346
 GameObject:
   m_ObjectHideFlags: 0
@@ -22367,7 +22368,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: enemyPool.Array.data[0]
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: enemyPool.Array.data[1]

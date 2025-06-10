@@ -18,6 +18,21 @@ public class BattleCharacterManager
     public void AddAlly(BattleCharacterBase character) => allyCharacters.Add(character);
     public void AddEnemy(BattleCharacterBase character) => enemyCharacters.Add(character);
 
+    public void RemoveAlly(BattleCharacterBase character)
+    {
+        if (this.allyCharacters.Contains(character))
+            this.allyCharacters.Remove(character);
+        else
+            return;
+    }
+    public void RemoveEnemy(BattleCharacterBase character)
+    {
+        if (this.enemyCharacters.Contains(character))
+            this.enemyCharacters.Remove(character);
+        else
+            return;
+    }
+
     public bool IsAllyAllDie()
     {
         foreach (var ally in allyCharacters)
@@ -52,18 +67,15 @@ public class BattleUIManager
 {
     private TextMeshProUGUI battleText;
     private GameObject selectButtonGroup;
-    //private GameObject nextButton;
 
     public BattleUIManager(TextMeshProUGUI battleText, GameObject selectButtonGroup)
     {
         this.battleText = battleText;
         this.selectButtonGroup = selectButtonGroup;
-        //this.nextButton = nextButton;
     }
 
     public void ShowText(string text) => battleText.text = text;
     public void SetSelectButtonGroupActive(bool isActive) => selectButtonGroup.SetActive(isActive);
-    //public void SetNextButtonActive(bool isActive) => nextButton.SetActive(isActive);
 }
 
 public class BattleManager : MonoBehaviour
@@ -78,7 +90,6 @@ public class BattleManager : MonoBehaviour
 
     [SerializeField] BattleCharacterBase currentSelectedCharacter;
 
-    //[SerializeField] GameObject nextButton;
 
     [SerializeField] TurnSequence.BattleSequenceType currentSequenceType;
 
@@ -91,6 +102,8 @@ public class BattleManager : MonoBehaviour
 
     private BattleCharacterManager characterManager;
     private BattleUIManager uiManager;
+
+    [SerializeField] List<BattleCharacterBase> playerDataContainer;
 
     private void Awake()
     {
@@ -185,6 +198,7 @@ public class BattleManager : MonoBehaviour
                 }
                 ally.transform.position = allyPositions[i].position;
                 characterManager.AddAlly(allyComponent);
+                playerDataContainer.Add(allyComponent);
                 allyComponent.PlayerInitialization(this, t_allys[i], i == 0 ? GameManager.instance.GetBattleSceneData().GetPlayerHp() : GameManager.instance.GetBattleSceneData().GetNpcHp());
             }
 
@@ -290,6 +304,12 @@ public class BattleManager : MonoBehaviour
         this.turnSystem.SequenceAction();
     }
 
+    public void CharacterDie(BattleCharacterBase _character)
+    {
+        this.characterManager.RemoveAlly(_character);
+        this.characterManager.RemoveEnemy(_character);
+    }
+
     #region 기능
     #region public
     public void ShowText(string _text)
@@ -386,8 +406,17 @@ public class BattleManager : MonoBehaviour
     {
         foreach (var t_character in characterManager.GetEnemies())
         {
-            t_character.SetSelectedSkill(t_character.GetSkills()[0], characterManager.GetAllies());
-            t_character.SetAction(CharacterActionType.Skill);
+            var t_Skill = t_character.GetSkills()[Random.Range(0, t_character.GetSkills().Length)];
+            if (t_Skill.attackRange == SOSkillBase.AttackRangeType.All)
+            {
+                t_character.SetSelectedSkill(t_Skill, characterManager.GetAllies());
+                t_character.SetAction(CharacterActionType.Skill);
+            }
+            else
+            {
+                t_character.SetSelectedSkill(t_Skill, GetRandomElementAsArray(this.characterManager.GetAllies()));
+                t_character.SetAction(CharacterActionType.Skill);
+            }
         }
     }
 
@@ -431,7 +460,7 @@ public class BattleManager : MonoBehaviour
     public void ChangeToFieldScene()
     {
 
-        GameManager.instance.ChangeSceneBattleToField(characterManager.GetAllies()[0].GetBattleCharacter(), characterManager.GetAllies()[1].GetBattleCharacter());
+        GameManager.instance.ChangeSceneBattleToField(this.playerDataContainer[0].GetBattleCharacter(), this.playerDataContainer[1].GetBattleCharacter());
     }
 
 
@@ -467,8 +496,6 @@ public class BattleManager : MonoBehaviour
         }
     }
 
-
-
     public void SelectPlayerAction(int _type)
     {
         var t_Sequence = this.turnSystem.GetCurrentSequence() as ChooseSequence;
@@ -493,7 +520,6 @@ public class BattleManager : MonoBehaviour
                     action = UISelectSkill,
                     onHide = () =>
                     {
-
                         this.selectButtonGroup.gameObject.SetActive(true);
                     }
                 });

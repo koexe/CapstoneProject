@@ -22,8 +22,10 @@ public class SOAtatckSkill : SOSkillBase
         GameManager.instance.GetCamera().SetTarget(this.character.transform);
         if (this.attackRange == AttackRangeType.All)
         {
-            await this.character.AttackPosition();
+            await this.character.AttackPosition(this.attackParticle , this.attackSound);
         }
+
+
 
         foreach (var t_target in this.target)
         {
@@ -33,9 +35,9 @@ public class SOAtatckSkill : SOSkillBase
             {
                 Vector3 t_position = t_target.transform.position;
                 Vector3 t_offset = new Vector3(
-                    this.character.transform.position.x - t_target.transform.position.x > 0f ? 
+                    this.character.transform.position.x - t_target.transform.position.x > 0f ?
                     2.5f : -2.5f, 0, 0);
-                await this.character.AttackPosition(t_position + t_offset);
+                await this.character.AttackPosition(t_position + t_offset , this.attackParticle, this.attackSound);
             }
 
 

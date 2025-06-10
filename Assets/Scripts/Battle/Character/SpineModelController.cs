@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,9 +12,9 @@ public class SpineModelController : MonoBehaviour
 {
     [SerializeField] SkeletonAnimation skeletonAnimation;
     [SerializeField] AnimationReferenceAsset idle, walk, meleeAttack, magicAttack, hit, die;
-
+    [SerializeField] float attackTiming;
     public void Initialization(
-        SkeletonDataAsset _skeletonAnimation, 
+        SkeletonDataAsset _skeletonAnimation,
         AnimationReferenceAsset _idle,
         AnimationReferenceAsset _attack,
         AnimationReferenceAsset _hit)
@@ -26,7 +27,7 @@ public class SpineModelController : MonoBehaviour
     }
 
 
-    public async UniTask PlayAnimationAsync(AnimationType _type)
+    public async UniTask PlayAnimationAsync(AnimationType _type, float _effectTiming = 0.0f, System.Action onEffect = null)
     {
         AnimationReferenceAsset t_animName = _type switch
         {
@@ -40,21 +41,24 @@ public class SpineModelController : MonoBehaviour
         };
 
         bool t_loop = (_type == AnimationType.idle || _type == AnimationType.walk);
-
         TrackEntry t_entry = this.skeletonAnimation.AnimationState.SetAnimation(0, t_animName, t_loop);
 
+        if (_type == AnimationType.meleeAttack && onEffect != null)
+        {
+            // 예: 0.3초 후에 이펙트 발동
+            await UniTask.Delay(TimeSpan.FromSeconds(_effectTiming));
+            onEffect?.Invoke();
+        }
+
+        // 루프 애니메이션이면 기다릴 필요 없음
         if (!t_loop)
         {
             var tcs = new UniTaskCompletionSource();
 
-            t_entry.Complete += t_isComplete =>
-            {
-                tcs.TrySetResult();
-            };
+            t_entry.Complete += _ => tcs.TrySetResult();
 
             await tcs.Task;
         }
-        return;
     }
     public void PlayAnimation(AnimationType _type)
     {

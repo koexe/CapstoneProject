@@ -13,16 +13,13 @@ public class CameraController : MonoBehaviour
         this.areaSize = _areaSize;
     }
 
-    float viewDistance =10f;
+    float viewDistance = 10f;
 
     [SerializeField] Vector3 offset = new Vector3(0f, 0f, -10f);
 
     [SerializeField] float basicOffsetY;
 
     [SerializeField] float followSpeed = 5f;
-
-    [SerializeField] Vector2 cameraAreaCenter = Vector2.zero;
-    [SerializeField] Vector2 cameraAreaSize = new Vector2(20f, 10f);
 
     Camera cam;
 
@@ -34,8 +31,6 @@ public class CameraController : MonoBehaviour
     public void SetPosition(Vector3 _position) => this.transform.position = new Vector3(_position.x, this.basicOffsetY, _position.z);
     public void SetTarget(Transform _target) => this.currentTarget = _target;
 
-    public Vector2 GetCameraAreaCenter() => cameraAreaCenter;
-    public Vector2 GetCameraAreaSize() => cameraAreaSize;
 
     private void FixedUpdate()
     {
@@ -66,7 +61,7 @@ public class CameraController : MonoBehaviour
     {
         Gizmos.color = Color.yellow;
         Vector3 center = new Vector3(areaCenter.x, areaCenter.y, areaCenter.z);
-        Vector3 size = new Vector3(areaSize.x, areaSize.y, 0f);
+        Vector3 size = new Vector3(areaSize.x, areaSize.y, areaSize.z);
         Gizmos.DrawWireCube(center, size);
     }
 }

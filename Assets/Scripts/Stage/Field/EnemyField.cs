@@ -61,7 +61,7 @@ public class EnemyField : MonoBehaviour
 
         Debug.Log($"[OverlapBox] 조우된 Enemy ID: {t_enemyID}");
 
-        int t_enemyCount = Random.Range(1, 3);
+        int t_enemyCount = Random.Range(1, enemyPool.Length);
 
         SOBattleCharacter[] t_enemy = new SOBattleCharacter[t_enemyCount];
         int[] t_level = new int[t_enemyCount];

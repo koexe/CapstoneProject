@@ -4,6 +4,7 @@ using Cysharp.Threading.Tasks;
 using Spine.Unity;
 using TMPro;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 using Random = UnityEngine.Random;
 
 public class BattleCharacterBase : MonoBehaviour
@@ -23,12 +24,14 @@ public class BattleCharacterBase : MonoBehaviour
     [SerializeField] ParticleSystem hitParticle;
 
     [Header("정보")]
+    [SerializeField] Vector3 initialPosition;
     [SerializeField] float maxHP;
     [SerializeField] float currentHP;
     [SerializeField] float maxMp;
     [SerializeField] float currentMp;
     [SerializeField] StatBlock statBlock;
     [SerializeField] int isUsedDefence;
+    [SerializeField] bool basicRightDir; // true = 1 false = -1
     [SerializeField] bool isInDefence;
     [SerializeField] bool isActionDone = false;
     [SerializeField] protected bool isDie;
@@ -111,7 +114,7 @@ public class BattleCharacterBase : MonoBehaviour
                 t_anim.Item2,
                 t_anim.Item3);
         }
-
+        this.initialPosition = this.battleManager.GetOriginTranform(this).position;
         this.buffSystem = new BuffSystem();
         this.soBattleCharacter = Instantiate(_character);
         this.soBattleCharacter.GetStatus().SetLevel(_level);
@@ -149,6 +152,7 @@ public class BattleCharacterBase : MonoBehaviour
             {
                 this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
             }
+            this.basicRightDir = true;
         }
         else
         {
@@ -160,6 +164,7 @@ public class BattleCharacterBase : MonoBehaviour
             {
                 this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
             }
+            this.basicRightDir = false;
         }
 
         this.spineModelController.PlayAnimation(AnimationType.idle);
@@ -167,7 +172,7 @@ public class BattleCharacterBase : MonoBehaviour
 
         return;
     }
-    public void PlayerInitialization(BattleManager _battleManager, SOBattleCharacter _character , int _currentHp)
+    public void PlayerInitialization(BattleManager _battleManager, SOBattleCharacter _character, int _currentHp)
     {
         this.battleManager = _battleManager;
         if (_character.GetSkeletonDataAsset() != null)
@@ -197,7 +202,7 @@ public class BattleCharacterBase : MonoBehaviour
             Debug.LogError($"[{this.name}] HealthPreferences 컴포넌트가 없습니다.");
             return;
         }
-
+        this.initialPosition = this.battleManager.GetOriginTranform(this).position;
         var t_screenHpPosition = Camera.main.WorldToScreenPoint(this.healthPreferences.transform.position);
 
         this.healthPreferences.SetTotalHealth(maxHP);
@@ -218,6 +223,7 @@ public class BattleCharacterBase : MonoBehaviour
             {
                 this.spineModelController.transform.localScale = new Vector3(1, 1, 1);
             }
+            this.basicRightDir = true;
         }
         else
         {
@@ -229,6 +235,7 @@ public class BattleCharacterBase : MonoBehaviour
             {
                 this.spineModelController.transform.localScale = new Vector3(-1, 1, 1);
             }
+            this.basicRightDir = false;
         }
 
         this.spineModelController.PlayAnimation(AnimationType.idle);
@@ -300,7 +307,7 @@ public class BattleCharacterBase : MonoBehaviour
     {
         Debug.Log($"{name} has died.");
         this.isDie = true;
-        //this.spineModelController.PlayAnimation(AnimationType.die);
+        this.battleManager.CharacterDie(this);
     }
     public async UniTask OnTurnStart()
     {
@@ -345,25 +352,72 @@ public class BattleCharacterBase : MonoBehaviour
         this.transform.position = _point;
         return;
     }
-    public async UniTask AttackPosition()
+    public async UniTask AttackPosition(ParticleSystem _particle, AudioClip _sound = null)
     {
         this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
         await MoveMiddlePoint();
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
-        await this.spineModelController.PlayAnimationAsync(AnimationType.meleeAttack);
+
+        await this.spineModelController.PlayAnimationAsync(
+            AnimationType.meleeAttack,
+            _effectTiming: this.soBattleCharacter.GetEffectTiming(),
+            onEffect: () =>
+            {
+                if (_particle != null)
+                {
+                    Vector3 t_offset = new Vector3(this.basicRightDir ? 1 : -1 * this.soBattleCharacter.GetEffectOffset().x, this.soBattleCharacter.GetEffectOffset().y);
+
+
+                    var t_effect = Instantiate(
+                        _particle,
+                        this.transform.position +
+                        t_offset,
+                        _particle.transform.rotation);
+                    t_effect.transform.localScale = this.spineModelController.transform.localScale;
+                }
+
+                if (_sound != null)
+                    SoundManager.instance.PlaySE(_sound);
+            });
     }
-    public async UniTask AttackPosition(Vector3 _position)
+    public async UniTask AttackPosition(Vector3 _position, ParticleSystem _particle, AudioClip _sound = null)
     {
         this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
         await MovePoint(_position);
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        await this.spineModelController.PlayAnimationAsync(
+            AnimationType.meleeAttack,
+            _effectTiming: this.soBattleCharacter.GetEffectTiming(),
+            onEffect: () =>
+                        {
+                            if (_particle != null)
+                            {
+                                Vector3 t_offset = new Vector3((this.basicRightDir ? 1 : -1) * this.soBattleCharacter.GetEffectOffset().x, this.soBattleCharacter.GetEffectOffset().y);
+
+
+                                var t_effect = Instantiate(
+                                    _particle,
+                                    this.transform.position +
+                                    t_offset,
+                                    _particle.transform.rotation);
+                                t_effect.transform.localScale = this.spineModelController.transform.localScale;
+                            }
+                            if (_sound != null)
+                                SoundManager.instance.PlaySE(_sound);
+                        });
+
+
+
+    }
+
+    public async UniTask PlayAttackAnimationAsync()
+    {
         await this.spineModelController.PlayAnimationAsync(AnimationType.meleeAttack);
     }
     public async UniTask ResetPosition()
     {
-        var t_position = this.battleManager.GetOriginTranform(this).position;
         this.spineModelController.PlayAnimation(AnimationType.idle);
-        await MovePoint(t_position);
+        await MovePoint(this.initialPosition);
         this.spineModelController.PlayAnimation(AnimationType.idle);
     }
     public async UniTask AttackTask(HitInfo _hitInfo)
@@ -387,7 +441,12 @@ public class BattleCharacterBase : MonoBehaviour
             }
         }
 
-        this.hitParticle.Play();
+        if (_hitInfo.hitParticle == null)
+            this.hitParticle.Play();
+        else
+            Instantiate(_hitInfo.hitParticle, this.transform.position, this.transform.rotation);
+
+
         await this.spineModelController.PlayAnimationAsync(AnimationType.hit);
         string t_text = "";
         if (_hitInfo.isCritical)
@@ -504,6 +563,7 @@ public class BattleCharacterBase : MonoBehaviour
         public RaceType attackRace;
         public StatusEffectID statusEffect;
         public BattleCharacterBase target;
+        public ParticleSystem hitParticle;
     }
     public virtual void GainExp(int _exp)
     {

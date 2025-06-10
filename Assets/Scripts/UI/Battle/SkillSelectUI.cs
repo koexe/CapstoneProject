@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using static ChooseSequence;
 
 public class SkillSelectUI : UIBase
 {
@@ -27,6 +28,12 @@ public class SkillSelectUI : UIBase
     public override void Initialization(UIData _data)
     {
     }
+    public void OnClose()
+    {
+        this.skillUIData.battleManager.SetChooseSequenceState(ChooseState.None);
+        this.Hide();
+    }
+
 
     public override void Show(UIData _data)
     {
