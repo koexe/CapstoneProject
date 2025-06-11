@@ -15315,6 +15315,8 @@ MonoBehaviour:
   - {fileID: 951739182643739530}
   items: {fileID: 1837445241528667664}
   itemEntitys: []
+  cameraAreaCenter: {x: -26, y: 0, z: 0}
+  cameraAreaSize: {x: 100, y: 10, z: 20}
 --- !u!1 &2053881535062173580
 GameObject:
   m_ObjectHideFlags: 0
