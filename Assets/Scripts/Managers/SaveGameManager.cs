@@ -213,6 +213,10 @@ public class SaveGameManager : MonoBehaviour
         {
             t_saveData.chatacterDialogs.Add(t_dialog.Key, false);
         }
+        foreach (var t_cutscene in DataLibrary.instance.GetCutsceneTable())
+        {
+            t_saveData.cutsceneIsShow.Add(t_cutscene.Key, false);
+        }
 
         t_saveData.mapItems = new Dictionary<string, List<bool>>();
         foreach (var map in DataLibrary.instance.GetMapAll())
@@ -291,6 +295,8 @@ public class SaveData
     public List<SaveItemMinimal> itemNames;
     public Dictionary<string, List<bool>> mapItems;
 
+    public Dictionary<string, bool> cutsceneIsShow;
+
     // 시간 정보 추가
     public float playTime;        // 플레이 시간 (초 단위)
     public string saveDateTime;   // 저장 시간
@@ -300,6 +306,7 @@ public class SaveData
         this.items = new Dictionary<int, SaveItem>();
         this.itemNames = new List<SaveItemMinimal>();
         this.chatacterDialogs = new Dictionary<int, bool>();
+        this.cutsceneIsShow = new Dictionary<string, bool>();
         this.playTime = 0f;
         this.saveDateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
     }

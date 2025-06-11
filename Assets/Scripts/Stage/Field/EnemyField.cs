@@ -43,6 +43,11 @@ public class EnemyField : MonoBehaviour
                 layerMask: playerLayer
             );
 
+            while (GameManager.instance.GetGameState() != GameState.Field)
+            {
+                yield return CoroutineUtil.WaitForSeconds(checkInterval);
+            }
+
             if (t_hits.Length > 0)
             {
                 float t_roll = Random.value;

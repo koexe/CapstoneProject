@@ -633,7 +633,7 @@ public class BattleManager : MonoBehaviour
         foreach (var t_chracter in t_allyCharacter)
         {
             int t_Exp = _exp / t_allyCharacter.Count;
-            ShowText($"{t_chracter.GetCharacterName()} 이 {t_Exp} 의 경험치를 얻었다!");
+            ShowText($"{t_chracter.GetCharacterName()}{GameStatics.GetSubjectParticle(t_chracter.GetCharacterName())} {t_Exp} 의 경험치를 얻었다!");
 
             await UniTask.Delay(TimeSpan.FromSeconds(1f));
             t_chracter.GainExp(t_Exp);

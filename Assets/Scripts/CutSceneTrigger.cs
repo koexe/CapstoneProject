@@ -4,18 +4,16 @@ using UnityEngine;
 
 public class CutSceneTrigger : MonoBehaviour
 {
-    [SerializeField] List<CutsceneStep> cutsceneSteps = new List<CutsceneStep>();
-    private void OnTriggerEnter(Collider other)
+    [SerializeField] CutsceneData cutsceneData;
+    public void ShowCutscene()
     {
-        if(other.tag == "Player")
-        {
-            UIManager.instance.ShowUI<CutSceneUI>(
-                new CutSceneUIData
-                {
-                    identifier = "CutScene",
-                    step = this.cutsceneSteps,
-                    isAllowMultifle = false,
-                });
-        }
+        UIManager.instance.ShowUI<CutSceneUI>(
+            new CutSceneUIData
+            {
+                identifier = "CutScene",
+                step = this.cutsceneData.steps,
+                isAllowMultifle = false,
+                cutsceneID = this.cutsceneData.id,
+            });
     }
 }

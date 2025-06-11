@@ -17,7 +17,7 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: b3f7586259ee1ab4197a7e41e9dd353b
   m_SerializeEntries:
-  - m_GUID: 090d65e2657c7ee448e93c5be9f96367
+  - m_GUID: da16d19be9b18784881964456551e850
     m_Address: Assets/TextAssets/DialogDataTable.csv
     m_ReadOnly: 0
     m_SerializedLabels:
@@ -242,6 +242,56 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - UIPrefab
+  - m_GUID: b0d25c5d69245784a82f7408e09a23f8
+    m_Address: Assets/SO/Cutscene/CS03.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CutsceneSO
+  - m_GUID: 31959ed60053ec84580ad4bd378ec73c
+    m_Address: Assets/SO/Cutscene/CS02.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CutsceneSO
+  - m_GUID: 929652ca72f500b4abf301668ee611b7
+    m_Address: Assets/SO/Cutscene/CS01.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CutsceneSO
+  - m_GUID: f209bbfa16f2b9b4cb62f449a1b5eddc
+    m_Address: Assets/Images/DialogCharacters/Sarah/Profile/Sarah_003.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
+  - m_GUID: e7b4c766ef3491740bcd81624bfe0c1b
+    m_Address: Assets/Images/DialogCharacters/Sarah/Profile/Sarah_002.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
+  - m_GUID: 983c0788d544e994fa674df0d60397ea
+    m_Address: Assets/Images/DialogCharacters/Sarah/Profile/Sarah_004.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
+  - m_GUID: c89f8e45e5badfc458d21d1db085845b
+    m_Address: Assets/Images/DialogCharacters/Sarah/Profile/Sarah_001.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
+  - m_GUID: 3f5c8af3be36d2742a6657f56c9374be
+    m_Address: Assets/Images/DialogCharacters/Sarah/Profile/Sarah_000.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
+  - m_GUID: 97b010e1d9b521f469361640c1e3dca7
+    m_Address: Assets/Images/DialogCharacters/MrWhere/Profile/Mr.Where_000.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
+  - m_GUID: dd6e37a61c4db0a46b050c6f15077a6e
+    m_Address: Assets/Images/DialogCharacters/MrWhere/Profile/Mr.Where_001.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
   m_SchemaSet:

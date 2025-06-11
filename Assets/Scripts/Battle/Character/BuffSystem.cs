@@ -250,20 +250,14 @@ public class StatusEffectInstance
                     Debug.Log($"{_target.name} is hit by Mark of Doom explosion! {t_explosion} damage");
                 }
                 break;
-
-            case StatusEffectID.PN001:
-                _target.SetSkillUseDisabled(true);
-                break;
-            case StatusEffectID.PN002:
+            case StatusEffectID.Spended:
                 _target.AddStatBuff(this.info.id, new BuffBlock(StatType.DamageReduce, StatSign.Constant, -0.2f));
                 break;
-            case StatusEffectID.PN003:
+            case StatusEffectID.Exhaustion:
                 _target.AddStatBuff(this.info.id, new BuffBlock(StatType.Atk, StatSign.Percentage, 0.3f));
                 break;
-            case StatusEffectID.PN004:
+            case StatusEffectID.CantAction:
                 _target.AddStatBuff(this.info.id, new BuffBlock(StatType.Spd, StatSign.Percentage, 0.3f));
-                break;
-            case StatusEffectID.PN005:
                 break;
         }
     }

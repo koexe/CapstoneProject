@@ -36,12 +36,22 @@ public class MapManager : MonoBehaviour
 
     public void Detialization()
     {
-        Destroy(this.currentMap.gameObject);
-        this.currentMap = null;
+        if (this.currentMap != null)
+        {
+            this.currentMap.OnExitMap();
+            Destroy(this.currentMap.gameObject);
+            this.currentMap = null;
+        }
     }
 
     public void LoadMap(string _mapName)
     {
+        if (this.currentMap != null)
+        {
+            this.currentMap.OnExitMap();
+            Destroy(this.currentMap.gameObject);
+        }
+
         this.currentMap = Instantiate(DataLibrary.instance.GetMap(_mapName), this.transform);
         this.currentMap.InitializeMap();
         SaveGameManager.instance.GetCurrentSaveData().currentMap = _mapName;
@@ -53,7 +63,12 @@ public class MapManager : MonoBehaviour
     {
         var t_player = GameManager.instance.GetPlayer();
         t_player.transform.SetParent(null);
-        Destroy(this.currentMap.gameObject);
+        
+        if (this.currentMap != null)
+        {
+            this.currentMap.OnExitMap();
+            Destroy(this.currentMap.gameObject);
+        }
 
         this.currentMap = Instantiate(_path.linkedMap, this.transform);
         t_player.transform.SetParent(this.currentMap.transform);
@@ -64,9 +79,7 @@ public class MapManager : MonoBehaviour
 
         GameManager.instance.GetCamera().SetPosition(t_player.transform.position);
 
-        this.currentMap.InitializeMap(); 
-
-
+        this.currentMap.InitializeMap();
     }
     public int GetItem(MapItem _mapitem)
     {

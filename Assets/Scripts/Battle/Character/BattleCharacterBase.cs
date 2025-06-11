@@ -453,7 +453,7 @@ public class BattleCharacterBase : MonoBehaviour
         {
             t_text += $"치명타! ";
         }
-        t_text += $"{(int)t_finalDamage}의 데미지를 {this.name} 이 받았다!!";
+        t_text += $"{(int)t_finalDamage}의 데미지를 {this.name}{GameStatics.GetSubjectParticle(this.name)} 받았다!!";
         this.battleManager.ShowText(t_text);
         this.currentHP = Mathf.Max(0f, this.currentHP - (int)t_finalDamage);
         this.healthPreferences.SetCurrentHealth(currentHP);
@@ -468,7 +468,7 @@ public class BattleCharacterBase : MonoBehaviour
         if (_hitInfo.statusEffect != StatusEffectID.None)
         {
             this.buffSystem.Add(_hitInfo.statusEffect);
-            this.battleManager.ShowText($"{this.name}이  {_hitInfo.statusEffect} 에 걸렸다!!");
+            this.battleManager.ShowText($"{this.name}{GameStatics.GetSubjectParticle(this.name)}  {GameStatics.GetStatusText(_hitInfo.statusEffect)} 에 걸렸다!!");
             await UniTask.Delay(TimeSpan.FromSeconds(1f));
         }
     }
@@ -476,7 +476,7 @@ public class BattleCharacterBase : MonoBehaviour
     #region 방어
     public async UniTask DefenceTask()
     {
-        this.battleManager.ShowText($"{this.name} 이 방어를 시작했다!");
+        this.battleManager.ShowText($"{this.name}{GameStatics.GetSubjectParticle(this.name)} 방어를 시작했다!");
 
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
         if (this.isUsedDefence == 0)
@@ -504,7 +504,7 @@ public class BattleCharacterBase : MonoBehaviour
     #region 도망
     public async UniTask RunTask()
     {
-        this.battleManager.ShowText($"{this.name} 이 도망을 시작했다!");
+        this.battleManager.ShowText($"{this.name}{GameStatics.GetSubjectParticle(this.name)} 도망을 시작했다!");
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
         await this.battleManager.RunCheck();
     }

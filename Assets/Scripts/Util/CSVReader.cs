@@ -80,7 +80,7 @@ public class CSVReader
             t_data.dialogs = t_dialogs;
             t_data.characters = t_characters;
 
-            if (values[2] == "NONE")
+            if (values[2] == "NONE" || values[2] == "")
             {
                 t_data.condition = (-1, false, null, -1);
             }
@@ -90,7 +90,7 @@ public class CSVReader
                 t_data.condition = (int.Parse(t_conditionData[0]), bool.Parse(t_conditionData[1]), t_conditionData[2], int.Parse(t_conditionData[3]));
             }
 
-            if (values[3] == "NONE")
+            if (values[3] == "NONE" || values[3] == "")
             {
                 t_data.choices = null;
             }
@@ -107,6 +107,15 @@ public class CSVReader
                 t_data.choices = t_choices;
             }
 
+            if (values[4] == "NONE" || values[4] == "")
+            {
+                t_data.autoNextDialog = -1;
+            }
+            else
+            {
+                t_data.autoNextDialog = int.Parse(values[4]);
+            }
+            
             int key = int.Parse(values[0]);
             if (!list.ContainsKey(key))
             {
@@ -172,6 +181,7 @@ public class CSVReader
             "Debuff" => StatusCategory.Debuff,
             "Restriction" => StatusCategory.Restriction,
             "SpecialEffect" => StatusCategory.SpecialEffect,
+            "Panalty" => StatusCategory.Panalty,
             _ => StatusCategory.Debuff
         };
     }

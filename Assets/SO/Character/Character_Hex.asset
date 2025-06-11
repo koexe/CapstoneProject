@@ -16,6 +16,8 @@ MonoBehaviour:
   raceType: 2
   skills:
   - {fileID: 11400000, guid: d3c688b0912607643977f6f4d456cb73, type: 2}
+  - {fileID: 11400000, guid: 75f8861f96ac57046bbff608f4c13508, type: 2}
+  - {fileID: 11400000, guid: 29ad7e7bf186db4459d5748150005833, type: 2}
   characterName: "\uD5E5\uC2A4"
   status:
     level: 0

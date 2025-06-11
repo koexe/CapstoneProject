@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
 
 public class MapEntity : MonoBehaviour
@@ -16,8 +17,31 @@ public class MapEntity : MonoBehaviour
     [SerializeField] Vector3 cameraAreaCenter = Vector3.zero;
     [SerializeField] Vector3 cameraAreaSize = new Vector3(20f, 10f, 0f);
 
+    [Header("Map Events")]
+    [SerializeField] UnityEvent onMapEnter;
+    [SerializeField] UnityEvent onMapExit;
+
     public Vector3 GetCameraAreaCenter() => cameraAreaCenter;
     public Vector3 GetCameraAreaSize() => cameraAreaSize;
+
+    /// <summary>
+    /// 맵에 진입할 때 호출되는 메서드
+    /// </summary>
+    public void OnEnterMap()
+    {
+        LogUtil.Log($"맵 진입: {mapIdentifier}");
+        onMapEnter?.Invoke();
+    }
+
+    /// <summary>
+    /// 맵에서 나갈 때 호출되는 메서드
+    /// </summary>
+    public void OnExitMap()
+    {
+        LogUtil.Log($"맵 나가기: {mapIdentifier}");
+        onMapExit?.Invoke();
+    }
+
     public int GetMapItemIndex(MapItem _item)
     {
         if (this.itemEntitys == null)
@@ -44,6 +68,8 @@ public class MapEntity : MonoBehaviour
             this.itemEntitys[i].gameObject.SetActive(!t_itemInfo[i]);
         }
 
+        // 맵 초기화 완료 후 진입 이벤트 호출
+        OnEnterMap();
     }
 
 
@@ -71,10 +97,6 @@ public class MapEntity : MonoBehaviour
                 this.itemEntitys.Add(item);
             }
         }
-
-
-
-
     }
 
     public void Reset()

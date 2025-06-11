@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9353670de53fdf343b22cc5d2ca5c37a, type: 3}
+  m_Name: CS01
+  m_EditorClassIdentifier: 
+  id: Cs01
+  steps:
+  - image: {fileID: 21300000, guid: 701d184c1cba2684b82ebe197216594b, type: 3}
+    holdTime: 1
+    dialogue: "\uC54C\uC218\uC5C6\uB294 \uC77C\uC774 \uC77C\uC5B4\uB098\uB294 \uC2E0\uAE30\uD55C
+      \uC138\uC0C1. \n\uB204\uAD70\uAC00\uC758 \uB9C8\uC74C\uC18D\uC5D0\uC11C, \uC0C1\uC0C1\uC18D\uC5D0\uC11C,
+      \uD604\uC2E4 \uB610\uB294 \uAFC8\uC5D0\uC11C \uC874\uC7AC\uD558\uB294 \uADF8\uB7F0
+      \uC138\uACC4.\n\uB2F9\uC2E0\uC740 \uADF8\uB7F0\uACF3\uC744 \uACBD\uD5D8\uD574\uBCF8\uC801\uC774
+      \uC788\uB098\uC694?\n\uC544\uBB34\uAC83\uB3C4 \uBAA8\uB974\uB294 \uC774\uACF3\uC5D0\uC11C
+      \uD3BC\uCCD0\uC9C0\uB294 \uB9CE\uC740 \uC77C\uB4E4\uC744. "
+    useTypewriter: 1
+  - image: {fileID: 21300000, guid: e75f31b26ade1ce4688b394552dff03d, type: 3}
+    holdTime: 1
+    dialogue: "\uC774\uAC74 \uD55C \uC18C\uB140\uC758 \uC774\uC57C\uAE30.\n\uC790\uC2E0\uC744
+      \uCC3E\uC544\uAC00\uB294 \uC18C\uB140\uC758 \uC774\uC57C\uAE30.\n\uC544\uBB34\uAC83\uB3C4
+      \uBAA8\uB974\uB294 \uC774\uACF3\uC5D0 \uB5A8\uC5B4\uC838 \uC790\uC2E0\uC744
+      \uCC3E\uB294 \uC5EC\uC815\uC744 \uB5A0\uB098\uB824 \uD558\uACE0 \uC788\uC2B5\uB2C8\uB2E4. "
+    useTypewriter: 1
+  - image: {fileID: 21300000, guid: 0721874e186484a4eb057d25861f0c12, type: 3}
+    holdTime: 1
+    dialogue: "\uD568\uAED8\uD558\uC9C0 \uC54A\uC73C\uC2E4\uB798\uC694?\n\uC774\uACF3\uC5D0\uC11C
+      \uBC8C\uC5B4\uC9C0\uB294 \uBAA8\uB4E0 \uC2E0\uAE30\uD55C \uC77C\uB4E4\uACFC
+      \uADF8\uAC83\uB4E4\uC744 \uB9C8\uC8FC\uD558\uB294 \uC18C\uB140\uC758 \uC774\uC57C\uAE30\uB97C..."
+    useTypewriter: 1

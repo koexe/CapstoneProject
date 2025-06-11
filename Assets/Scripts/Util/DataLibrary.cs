@@ -12,9 +12,6 @@ public class DataLibrary : MonoBehaviour
 {
     public static DataLibrary instance;
 
-    [SerializeField] Image coverImage;
-    [SerializeField] TextMeshProUGUI loadingInfoText;
-
     Dictionary<int, SOBattleCharacter> characterData = new Dictionary<int, SOBattleCharacter>();
     Dictionary<int, SOItem> itemData = new Dictionary<int, SOItem>();
 
@@ -32,7 +29,9 @@ public class DataLibrary : MonoBehaviour
 
     Dictionary<string, GameObject> uiPrefabData = new Dictionary<string, GameObject>();
 
+    Dictionary<string, CutsceneData> cutsceneData = new Dictionary<string, CutsceneData>();
 
+    [SerializeField] GameObject loadingUIPrefab;
     private void Awake()
     {
         if (instance == null)
@@ -56,28 +55,71 @@ public class DataLibrary : MonoBehaviour
 
     public async UniTask LoadAllDataAsync()
     {
-        this.coverImage.gameObject.SetActive(true);
-        this.loadingInfoText.gameObject.SetActive(true);
-        this.loadingInfoText.text = "Load Monster Data";
-        await LoadAllCharacterDataAsync();
-        this.loadingInfoText.text = "Load Dialog Data";
-        await LoadDialogDataAsync();
-        this.loadingInfoText.text = "Load Item Data";
-        await LoadAllItemDataAsync();
-        this.loadingInfoText.text = "Load Portraits Data";
-        await LoadAllMapDataAsync();
-        this.loadingInfoText.text = "Load Map Data";
-        await LoadAllPortraitsDataAsync();
-        this.loadingInfoText.text = "Load Effect Data";
-        await LoadEffectDataAsync();
-        this.loadingInfoText.text = "Load Skill Data";
-        await LoadAllSkillDataAsync();
-        this.loadingInfoText.text = "Load UI Data";
-        await LoadAllUIDataAsync();
-        this.loadingInfoText.text = "All Loading Done!!";
-        await UniTask.Delay(1000);
-        this.coverImage.gameObject.SetActive(false);
-        this.loadingInfoText.gameObject.SetActive(false);
+        // LoadingUI를 UIManager를 통해 표시
+        var loadingUI = UIManager.instance.ShowUI<LoadingUI>(this.loadingUIPrefab, new LoadingUIData()
+        {
+            identifier = "LoadingUI",
+            isAllowMultifle = false,
+            task = UniTask.CompletedTask // 초기값
+        });
+
+        if (loadingUI != null)
+        {
+            float totalSteps = 9f; // 총 로딩 단계 수
+            int currentStep = 0;
+
+            loadingUI.ChangeText("악몽 꾸는중");
+            loadingUI.UpdateProgress(currentStep / totalSteps);
+            await LoadAllCharacterDataAsync();
+            currentStep++;
+
+            loadingUI.ChangeText("잠꼬대 하는중");
+            loadingUI.UpdateProgress(currentStep / totalSteps);
+            await LoadDialogDataAsync();
+            currentStep++;
+
+            loadingUI.ChangeText("가방 뒤지는중");
+            loadingUI.UpdateProgress(currentStep / totalSteps);
+            await LoadAllItemDataAsync();
+            currentStep++;
+
+            loadingUI.ChangeText("꿈에서 헤매는중");
+            loadingUI.UpdateProgress(currentStep / totalSteps);
+            await LoadAllMapDataAsync();
+            currentStep++;
+
+            loadingUI.ChangeText("꿈에서 본 소녀 찾는중");
+            loadingUI.UpdateProgress(currentStep / totalSteps);
+            await LoadAllPortraitsDataAsync();
+            currentStep++;
+
+            loadingUI.ChangeText("바다 보는중");
+            loadingUI.UpdateProgress(currentStep / totalSteps);
+            await LoadEffectDataAsync();
+            currentStep++;
+
+            loadingUI.ChangeText("꿈에서 하늘 나는중");
+            loadingUI.UpdateProgress(currentStep / totalSteps);
+            await LoadAllSkillDataAsync();
+            currentStep++;
+
+            loadingUI.ChangeText("꿈에서 깨는중");
+            loadingUI.UpdateProgress(currentStep / totalSteps);
+            await LoadAllUIDataAsync();
+            currentStep++;
+
+            loadingUI.ChangeText("꿈에서 본 장면 떠올리는중");
+            loadingUI.UpdateProgress(currentStep / totalSteps);
+            await LoadAllCutsceneDataAsync();
+            currentStep++;
+
+            loadingUI.ChangeText("완료!!");
+            loadingUI.UpdateProgress(1.0f); // 100% 완료
+            await UniTask.Delay(1000);
+
+            // LoadingUI 숨기기
+            UIManager.instance.HideUI("LoadingUI");
+        }
     }
 
     private void Update()
@@ -103,6 +145,8 @@ public class DataLibrary : MonoBehaviour
     private AsyncOperationHandle<IList<GameObject>> mapHandle;
     private AsyncOperationHandle<IList<Sprite>> portraitHandle;
     private AsyncOperationHandle<IList<GameObject>> uiHandle;
+
+    private AsyncOperationHandle<IList<CutsceneData>> cutsceneHandle;
 
     // 기존 Load 메서드 내부에서 handle 저장 추가
     public async UniTask LoadConversationDataAsync()
@@ -194,6 +238,15 @@ public class DataLibrary : MonoBehaviour
         await itemHandle.Task;
     }
 
+    public async UniTask LoadAllCutsceneDataAsync()
+    {
+        cutsceneHandle = Addressables.LoadAssetsAsync<CutsceneData>("CutsceneSO", so =>
+        {
+            cutsceneData.Add(so.id, so);
+        });
+        await cutsceneHandle.Task;
+    }
+
     public void UnloadAllData()
     {
         if (conversationHandle.IsValid()) Addressables.Release(conversationHandle);
@@ -203,6 +256,7 @@ public class DataLibrary : MonoBehaviour
         if (characterHandle.IsValid()) Addressables.Release(characterHandle);
         if (portraitHandle.IsValid()) Addressables.Release(portraitHandle);
         if (uiHandle.IsValid()) Addressables.Release(uiHandle);
+        if (cutsceneHandle.IsValid()) Addressables.Release(cutsceneHandle);
 
         Debug.Log(" Addressables 리소스 전부 언로드 완료!");
     }
@@ -273,6 +327,8 @@ public class DataLibrary : MonoBehaviour
     {
         return this.itemData.TryGetValue(_index, out var t_item) ? t_item : null;
     }
+
+    public Dictionary<string, CutsceneData> GetCutsceneTable() => this.cutsceneData;
     #endregion
 }
 
@@ -305,13 +361,16 @@ public class DialogData
     /// Choice Text / Choice Link Dialog
     /// </summary>
     public (string, int)[] choices;
+
+    public int autoNextDialog;
 }
 
 public enum StatusCategory
 {
     Debuff,
     Restriction,
-    SpecialEffect
+    SpecialEffect,
+    Panalty
 }
 
 public class StatusEffectInfo
@@ -327,7 +386,6 @@ public class StatusEffectInfo
 public enum StatusEffectID
 {
     None = 0,
-    Defence = 1,
     Bleed = 11,
     Corrosion = 12,
     Poison = 13,
@@ -349,10 +407,8 @@ public enum StatusEffectID
     Split = 29,
     SelfHarm = 30,
     MarkOfDoom = 31,
-    PN001 = 101,
-    PN002 = 102,
-    PN003 = 103,
-    PN004 = 104,
-    PN005 = 105,
+    Spended = 101,
+    Exhaustion = 102,
+    CantAction = 103,
 }
 #endregion

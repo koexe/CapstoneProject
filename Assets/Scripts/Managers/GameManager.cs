@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject player;
     [SerializeField] SceneLoadManager sceneLoadManager;
     [SerializeField] SaveGameManager saveGameManager;
+    [SerializeField] MainScene mainScene;
 
     [SerializeField] MapManager mapManager;
 
@@ -33,6 +35,8 @@ public class GameManager : MonoBehaviour
 
     public GameState GetGameState() => this.gameState;
     public void SetGameState(GameState _gameState) => this.gameState = _gameState;
+
+    public void SetMainScene(MainScene _mainScene) => this.mainScene = _mainScene;
 
     public GameObject GetPlayer()
     {
@@ -60,7 +64,15 @@ public class GameManager : MonoBehaviour
         ChangeGameState(GameState.Loading);
         await this.dataLibrary.Initialization();
         await this.saveGameManager.Initialization();
+
+        // DataLibrary 로딩 완료 후 MainScene 초기화
+        if (this.mainScene != null)
+        {
+            this.mainScene.Initialization();
+        }
+
         ChangeGameState(GameState.Main);
+
     }
 
     public void MapInitialization()
@@ -76,20 +88,24 @@ public class GameManager : MonoBehaviour
     {
         await this.sceneLoadManager.LoadScene_Async("FieldScene");
         this.fieldManager.Initialization();
+        ChangeGameState(GameState.Field);
         MapInitialization();
         MapManager.instance.OnChangeToFieldScene();
-        ChangeGameState(GameState.Field);
     }
 
     public async void ChangeSceneFieldToBattle(SOBattleCharacter[] enemys, int[] _levels)
     {
+        ChangeGameState(GameState.Battle);
+        this.player.GetComponent<PlayerInputModule>().ShowEncounterUI();
         this.onChangeBattleSceneData.FieldToBattle(this.currentPlayer, this.currentNPC, enemys, this.player.transform.position, _levels);
-        await this.sceneLoadManager.LoadScene_Async("BattleScene");
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
         MapManager.instance.OnChangeToBattleScene();
+        await this.sceneLoadManager.LoadScene_Async("BattleScene");
     }
 
     public async void ChangeSceneBattleToField(SOBattleCharacter _currentPlayer, SOBattleCharacter _currentNpc)
     {
+        ChangeGameState(GameState.Field);
         this.currentNPC = _currentNpc;
         this.currentPlayer = _currentPlayer;
         this.player.transform.position = this.onChangeBattleSceneData.position;

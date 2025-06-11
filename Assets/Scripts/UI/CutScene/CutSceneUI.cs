@@ -92,6 +92,7 @@ public class CutSceneUI : UIBase
             yield return Fade(0f, 1f);
         }
 
+        Hide();
         fadeOverlay.gameObject.SetActive(false);
     }
     private IEnumerator WaitForClick()
@@ -144,10 +145,9 @@ public class CutSceneUI : UIBase
 
     public override void Show(UIData _data)
     {
-        this.contents.SetActive(true);
-        if (_data is CutSceneUIData saveUIData)
+        if (_data is CutSceneUIData cutSceneData)
         {
-            uiData = saveUIData;
+            uiData = cutSceneData;
         }
         else
         {
@@ -156,13 +156,30 @@ public class CutSceneUI : UIBase
             return;
         }
 
-        this.steps = this.uiData.step;
-        StartCoroutine(PlayCutscene());
+        if (SaveGameManager.instance.GetCurrentSaveData().cutsceneIsShow[uiData.cutsceneID])
+        {
+            Hide();
+            return;
+        }
+        else
+        {
+            SaveGameManager.instance.GetCurrentSaveData().cutsceneIsShow[uiData.cutsceneID] = true;
+            GameManager.instance.ChangeGameState(GameState.Pause);
+            this.steps = this.uiData.step;
+            StartCoroutine(PlayCutscene());
+            this.contents.SetActive(true);
+            this.isShow = true;
+        }
+
+
+
     }
 
     public override void Hide()
     {
         this.contents.SetActive(false);
+        this.isShow = false;
+        GameManager.instance.ChangeGameState(GameState.Field);
         StopAllCoroutines();
     }
 }
@@ -179,5 +196,6 @@ public class CutsceneStep
 
 public class CutSceneUIData : UIData
 {
+    public string cutsceneID;
     public List<CutsceneStep> step;
 }

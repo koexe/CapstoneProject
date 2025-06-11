@@ -45,6 +45,8 @@ public class SOAtatckSkill : SOSkillBase
 
             float t_damage = this.character.GetStat(StatType.Atk) * this.attackModifier;
 
+            t_hitInfo.hitParticle = this.hitParticle;
+
             t_damage *= 1 - (t_target.GetStat(StatType.Def) / (t_target.GetStat(StatType.Def) + 100));
 
             if (GameStatics.GetRaceCompatibility(this.attackRaceType, t_target.raceType) == 1)

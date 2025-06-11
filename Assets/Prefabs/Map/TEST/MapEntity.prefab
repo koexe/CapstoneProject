@@ -4734,7 +4734,7 @@ MonoBehaviour:
   - {fileID: 5231039182354711016}
   - {fileID: 7790958381834858758}
   cameraAreaCenter: {x: 0, y: 0, z: 0}
-  cameraAreaSize: {x: 20, y: 10, z: 0}
+  cameraAreaSize: {x: 20, y: 10, z: 30}
 --- !u!1 &2055209307439998346
 GameObject:
   m_ObjectHideFlags: 0

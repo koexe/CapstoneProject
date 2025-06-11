@@ -5,7 +5,6 @@ Poison,Debuff,Deals 7% HP damage each turn,2,0.8,-,Refreshes on reapply
 Blind,Debuff,Reduces accuracy by 30%,1,0.4,-,Refreshes on reapply
 DEF Down,Debuff,Reduces DEF by 20%,2,0.4,2,Up to 2 stacks
 ATK Down,Debuff,Reduces ATK by 20%,2,0.4,2,Up to 2 stacks
-Frail,Debuff,Increases damage taken by 20%,2,0.4,-,Refreshes on reapply
 Heal Block,Debuff,Reduces healing received by 50%,2,0.4,-,Refreshes on reapply
 Sensory Loss,Debuff,Reduces accuracy and evasion by 20%,2,0.4,-,Refreshes on reapply
 Decay,Debuff,ATK/DEF decrease by 5% each turn (max 3 turns),3,0.8,-,"Weakens each turn, refreshes"
@@ -15,9 +14,10 @@ Bind,Restriction,Cannot escape from battle,3,0.5,-,Refreshes on reapply
 Confusion,Restriction,35% chance to attack self,2,0.3,-,Refreshes on reapply
 Mental Break,Restriction,Cannot use skills (can only use basic attack),2,0.5,2,Up to 2 stacks
 Lethargy,Restriction,Reduces ATK and SPD by 30%,2,0.5,-,Refreshes on reapply
-Stun,Restriction,Cannot act (skip turn),1,0.4,-,Refreshes on reapply
 Weak Resistance,Restriction,Increases debuff duration by 1 turn,1,0.6,-,Refreshes on reapply
 Split,Restriction,10% chance to self-damage each turn,4,0.5,-,Refreshes on reapply
 SelfHarm,SpecialEffect,50% chance to attack self,1,0.2,-,Hits self
-Mark of Doom,SpecialEffect,Triggers damage explosion after 2 turns,2,0.8,-,Delayed explosion
-Defence,SpecialEffect,데미지 감소,2,1,-,방어 커멘드 전용
+Mark of Doom,SpecialEffect,Triggers damage explosion after 2 turns2,2,0.8,-,Delayed explosion
+Spended,Panalty,Triggers damage explosion after 2 turns3,2,1,-,Refreshes on reapply
+Exhaustion,Panalty,Triggers damage explosion after 2 turns4,2,1,-,Refreshes on reapply
+CantAction,Panalty,Triggers damage explosion after 2 turns5,1,1,-,Refreshes on reapply

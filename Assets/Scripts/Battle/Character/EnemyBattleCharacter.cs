@@ -11,7 +11,7 @@ public class EnemyBattleCharacter : BattleCharacterBase
         await TakeDamage(_hitInfo);
         if (this.isDie)
         {
-            this.battleManager.ShowText($"{this.name} 가 쓰러졌다!");
+            this.battleManager.ShowText($"{this.name}{GameStatics.GetSubjectParticle(this.name)} 쓰러졌다!");
             await UniTask.Delay(TimeSpan.FromSeconds(1f));
             await this.battleManager.GainExp(1000);
             return;
@@ -21,7 +21,7 @@ public class EnemyBattleCharacter : BattleCharacterBase
         if (_hitInfo.statusEffect != StatusEffectID.None)
         {
             this.buffSystem.Add(_hitInfo.statusEffect);
-            this.battleManager.ShowText($"{this.name}이  {_hitInfo.statusEffect} 에 걸렸다!!");
+            this.battleManager.ShowText($"{this.name}{GameStatics.GetSubjectParticle(this.name)}  {GameStatics.GetStatusText(_hitInfo.statusEffect)} 에 걸렸다!!");
             await UniTask.Delay(TimeSpan.FromSeconds(1f));
         }
     }
