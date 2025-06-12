@@ -22505,6 +22505,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4461653974850616233}
   - component: {fileID: 6202327555237461339}
+  - component: {fileID: -7249588356019526957}
   m_Layer: 0
   m_Name: Enterance
   m_TagString: Untagged
@@ -22554,7 +22555,7 @@ MonoBehaviour:
   onMapEnter:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: -7249588356019526957}
         m_TargetAssemblyTypeName: CutSceneTrigger, Assembly-CSharp
         m_MethodName: ShowCutscene
         m_Mode: 1
@@ -22569,6 +22570,19 @@ MonoBehaviour:
   onMapExit:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &-7249588356019526957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052354616774426826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77f36cdf09bc7cc4d905ec1aebd5e2cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cutsceneData: {fileID: 11400000, guid: 929652ca72f500b4abf301668ee611b7, type: 2}
 --- !u!1 &2055209307439998346
 GameObject:
   m_ObjectHideFlags: 0

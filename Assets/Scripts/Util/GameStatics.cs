@@ -84,7 +84,7 @@ public class GameStatics
     {
         switch (_name)
         {
-            case "Shara":
+            case "Sarah":
                 return "사라";
             case "Limo":
                 return "리모";

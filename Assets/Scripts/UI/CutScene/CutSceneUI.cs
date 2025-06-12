@@ -83,6 +83,7 @@ public class CutSceneUI : UIBase
             }
 
             textBox.SetActive(false);
+            nameBox.SetActive(false);   
             yield return WaitForClick();
             yield return CoroutineUtil.WaitForSeconds(step.holdTime);
 

@@ -16,7 +16,7 @@ MonoBehaviour:
   target: []
   skillIdentifier: 2003
   skillName: "\uBCC4\uC758 \uD654\uC0B4"
-  skillIcon: {fileID: 0}
+  skillIcon: {fileID: 21300000, guid: 5b331328b4e205d4ea14497e857a145e, type: 3}
   attackRange: 1
   statusEffect: 21
   attackRaceType: 5

@@ -5138,6 +5138,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4461653974850616233}
   - component: {fileID: 6202327555237461339}
+  - component: {fileID: 7280862325440028807}
   m_Layer: 0
   m_Name: Exit
   m_TagString: Untagged
@@ -5185,6 +5186,37 @@ MonoBehaviour:
   itemEntitys: []
   cameraAreaCenter: {x: 0, y: 0, z: 0}
   cameraAreaSize: {x: 20, y: 10, z: 0}
+  onMapEnter:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7280862325440028807}
+        m_TargetAssemblyTypeName: CutSceneTrigger, Assembly-CSharp
+        m_MethodName: ShowCutscene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onMapExit:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &7280862325440028807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052354616774426826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77f36cdf09bc7cc4d905ec1aebd5e2cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cutsceneData: {fileID: 11400000, guid: a41f15c394278c347aacc9ccc5aeef0b, type: 2}
 --- !u!1 &2055209307439998346
 GameObject:
   m_ObjectHideFlags: 0
