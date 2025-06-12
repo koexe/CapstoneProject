@@ -41,6 +41,11 @@ public class PlayerInputModule : MonoBehaviour
         }
     }
 
+    public void HideEncounterUI()
+    {
+        encounterUI.SetActive(false);
+    }
+
     private void Start()
     {
         // 방향키 입력 설정

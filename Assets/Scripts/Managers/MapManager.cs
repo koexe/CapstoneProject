@@ -96,10 +96,11 @@ public class MapManager : MonoBehaviour
     }
 
 
-    public void OnChangeToFieldScene()
+    public void  OnChangeToFieldScene()
     {
         this.currentMap.gameObject.SetActive(true);
         GameManager.instance.GetPlayer().SetActive(true);
+        GameManager.instance.GetCamera().SetAreaSize(this.currentMap.GetCameraAreaCenter(), this.currentMap.GetCameraAreaSize());
     }
     public void OnChangeToBattleScene()
     {

@@ -362,19 +362,10 @@ public class EndSequence : TurnSequence
     public override async void SequenceAction()
     {
         base.SequenceAction();
-        if (this.battleManager.IsAllyAllDie())
-        {
-            await GameManager.instance.GameOver();
-        }
-        else if (this.battleManager.IsEnemyAllDie())
-        {
-            await EndTask(); 
-        }
-        else
-        {
-            await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
-            this.battleManager.NextSequence();
-        }
+
+        await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
+        this.battleManager.NextSequence();
+
 
     }
     async UniTask EndTask()

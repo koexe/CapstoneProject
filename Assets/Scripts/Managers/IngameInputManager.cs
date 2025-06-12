@@ -23,6 +23,7 @@ public class IngameInputManager : MonoBehaviour
     {
         if (instance == null) instance = this;
         else Destroy(gameObject);
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Update()
