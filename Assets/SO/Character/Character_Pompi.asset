@@ -34,6 +34,6 @@ MonoBehaviour:
   hitAnim: {fileID: 11400000, guid: 6180b2b083d650c47b8578e062a14c09, type: 2}
   idleAnim: {fileID: 11400000, guid: 4e4c41928f59e754a9da8de89e41e11c, type: 2}
   isModelBasicRight: 1
-  attackParticle: {fileID: 0}
+  hpBarOffset: {x: -0.5, y: 3.2}
   effectOffset: {x: -1.6, y: 1.5}
   effectTiming: 0.7

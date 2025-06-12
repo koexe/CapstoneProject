@@ -133,7 +133,7 @@ public class BattleCharacterBase : MonoBehaviour
             Debug.LogError($"[{this.name}] HealthPreferences 컴포넌트가 없습니다.");
             return;
         }
-
+        this.healthPreferences.transform.localPosition = this.soBattleCharacter.GetHpBarOffset();
         this.healthPreferences.SetTotalHealth(maxHP);
         this.healthPreferences.SetCurrentHealth(currentHP);
 
@@ -202,8 +202,9 @@ public class BattleCharacterBase : MonoBehaviour
             Debug.LogError($"[{this.name}] HealthPreferences 컴포넌트가 없습니다.");
             return;
         }
+        this.healthPreferences.transform.localPosition = this.soBattleCharacter.GetHpBarOffset();
+
         this.initialPosition = this.battleManager.GetOriginTranform(this).position;
-        var t_screenHpPosition = Camera.main.WorldToScreenPoint(this.healthPreferences.transform.position);
 
         this.healthPreferences.SetTotalHealth(maxHP);
         this.healthPreferences.SetCurrentHealth(currentHP);

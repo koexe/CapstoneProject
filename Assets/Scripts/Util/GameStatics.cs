@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameStatics 
+public class GameStatics
 {
     public CameraController CameraController;
 
@@ -60,7 +60,7 @@ public class GameStatics
             case StatusEffectID.MentalBreak:
                 return "정신 붕괴";
             case StatusEffectID.Lethargy:
-                return "무기력";        
+                return "무기력";
             case StatusEffectID.Split:
                 return "분열";
             case StatusEffectID.SelfHarm:
@@ -78,6 +78,27 @@ public class GameStatics
         }
     }
 
+    #region  이름
+
+    public static string GetName(string _name)
+    {
+        switch (_name)
+        {
+            case "Shara":
+                return "사라";
+            case "Limo":
+                return "리모";
+            case "Mr.Where":
+                return "어디든씨";
+        }
+
+
+        return _name;
+    }
+
+    #endregion
+
+
     #region 한국어 조사 처리
     /// <summary>
     /// 단어의 받침 유무를 확인합니다.
@@ -87,11 +108,11 @@ public class GameStatics
     public static bool HasFinalConsonant(string word)
     {
         if (string.IsNullOrEmpty(word)) return false;
-        
+
         char lastChar = word[word.Length - 1];
-        
+
         // 한글 범위 확인 (가: 0xAC00, 힣: 0xD7A3)
-        if (lastChar < 0xAC00 || lastChar > 0xD7A3) 
+        if (lastChar < 0xAC00 || lastChar > 0xD7A3)
         {
             // 한글이 아닌 경우 숫자나 영어 등으로 판단
             // 숫자의 경우 받침 규칙 적용
@@ -99,9 +120,17 @@ public class GameStatics
             {
                 switch (lastChar)
                 {
-                    case '0': case '1': case '3': case '6': case '7': case '8':
+                    case '0':
+                    case '1':
+                    case '3':
+                    case '6':
+                    case '7':
+                    case '8':
                         return true;  // 받침 있음
-                    case '2': case '4': case '5': case '9':
+                    case '2':
+                    case '4':
+                    case '5':
+                    case '9':
                         return false; // 받침 없음
                     default:
                         return false;
@@ -110,7 +139,7 @@ public class GameStatics
             // 영어의 경우 대부분 받침 있는 것으로 처리
             return true;
         }
-        
+
         // 한글인 경우 받침 확인
         // (글자 - 0xAC00) % 28 == 0이면 받침 없음
         return (lastChar - 0xAC00) % 28 != 0;
@@ -172,7 +201,7 @@ public class GameStatics
             "와/과" => GetWithParticle(word),
             _ => ""
         };
-        
+
         return word + particle;
     }
     #endregion

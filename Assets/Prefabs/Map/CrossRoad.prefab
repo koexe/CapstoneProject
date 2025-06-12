@@ -7618,6 +7618,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4461653974850616233}
   - component: {fileID: 6202327555237461339}
+  - component: {fileID: 7885559754278383504}
   m_Layer: 0
   m_Name: CrossRoad
   m_TagString: Untagged
@@ -7669,10 +7670,35 @@ MonoBehaviour:
   cameraAreaSize: {x: 20, y: 10, z: 10}
   onMapEnter:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7885559754278383504}
+        m_TargetAssemblyTypeName: CutSceneTrigger, Assembly-CSharp
+        m_MethodName: ShowCutscene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onMapExit:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7885559754278383504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052354616774426826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77f36cdf09bc7cc4d905ec1aebd5e2cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cutsceneData: {fileID: 11400000, guid: 31959ed60053ec84580ad4bd378ec73c, type: 2}
 --- !u!1 &2053124636282176620
 GameObject:
   m_ObjectHideFlags: 0
@@ -29968,6 +29994,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5198704684780330344}
   - component: {fileID: 9046111074188471794}
+  - component: {fileID: 4988940333532998665}
   m_Layer: 0
   m_Name: "\uC5B4\uB514\uB4E0\uC528"
   m_TagString: Untagged
@@ -30003,6 +30030,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogIndex: 3
+--- !u!65 &4988940333532998665
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7484676750183626620}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3, z: 3}
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!1 &7489837783436706936
 GameObject:
   m_ObjectHideFlags: 0
@@ -35235,7 +35275,7 @@ MonoBehaviour:
     materialsInsideMask: []
     materialsOutsideMask: []
   disableRenderingOnOverride: 1
-  _animationName: 
+  _animationName: animation
   loop: 1
   timeScale: 1
 --- !u!1 &8879221350803965667

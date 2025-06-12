@@ -1,0 +1,76 @@
+
+merla01.png
+size: 598,503
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ArmL1
+  rotate: true
+  xy: 2, 110
+  size: 149, 216
+  orig: 149, 217
+  offset: 0, 1
+  index: -1
+ArmR1
+  rotate: true
+  xy: 334, 7
+  size: 166, 214
+  orig: 166, 216
+  offset: 0, 2
+  index: -1
+Belt
+  rotate: true
+  xy: 2, 11
+  size: 97, 108
+  orig: 97, 110
+  offset: 0, 1
+  index: -1
+Head
+  rotate: false
+  xy: 2, 261
+  size: 334, 240
+  orig: 335, 240
+  offset: 0, 0
+  index: -1
+Hoodie
+  rotate: true
+  xy: 112, 2
+  size: 106, 69
+  orig: 109, 72
+  offset: 2, 0
+  index: -1
+Hoodie_back
+  rotate: false
+  xy: 220, 144
+  size: 112, 115
+  orig: 113, 115
+  offset: 1, 0
+  index: -1
+Lowerbody
+  rotate: false
+  xy: 338, 175
+  size: 257, 326
+  orig: 257, 326
+  offset: 0, 0
+  index: -1
+Mouth
+  rotate: true
+  xy: 550, 121
+  size: 52, 46
+  orig: 53, 49
+  offset: 0, 0
+  index: -1
+Neck
+  rotate: false
+  xy: 550, 56
+  size: 42, 63
+  orig: 43, 63
+  offset: 1, 0
+  index: -1
+Upperbody
+  rotate: false
+  xy: 220, 2
+  size: 103, 140
+  orig: 103, 140
+  offset: 0, 0
+  index: -1

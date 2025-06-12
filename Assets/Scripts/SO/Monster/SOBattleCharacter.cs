@@ -16,7 +16,7 @@ public class SOBattleCharacter : ScriptableObject
     [SerializeField] AnimationReferenceAsset hitAnim;
     [SerializeField] AnimationReferenceAsset idleAnim;
     [SerializeField] bool isModelBasicRight;
-    [SerializeField] ParticleSystem attackParticle;
+    [SerializeField] Vector2 hpBarOffset;
     [SerializeField] Vector2 effectOffset;
     [SerializeField] float effectTiming;
 
@@ -28,12 +28,12 @@ public class SOBattleCharacter : ScriptableObject
     public bool IsModelBasicRight() => isModelBasicRight;
     public Sprite GetBattleSprite() => battleSprite;
     public Vector2 GetEffectOffset() => this.effectOffset;
-
-    public float GetEffectTiming() => this.effectTiming;    
+    public Vector2 GetHpBarOffset() => this.hpBarOffset;
+    public float GetEffectTiming() => this.effectTiming;
 
     public SkeletonDataAsset GetSkeletonDataAsset() => skeletonDataAsset;
     public (AnimationReferenceAsset, AnimationReferenceAsset, AnimationReferenceAsset) GetAnimations()
-        => (this.idleAnim, this.basicAttackAnim, this.hitAnim  );
+        => (this.idleAnim, this.basicAttackAnim, this.hitAnim);
     public AnimationReferenceAsset GetAdditionalAttackAnim() => this.additionalAttackAnim;
 
 }

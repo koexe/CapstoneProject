@@ -277,11 +277,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Portraits
-  - m_GUID: 3f5c8af3be36d2742a6657f56c9374be
-    m_Address: Assets/Images/DialogCharacters/Sarah/Profile/Sarah_000.png
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Portraits
   - m_GUID: 97b010e1d9b521f469361640c1e3dca7
     m_Address: Assets/Images/DialogCharacters/MrWhere/Profile/Mr.Where_000.png
     m_ReadOnly: 0

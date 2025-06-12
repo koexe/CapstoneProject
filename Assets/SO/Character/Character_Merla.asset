@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69053f2eebd69574995e810fdd81472c, type: 3}
+  m_Name: Character_Merla
+  m_EditorClassIdentifier: 
+  identifier: 0
+  raceType: 2
+  skills:
+  - {fileID: 11400000, guid: 29ad7e7bf186db4459d5748150005833, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 11400000, guid: 469a86a10c666024eb20b56fc2de9885, type: 2}
+  characterName: Merla
+  status:
+    level: 0
+    exp: 0
+    baseHp: 0
+    baseMp: 0
+    baseAtk: 0
+    baseDef: 0
+    baseSpeed: 0
+  battleSprite: {fileID: 0}
+  skeletonDataAsset: {fileID: 11400000, guid: d26ac1ce9530ba94392e2b07c75245fa, type: 2}
+  basicAttackAnim: {fileID: 11400000, guid: e8e90b57cdcc3a443b5131a848caccf8, type: 2}
+  additionalAttackAnim: {fileID: 0}
+  hitAnim: {fileID: 11400000, guid: a98a0565bb67223449a5ccfaacf0e1dc, type: 2}
+  idleAnim: {fileID: 11400000, guid: dea0bedc43a8e6e4eac5a01d13b02627, type: 2}
+  isModelBasicRight: 0
+  hpBarOffset: {x: -0.5, y: 6.6}
+  effectOffset: {x: 0, y: 0}
+  effectTiming: 0
