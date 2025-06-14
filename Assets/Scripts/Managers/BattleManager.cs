@@ -106,6 +106,15 @@ public class BattleManager : MonoBehaviour
     [SerializeField] List<BattleCharacterBase> playerDataContainer;
     [SerializeField] List<BattleCharacterBase> enemyDataContainer;
 
+
+    [SerializeField] TextMeshProUGUI playerHp;
+    [SerializeField] TextMeshProUGUI playerMp;
+    [SerializeField] TextMeshProUGUI playerName;
+    [SerializeField] TextMeshProUGUI npcHp;
+    [SerializeField] TextMeshProUGUI npcMp;
+    [SerializeField] TextMeshProUGUI npcName;
+
+
     // 배틀 종료 이벤트
     public event Action<bool> OnBattleEnd; // bool은 보스전 여부
 
@@ -203,7 +212,7 @@ public class BattleManager : MonoBehaviour
                 ally.transform.position = allyPositions[i].position;
                 characterManager.AddAlly(allyComponent);
                 playerDataContainer.Add(allyComponent);
-                allyComponent.PlayerInitialization(this, t_allys[i]);
+                allyComponent.PlayerInitialization(this, t_allys[i], i == 0 ? (playerHp, playerMp, playerName) : (npcHp, npcMp, npcName));
             }
 
             for (int i = 0; i < enemyData.Length; i++)
@@ -467,7 +476,7 @@ public class BattleManager : MonoBehaviour
     {
         foreach (var t_enemy in this.enemyDataContainer)
         {
-            if(t_enemy.GetBattleCharacter().GetCharacterName() == "Merla")
+            if (t_enemy.GetBattleCharacter().GetCharacterName() == "Merla")
             {
                 SaveGameManager.instance.GetCurrentSaveData().isCleardBoss = true;
             }

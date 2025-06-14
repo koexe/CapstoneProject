@@ -394,7 +394,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8620806760606421822}
-  - component: {fileID: 8620806760606421823}
+  - component: {fileID: 5999843021458951325}
   - component: {fileID: 8620806760606421809}
   - component: {fileID: 4730795872236492300}
   m_Layer: 6
@@ -420,7 +420,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8620806760606421823
+--- !u!114 &5999843021458951325
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -429,18 +429,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 8620806760606421821}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa117df7005b9404d8fd8bceb6cba529, type: 3}
+  m_Script: {fileID: 11500000, guid: 2d8e0aa42dbc10a4d815d095edfc7976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   characterName: 
   battleManager: {fileID: 0}
   spineModelController: {fileID: 3733194385528090609}
-  skills:
-  - {fileID: 11400000, guid: 54c81be1569442247af97e78e93a79b6, type: 2}
-  - {fileID: 11400000, guid: 422e972f0b9b2c3469d6a4e065c88ac3, type: 2}
+  skills: []
   selectedSkill: {fileID: 0}
   arrow: {fileID: 4634394216358672311}
-  outlineEffect: {fileID: 635298374654723985}
   characterShadow: {fileID: 8424772844199780049}
   hitParticle: {fileID: 6964487385580298489}
   initialPosition: {x: 0, y: 0, z: 0}
@@ -460,6 +457,9 @@ MonoBehaviour:
   hpBarOffset: {x: 0, y: 1.5, z: 0}
   moveTime: 0.5
   raceType: 0
+  hpUI: {fileID: 0}
+  mpUI: {fileID: 0}
+  nameUI: {fileID: 0}
 --- !u!95 &8620806760606421809
 Animator:
   serializedVersion: 5

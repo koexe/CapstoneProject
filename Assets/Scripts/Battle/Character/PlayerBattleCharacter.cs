@@ -1,12 +1,16 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using TMPro;
 
-public class EnemyBattleCharacter : BattleCharacterBase
+public class PlayerBattleCharacter : BattleCharacterBase
 {
-    public override void EnemyInitialization(BattleManager _battleManager, SOBattleCharacter _character, int _level)
+    [SerializeField] TextMeshProUGUI hpUI;
+    [SerializeField] TextMeshProUGUI mpUI;
+    [SerializeField] TextMeshProUGUI nameUI;
+
+
+    public override void PlayerInitialization(BattleManager _battleManager, SOBattleCharacter _character, (TextMeshProUGUI _hpUI, TextMeshProUGUI _mpUI, TextMeshProUGUI _nameUI) _ui)
     {
         this.battleManager = _battleManager;
         if (_character.GetSkeletonDataAsset() != null)
@@ -18,10 +22,9 @@ public class EnemyBattleCharacter : BattleCharacterBase
                 t_anim.Item2,
                 t_anim.Item3);
         }
-        this.initialPosition = this.battleManager.GetOriginTranform(this).position;
+
         this.buffSystem = new BuffSystem();
         this.soBattleCharacter = Instantiate(_character);
-        this.soBattleCharacter.GetStatus().SetLevel(_level);
         this.characterName = soBattleCharacter.GetCharacterName();
         InitStats(soBattleCharacter.GetStatus());
         this.skills = new SOSkillBase[soBattleCharacter.GetSkills().Length];
@@ -30,7 +33,7 @@ public class EnemyBattleCharacter : BattleCharacterBase
         this.transform.name = _character.GetCharacterName();
         this.raceType = _character.GetRaceType();
         this.characterShadow.sprite = _character.GetBattleSprite();
-
+        // 체력 UI 초기화
 
 
         if (this.spineModelController == null)
@@ -62,7 +65,8 @@ public class EnemyBattleCharacter : BattleCharacterBase
             }
             this.basicRightDir = false;
         }
-        // 체력 UI 초기화
+
+        this.spineModelController.PlayAnimation(AnimationType.idle);
         if (this.healthPreferences == null)
         {
             Debug.LogError($"[{this.name}] HealthPreferences 컴포넌트가 없습니다.");
@@ -71,10 +75,19 @@ public class EnemyBattleCharacter : BattleCharacterBase
         this.healthPreferences.transform.localPosition = this.soBattleCharacter.GetHpBarOffset();
         this.arrow.transform.localPosition = this.healthPreferences.transform.localPosition + new Vector3(this.basicRightDir ? 0.5f : -0.5f, 0.5f, 0f);
 
+        this.initialPosition = this.battleManager.GetOriginTranform(this).position;
+
         this.healthPreferences.SetTotalHealth(maxHP);
         this.healthPreferences.SetCurrentHealth(currentHP);
-        this.spineModelController.PlayAnimation(AnimationType.idle);
+        this.healthPreferences.gameObject.SetActive(false);
 
+        this.hpUI = _ui.Item1;
+        this.mpUI = _ui.Item2;
+        this.nameUI = _ui.Item3;
+
+        this.hpUI.text = $"{this.currentHP}/{this.maxHP}";
+        this.mpUI.text = $"{this.currentMp}/{this.maxMp}";
+        this.nameUI.text = this.characterName;
 
         return;
     }
@@ -82,14 +95,7 @@ public class EnemyBattleCharacter : BattleCharacterBase
     public async override UniTask HitTask(HitInfo _hitInfo)
     {
         await TakeDamage(_hitInfo);
-        if (this.isDie)
-        {
-            this.battleManager.ShowText($"{this.name}{GameStatics.GetSubjectParticle(this.name)} 쓰러졌다!");
-            await UniTask.Delay(TimeSpan.FromSeconds(1f));
-            await this.battleManager.GainExp(1000);
-            return;
-        }
-
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
         if (_hitInfo.statusEffect != StatusEffectID.None)
         {
             this.buffSystem.Add(_hitInfo.statusEffect);
@@ -97,4 +103,46 @@ public class EnemyBattleCharacter : BattleCharacterBase
             await UniTask.Delay(TimeSpan.FromSeconds(1f));
         }
     }
-}
+
+    public override async UniTask TakeDamage(HitInfo _hitInfo)
+    {
+        float t_finalDamage = _hitInfo.hitDamage;
+        if (!_hitInfo.isDotDamage && this.isInDefence)
+        {
+            if (_hitInfo.isRaceAdvantage == 1)
+            {
+                t_finalDamage *= 0.5f;
+            }
+            else
+            {
+                t_finalDamage *= 0.25f;
+            }
+        }
+
+        if (_hitInfo.hitParticle == null)
+            this.hitParticle.Play();
+        else
+            Instantiate(_hitInfo.hitParticle, this.transform.position, this.transform.rotation);
+
+
+        await this.spineModelController.PlayAnimationAsync(AnimationType.hit);
+        string t_text = "";
+        if (_hitInfo.isCritical)
+        {
+            t_text += $"치명타! ";
+        }
+        t_text += $"{(int)t_finalDamage}의 데미지를 {this.name}{GameStatics.GetSubjectParticle(this.name)} 받았다!!";
+        this.battleManager.ShowText(t_text);
+        this.currentHP = Mathf.Max(0f, this.currentHP - (int)t_finalDamage);
+        this.hpUI.text = $"{this.currentHP}/{this.maxHP}";
+        this.spineModelController.PlayAnimation(AnimationType.idle);
+        if (this.currentHP <= 0f)
+            Die();
+    }
+
+    public override void UseMp(float _amount)
+    {
+        base.UseMp(_amount);
+        this.mpUI.text = $"{this.currentMp}/{this.maxMp}";
+    }
+} 

@@ -28,12 +28,12 @@ MonoBehaviour:
     baseDef: 1
     baseSpeed: 5
   battleSprite: {fileID: 21300000, guid: bbdb62552f7b4e349bec348b510a5b47, type: 3}
-  skeletonDataAsset: {fileID: 11400000, guid: 5b9e48fa83d6eba4d94d546b8debbc18, type: 2}
-  basicAttackAnim: {fileID: 11400000, guid: 35d3d0f785455f0428ca4acdaa0c74e7, type: 2}
-  additionalAttackAnim: {fileID: 11400000, guid: 35d3d0f785455f0428ca4acdaa0c74e7, type: 2}
-  hitAnim: {fileID: 11400000, guid: 928d7df3c498e254a9f606f8d0d32d2e, type: 2}
-  idleAnim: {fileID: 11400000, guid: c63b7d79adc02e241b0ca72f1ef4f051, type: 2}
+  skeletonDataAsset: {fileID: 11400000, guid: 2d6fa6cee23d30a44a7ed78d6e41d4c4, type: 2}
+  basicAttackAnim: {fileID: 11400000, guid: c1bd48aea802c1440845e5ab18aba118, type: 2}
+  additionalAttackAnim: {fileID: 0}
+  hitAnim: {fileID: 11400000, guid: 6792ca19a7f91ef419e7c3f9a7fc2416, type: 2}
+  idleAnim: {fileID: 11400000, guid: 1a0816c49fe317c41b13c0090f10d61a, type: 2}
   isModelBasicRight: 0
   hpBarOffset: {x: -0.5, y: 5}
   effectOffset: {x: 0, y: 0}
-  effectTiming: 0
+  effectTiming: 0.3

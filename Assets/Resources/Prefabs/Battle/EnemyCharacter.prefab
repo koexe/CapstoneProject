@@ -453,7 +453,6 @@ MonoBehaviour:
   skills: []
   selectedSkill: {fileID: 0}
   arrow: {fileID: 4976865499347919215}
-  outlineEffect: {fileID: 4141870152141205762}
   characterShadow: {fileID: 8203220718202394606}
   hitParticle: {fileID: 7885186916162609912}
   initialPosition: {x: 0, y: 0, z: 0}

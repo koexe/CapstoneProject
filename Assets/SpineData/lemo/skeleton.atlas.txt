@@ -1,62 +1,62 @@
 
 skeleton.png
-size: 841,509
+size: 382,514
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
-어디든씨 눈
-  rotate: true
-  xy: 385, 107
-  size: 55, 16
-  orig: 500, 500
-  offset: 221, 299
-  index: -1
-어디든씨 모자
-  rotate: true
-  xy: 567, 114
-  size: 393, 182
-  orig: 500, 500
-  offset: 51, 271
-  index: -1
-어디든씨 모자 풀
-  rotate: true
-  xy: 751, 180
-  size: 327, 88
-  orig: 500, 500
-  offset: 71, 374
-  index: -1
-어디든씨 모자_1
+리모 귀_L
   rotate: false
   xy: 2, 2
-  size: 381, 160
+  size: 140, 121
   orig: 500, 500
-  offset: 58, 242
+  offset: 31, 256
   index: -1
-어디든씨 몸통
-  rotate: false
-  xy: 2, 164
-  size: 450, 343
-  orig: 500, 500
-  offset: 23, 19
-  index: -1
-어디든씨 손
+리모 귀_R
   rotate: true
-  xy: 751, 98
-  size: 80, 78
+  xy: 272, 145
+  size: 162, 107
   orig: 500, 500
-  offset: 295, 114
+  offset: 310, 259
   index: -1
-어디든씨 수염
-  rotate: false
-  xy: 567, 8
-  size: 240, 88
+리모 눈
+  rotate: true
+  xy: 196, 28
+  size: 95, 43
   orig: 500, 500
-  offset: 128, 205
+  offset: 184, 302
   index: -1
-어디든씨 지팡이
-  rotate: false
-  xy: 454, 52
-  size: 111, 455
+리모 머리
+  rotate: true
+  xy: 2, 306
+  size: 206, 196
   orig: 500, 500
-  offset: 318, 19
+  offset: 145, 243
+  index: -1
+리모 머리 꽃
+  rotate: false
+  xy: 272, 39
+  size: 96, 104
+  orig: 500, 500
+  offset: 276, 315
+  index: -1
+리모 몸통
+  rotate: false
+  xy: 2, 125
+  size: 268, 179
+  orig: 500, 500
+  offset: 138, 42
+  index: -1
+리모 몸통 꽃
+  rotate: true
+  xy: 144, 15
+  size: 108, 50
+  orig: 500, 500
+  offset: 191, 208
+  index: -1
+리모 몸통 레이스
+  rotate: true
+  xy: 200, 309
+  size: 203, 180
+  orig: 500, 500
+  offset: 205, 74
   index: -1
