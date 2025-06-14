@@ -23,6 +23,8 @@ public class BattleCharacterBase : MonoBehaviour
 
     [SerializeField] protected ParticleSystem hitParticle;
 
+    [SerializeField] protected ParticleSystem deathParticle; 
+
     [Header("정보")]
     [SerializeField] protected Vector3 initialPosition;
     [SerializeField] protected float maxHP;
@@ -169,10 +171,37 @@ public class BattleCharacterBase : MonoBehaviour
                 break;
         }
     }
-    protected virtual void Die()
+    protected virtual async UniTask Die()
     {
         Debug.Log($"{name} has died.");
         this.isDie = true;
+        
+        // 점점 사라지는 효과
+        float fadeTime = 3f;
+        float currentTime = 0f;
+        SkeletonAnimation skeletonAnimation = GetComponentInChildren<SkeletonAnimation>();
+        
+        this.deathParticle.Play();
+        while (currentTime < fadeTime)
+        {
+            currentTime += Time.deltaTime;
+            float alpha = 1f - (currentTime / fadeTime);
+            
+            if (skeletonAnimation != null)
+            {
+                skeletonAnimation.skeleton.A = alpha;
+            }
+            
+            await UniTask.Yield();
+        }
+        
+        // 완전히 투명하게 만들기
+        if (skeletonAnimation != null)
+        {
+            skeletonAnimation.skeleton.A = 0f;
+        }
+        
+        this.deathParticle.Stop();
         this.battleManager.CharacterDie(this);
     }
     public async UniTask OnTurnStart()
@@ -339,7 +368,7 @@ public class BattleCharacterBase : MonoBehaviour
         this.healthPreferences.SetCurrentHealth(currentHP);
         this.spineModelController.PlayAnimation(AnimationType.idle);
         if (this.currentHP <= 0f)
-            Die();
+            await Die();
     }
     public virtual async UniTask HitTask(HitInfo _hitInfo)
     {
@@ -457,7 +486,7 @@ public class BattleCharacterBase : MonoBehaviour
     {
         return this.soBattleCharacter;
     }
-    public void LevelUp_UpdateStat()
+    public virtual void LevelUp_UpdateStat()
     {
         float t_beforeMaxHp = this.statBlock.GetStat(StatType.Hp);
         this.statBlock.UpdateBaseStats(this.soBattleCharacter.GetStatus());

@@ -63856,6 +63856,8 @@ MonoBehaviour:
   isUsedRunCommend: 0
   playerDataContainer: []
   enemyDataContainer: []
+  playerUIGroup: {fileID: 742178716}
+  npcUIGroup: {fileID: 2006475711}
   playerHp: {fileID: 549868835}
   playerMp: {fileID: 885875950}
   playerName: {fileID: 422495951}

@@ -20,11 +20,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e9ac87b43c5adea4eb1e68dd972f5fc0, type: 2}
   characterName: "\uC0AC\uB77C"
   status:
-    level: 0
+    level: 1
     exp: 0
-    baseHp: 30
-    baseMp: 5
-    baseAtk: 6
+    baseHp: 40
+    baseMp: 12
+    baseAtk: 9
     baseDef: 3
     baseSpeed: 4
   battleSprite: {fileID: 21300000, guid: 9fff1b90fe20b1f4a9164f1ec4d748b2, type: 3}

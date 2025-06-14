@@ -33,25 +33,25 @@ public class BattleStatus
 
     public int GetMp()
     {
-        float t_result = this.baseHp + ((this.level - 1) * 0.6f);
+        float t_result = this.baseMp + ((this.level - 1) * 0.6f);
         return (int)t_result;
     }
 
     public int GetAtk()
     {
-        float t_result = this.baseHp + ((this.level - 1) * 0.6f);
+        float t_result = this.baseAtk + ((this.level - 1) * 0.6f);
         return (int)t_result;
     }
 
     public int GetDef()
     {
-        float t_result = this.baseHp + ((this.level - 1) * 0.3f);
+        float t_result = this.baseDef + ((this.level - 1) * 0.3f);
         return (int)t_result;
     }
 
     public int GetSpd()
     {
-        float t_result = this.baseHp + ((this.level - 1) * 0.3f);
+        float t_result = this.baseSpeed + ((this.level - 1) * 0.3f);
         return (int)t_result;
     }
 

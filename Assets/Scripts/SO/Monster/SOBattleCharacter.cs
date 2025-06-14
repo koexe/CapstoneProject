@@ -1,7 +1,9 @@
+using System;
 using Spine.Unity;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Character_Base", menuName = "Character/Character_Base")]
+
+[CreateAssetMenu(fileName = "Character_Base", menuName = "Character/Character_Base"), System.Serializable]
 public class SOBattleCharacter : ScriptableObject
 {
     [SerializeField] int identifier;

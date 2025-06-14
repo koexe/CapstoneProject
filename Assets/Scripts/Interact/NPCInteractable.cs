@@ -24,6 +24,13 @@ public class NPCInteractable : MonoBehaviour, IInteractable
 
             if (dialogData != null)
             {
+                if(dialogIndex == 10)
+                {
+                    SaveGameManager.instance.GetCurrentSaveData().isMetLemo = true;
+                }
+
+
+
                 // DialogUI 표시
                 UIManager.instance.ShowUI<DialogUI>(new DialogUIData()
                 {

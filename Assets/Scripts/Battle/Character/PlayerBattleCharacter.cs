@@ -145,4 +145,16 @@ public class PlayerBattleCharacter : BattleCharacterBase
         base.UseMp(_amount);
         this.mpUI.text = $"{this.currentMp}/{this.maxMp}";
     }
+
+    public override void LevelUp_UpdateStat()
+    {
+        float t_beforeMaxHp = this.statBlock.GetStat(StatType.Hp);
+        this.statBlock.UpdateBaseStats(this.soBattleCharacter.GetStatus());
+        this.maxHP = GetStat(StatType.Hp);
+        float t_afterMaxHp = this.statBlock.GetStat(StatType.Hp);
+        Debug.Log($"{t_afterMaxHp}        {t_beforeMaxHp}");
+        Heal(t_afterMaxHp - t_beforeMaxHp);
+        this.hpUI.text = $"{this.currentHP}/{this.maxHP}";
+        this.mpUI.text = $"{this.currentMp}/{this.maxMp}";
+    }
 } 

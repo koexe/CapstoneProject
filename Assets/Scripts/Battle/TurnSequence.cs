@@ -317,7 +317,6 @@ public class ExecuteSequence : TurnSequence
         battleManager.ShowText("승리했다! 전투 종료!");
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
         battleManager.ChangeToFieldScene();
-
     }
 }
 

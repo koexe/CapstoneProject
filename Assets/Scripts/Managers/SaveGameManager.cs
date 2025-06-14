@@ -299,6 +299,8 @@ public class SaveData
 
     public bool isCleardBoss = false;
 
+    public bool isMetLemo = false;
+
     // 시간 정보 추가
     public float playTime;        // 플레이 시간 (초 단위)
     public string saveDateTime;   // 저장 시간

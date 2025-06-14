@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour
 
     public async UniTask GameOver()
     {
-
+        Destroy(this.player);   
         this.mapManager.Detialization();
         await this.sceneLoadManager.LoadScene_Async("MainScene");
     }

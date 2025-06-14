@@ -107,6 +107,10 @@ public class BattleManager : MonoBehaviour
     [SerializeField] List<BattleCharacterBase> enemyDataContainer;
 
 
+    [SerializeField] GameObject playerUIGroup;
+    [SerializeField] GameObject npcUIGroup;
+
+
     [SerializeField] TextMeshProUGUI playerHp;
     [SerializeField] TextMeshProUGUI playerMp;
     [SerializeField] TextMeshProUGUI playerName;
@@ -189,6 +193,17 @@ public class BattleManager : MonoBehaviour
         {
             for (int i = 0; i < t_allys.Length; i++)
             {
+                if (SaveGameManager.instance.GetCurrentSaveData().isMetLemo == false && t_allys[i].GetCharacterName() == "리모")
+                {
+                    this.npcUIGroup.SetActive(false);
+                    break;
+                }
+                else
+                {
+                    this.npcUIGroup.SetActive(true);
+                }
+
+
                 if (t_allys[i] == null)
                 {
                     Debug.LogError($"아군 데이터 {i}가 null입니다.");

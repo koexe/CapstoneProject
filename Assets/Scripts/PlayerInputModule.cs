@@ -71,7 +71,7 @@ public class PlayerInputModule : MonoBehaviour
         IngameInputManager.instance.AddInput(KeyCode.DownArrow, IngameInputManager.InputEventType.Hold, () => moveDirection += Vector3.back);
 
         // UI 입력 설정
-        IngameInputManager.instance.AddInput(KeyCode.I, IngameInputManager.InputEventType.Down, () => OpenInventory());
+        //IngameInputManager.instance.AddInput(KeyCode.I, IngameInputManager.InputEventType.Down, () => OpenInventory());
         IngameInputManager.instance.AddInput(KeyCode.M, IngameInputManager.InputEventType.Down, () => OpenMap());
 
         // 초기 애니메이션 설정
