@@ -122,18 +122,6 @@ public class DataLibrary : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            UIManager.instance.ShowUI<DialogUI>(new DialogUIData()
-            {
-                identifier = "DialogUI",
-                data = this.dialogData[0]
-            });
-        }
-    }
-
     #region Load
 
     // 주소값 해제를 위한 핸들 추적용 변수들

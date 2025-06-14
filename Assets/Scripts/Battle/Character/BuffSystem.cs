@@ -11,9 +11,25 @@ using System.Threading.Tasks;
 public class BuffSystem
 {
     private Dictionary<StatusEffectID, StatusEffectInstance> activeEffects = new Dictionary<StatusEffectID, StatusEffectInstance>();
+    private Dictionary<StatType, TurnBuff> turnBuffs = new Dictionary<StatType, TurnBuff>();
+
+    public class TurnBuff
+    {
+        public float value;
+        public int remainingTurns;
+        public StatSign sign;
+
+        public TurnBuff(float _value, int _turns, StatSign _sign)
+        {
+            this.value = _value;
+            this.remainingTurns = _turns;
+            this.sign = _sign;
+        }
+    }
 
     public async Task OnTurnStart(BattleCharacterBase _target)
     {
+        // 기존 상태이상 처리
         foreach (var t_effect in this.activeEffects.Values)
             await t_effect.Tick(_target);
 
@@ -26,6 +42,22 @@ public class BuffSystem
 
         foreach (var t_key in t_expired)
             this.activeEffects.Remove(t_key);
+
+        // 턴제 버프 처리
+        var expiredBuffs = new List<StatType>();
+        foreach (var buff in turnBuffs)
+        {
+            buff.Value.remainingTurns--;
+            if (buff.Value.remainingTurns <= 0)
+            {
+                expiredBuffs.Add(buff.Key);
+            }
+        }
+
+        foreach (var statType in expiredBuffs)
+        {
+            turnBuffs.Remove(statType);
+        }
     }
 
     public async UniTask OnTurnStartAsync(BattleCharacterBase _target)
@@ -64,6 +96,43 @@ public class BuffSystem
             // 없으면 새로 추가
             this.activeEffects.Add(_id, new StatusEffectInstance(DataLibrary.instance.GetStateInfo(_id)));
         }
+    }
+
+    public void AddTurnBuff(StatType _type, float _value, int _turns, StatSign _sign)
+    {
+        if (turnBuffs.ContainsKey(_type))
+        {
+            // 이미 존재하는 버프가 있다면 갱신
+            turnBuffs[_type] = new TurnBuff(_value, _turns, _sign);
+        }
+        else
+        {
+            // 새로운 버프 추가
+            turnBuffs.Add(_type, new TurnBuff(_value, _turns, _sign));
+        }
+    }
+
+    public float GetTurnBuffValue(StatType _type)
+    {
+        if (turnBuffs.TryGetValue(_type, out var buff))
+        {
+            return buff.value;
+        }
+        return 0f;
+    }
+
+    public StatSign GetTurnBuffSign(StatType _type)
+    {
+        if (turnBuffs.TryGetValue(_type, out var buff))
+        {
+            return buff.sign;
+        }
+        return StatSign.Constant;
+    }
+
+    public bool HasTurnBuff(StatType _type)
+    {
+        return turnBuffs.ContainsKey(_type);
     }
 }
 public class StatusEffectInstance
@@ -289,9 +358,11 @@ public class StatBlock
     private Dictionary<StatType, float> baseStats = new Dictionary<StatType, float>();
     private Dictionary<StatusEffectID, BuffBlock> buffStats = new Dictionary<StatusEffectID, BuffBlock>();
     Dictionary<StatType, float> instnatStatBuff = new Dictionary<StatType, float>();
+    private BuffSystem buffSystem;
 
-    public StatBlock()
+    public StatBlock(BuffSystem _buffSystem)
     {
+        this.buffSystem = _buffSystem;
         this.baseStats.Add(StatType.Hp, 100f);
         this.baseStats.Add(StatType.Atk, 10f);
         this.baseStats.Add(StatType.Def, 5f);
@@ -302,8 +373,10 @@ public class StatBlock
         this.baseStats.Add(StatType.HealEffecincy, 100f);
         this.baseStats.Add(StatType.DamageReduce, 0f);
     }
-    public StatBlock(BattleStatus _status)
+
+    public StatBlock(BattleStatus _status, BuffSystem _buffSystem)
     {
+        this.buffSystem = _buffSystem;
         this.baseStats.Add(StatType.Hp, _status.GetHp());
         this.baseStats.Add(StatType.Mp, _status.GetMp());
         this.baseStats.Add(StatType.Atk, _status.GetAtk());
@@ -314,6 +387,7 @@ public class StatBlock
         this.baseStats.Add(StatType.HealEffecincy, 100f);
         this.baseStats.Add(StatType.DamageReduce, 0f);
     }
+
     public void SetBase(StatType _type, float _value)
     {
         this.baseStats[_type] = _value;
@@ -352,6 +426,7 @@ public class StatBlock
     {
         float t_base = this.baseStats.TryGetValue(_type, out var t_val) ? t_val : 0f;
 
+        // 일반 버프 적용
         foreach (var t_buff in this.buffStats.Values)
         {
             if (t_buff.GetStatType() == _type)
@@ -365,6 +440,23 @@ public class StatBlock
                         t_base *= (1f + t_buff.GetStatValue());
                         break;
                 }
+            }
+        }
+
+        // 턴제 버프 적용
+        if (buffSystem.HasTurnBuff(_type))
+        {
+            float turnBuffValue = buffSystem.GetTurnBuffValue(_type);
+            StatSign turnBuffSign = buffSystem.GetTurnBuffSign(_type);
+
+            switch (turnBuffSign)
+            {
+                case StatSign.Constant:
+                    t_base += turnBuffValue;
+                    break;
+                case StatSign.Percentage:
+                    t_base *= (1f + turnBuffValue);
+                    break;
             }
         }
 

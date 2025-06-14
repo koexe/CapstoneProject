@@ -80,8 +80,6 @@ public class GameManager : MonoBehaviour
         this.mapManager.Initialization();
         this.currentPlayer = DataLibrary.instance.GetSOCharacter(1);
         this.currentNPC = DataLibrary.instance.GetSOCharacter(2);
-        this.onChangeBattleSceneData.currentPlayerHp = this.currentPlayer.GetStatus().GetHp();
-        this.onChangeBattleSceneData.currentNPCHp = this.currentNPC.GetStatus().GetHp();
     }
 
     public async UniTask ChangeSceneMainToField()
@@ -93,11 +91,12 @@ public class GameManager : MonoBehaviour
         MapManager.instance.OnChangeToFieldScene();
     }
 
-    public async void ChangeSceneFieldToBattle(SOBattleCharacter[] enemys, int[] _levels)
+    public async void ChangeSceneFieldToBattle(SOBattleCharacter[] enemys, int[] _levels, Action<bool> _onBattleEnd = null)
     {
         ChangeGameState(GameState.Battle);
         this.player.GetComponent<PlayerInputModule>().ShowEncounterUI();
-        this.onChangeBattleSceneData.FieldToBattle(this.currentPlayer, this.currentNPC, enemys, this.player.transform.position, _levels);
+        this.onChangeBattleSceneData.FieldToBattle(
+            this.currentPlayer, this.currentNPC, enemys, _levels, _onBattleEnd);
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
         MapManager.instance.OnChangeToBattleScene();
         await this.sceneLoadManager.LoadScene_Async("BattleScene");
@@ -109,12 +108,12 @@ public class GameManager : MonoBehaviour
         this.player.GetComponent<PlayerInputModule>().HideEncounterUI();
         this.currentNPC = _currentNpc;
         this.currentPlayer = _currentPlayer;
-        this.onChangeBattleSceneData.Reset();
         await this.sceneLoadManager.LoadScene_Async("FieldScene");
         this.cameraController.SetTarget(this.player.transform);
         this.cameraController.SetPosition(this.player.transform.position);
+        this.onChangeBattleSceneData.OnBattleEnd?.Invoke(true);
+        this.onChangeBattleSceneData.Reset();
         MapManager.instance.OnChangeToFieldScene();
-
     }
 
     public async UniTask GameOver()
@@ -168,26 +167,23 @@ public class GameManager : MonoBehaviour
     {
         [SerializeField] SOBattleCharacter currentPlayer;
         [SerializeField] SOBattleCharacter currentNPC;
-        public int currentPlayerHp;
-        public int currentNPCHp;
         SOBattleCharacter[] enemys;
-        public Vector3 position;
         public int[] enemyLevels;
 
-        public void FieldToBattle(SOBattleCharacter _player, SOBattleCharacter _npc, SOBattleCharacter[] _enemys, Vector3 _position, int[] _levels)
+        public Action<bool> OnBattleEnd;
+
+        public void FieldToBattle(SOBattleCharacter _player, SOBattleCharacter _npc, SOBattleCharacter[] _enemys, int[] _levels, Action<bool> _onBattleEnd)
         {
             this.currentPlayer = _player;
             this.currentNPC = _npc;
             this.enemys = _enemys;
-            this.position = _position;
             this.enemyLevels = _levels;
+            this.OnBattleEnd = _onBattleEnd;
         }
-        public void BattleToField(SOBattleCharacter _player, SOBattleCharacter _npc, int _playerHp, int _npcHp)
+        public void BattleToField(SOBattleCharacter _player, SOBattleCharacter _npc)
         {
             this.currentPlayer = _player;
             this.currentNPC = _npc;
-            this.currentNPCHp = _npcHp;
-            this.currentPlayerHp = _playerHp;
         }
 
         public void Reset()
@@ -200,10 +196,6 @@ public class GameManager : MonoBehaviour
         public int[] GetEnemyLevels() => this.enemyLevels;
         public SOBattleCharacter GetPlayerData() => this.currentPlayer;
         public SOBattleCharacter GetNPCData() => this.currentNPC;
-
-        public int GetPlayerHp() => this.currentPlayerHp;
-
-        public int GetNpcHp() => this.currentNPCHp;
     }
     public void SetPlayer(GameObject _player)
     {

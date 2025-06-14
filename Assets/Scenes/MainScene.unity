@@ -514,6 +514,7 @@ MonoBehaviour:
   currentSaveData:
     currentMap: 
     itemNames: []
+    isCleardBoss: 0
     playTime: 0
     saveDateTime: 2025-05-22 13:14:06
   isSaveDebug: 1
@@ -1562,7 +1563,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentMap: {fileID: 0}
-  startMap: {fileID: 6202327555237461339, guid: fe7e3b507b9572846900e2ef86d76b72, type: 3}
+  startMap: {fileID: 6202327555237461339, guid: 937607e568c81db4797cb8cffbfc72e3, type: 3}
   isDebugingMap: 1
 --- !u!4 &1958847839
 Transform:

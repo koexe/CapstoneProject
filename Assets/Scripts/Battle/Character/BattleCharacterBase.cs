@@ -68,6 +68,7 @@ public class BattleCharacterBase : MonoBehaviour
 
     public void SetArrow(bool _is) => this.arrow.SetActive(_is);
     public void SetShadow(bool _is) => this.characterShadow.gameObject.SetActive(_is);
+    public BuffSystem GetBuffSystem() => this.buffSystem;
     #endregion
     public SOSkillBase[] GetSkills() => this.skills;
     public void RecalculateMaxHPMP()
@@ -127,15 +128,7 @@ public class BattleCharacterBase : MonoBehaviour
         this.raceType = _character.GetRaceType();
         this.characterShadow.sprite = _character.GetBattleSprite();
 
-        // 체력 UI 초기화
-        if (this.healthPreferences == null)
-        {
-            Debug.LogError($"[{this.name}] HealthPreferences 컴포넌트가 없습니다.");
-            return;
-        }
-        this.healthPreferences.transform.localPosition = this.soBattleCharacter.GetHpBarOffset();
-        this.healthPreferences.SetTotalHealth(maxHP);
-        this.healthPreferences.SetCurrentHealth(currentHP);
+
 
         if (this.spineModelController == null)
         {
@@ -166,13 +159,23 @@ public class BattleCharacterBase : MonoBehaviour
             }
             this.basicRightDir = false;
         }
+        // 체력 UI 초기화
+        if (this.healthPreferences == null)
+        {
+            Debug.LogError($"[{this.name}] HealthPreferences 컴포넌트가 없습니다.");
+            return;
+        }
+        this.healthPreferences.transform.localPosition = this.soBattleCharacter.GetHpBarOffset();
+        this.arrow.transform.localPosition = this.healthPreferences.transform.localPosition + new Vector3(this.basicRightDir ? 0.5f : -0.5f, 0.5f, 0f);
 
+        this.healthPreferences.SetTotalHealth(maxHP);
+        this.healthPreferences.SetCurrentHealth(currentHP);
         this.spineModelController.PlayAnimation(AnimationType.idle);
 
 
         return;
     }
-    public void PlayerInitialization(BattleManager _battleManager, SOBattleCharacter _character, int _currentHp)
+    public void PlayerInitialization(BattleManager _battleManager, SOBattleCharacter _character)
     {
         this.battleManager = _battleManager;
         if (_character.GetSkeletonDataAsset() != null)
@@ -189,7 +192,6 @@ public class BattleCharacterBase : MonoBehaviour
         this.soBattleCharacter = Instantiate(_character);
         this.characterName = soBattleCharacter.GetCharacterName();
         InitStats(soBattleCharacter.GetStatus());
-        this.currentHP = _currentHp;
         this.skills = new SOSkillBase[soBattleCharacter.GetSkills().Length];
         for (int i = 0; i < skills.Length; i++)
             this.skills[i] = Instantiate(_character.GetSkills()[i]);
@@ -197,17 +199,7 @@ public class BattleCharacterBase : MonoBehaviour
         this.raceType = _character.GetRaceType();
         this.characterShadow.sprite = _character.GetBattleSprite();
         // 체력 UI 초기화
-        if (this.healthPreferences == null)
-        {
-            Debug.LogError($"[{this.name}] HealthPreferences 컴포넌트가 없습니다.");
-            return;
-        }
-        this.healthPreferences.transform.localPosition = this.soBattleCharacter.GetHpBarOffset();
 
-        this.initialPosition = this.battleManager.GetOriginTranform(this).position;
-
-        this.healthPreferences.SetTotalHealth(maxHP);
-        this.healthPreferences.SetCurrentHealth(currentHP);
 
         if (this.spineModelController == null)
         {
@@ -240,7 +232,18 @@ public class BattleCharacterBase : MonoBehaviour
         }
 
         this.spineModelController.PlayAnimation(AnimationType.idle);
+        if (this.healthPreferences == null)
+        {
+            Debug.LogError($"[{this.name}] HealthPreferences 컴포넌트가 없습니다.");
+            return;
+        }
+        this.healthPreferences.transform.localPosition = this.soBattleCharacter.GetHpBarOffset();
+        this.arrow.transform.localPosition = this.healthPreferences.transform.localPosition + new Vector3(this.basicRightDir ? 0.5f : -0.5f, 0.5f, 0f);
 
+        this.initialPosition = this.battleManager.GetOriginTranform(this).position;
+
+        this.healthPreferences.SetTotalHealth(maxHP);
+        this.healthPreferences.SetCurrentHealth(currentHP);
 
         return;
     }
@@ -421,6 +424,20 @@ public class BattleCharacterBase : MonoBehaviour
         await MovePoint(this.initialPosition);
         this.spineModelController.PlayAnimation(AnimationType.idle);
     }
+    public async UniTask GetBuff(ParticleSystem _particle, AudioClip _sound = null)
+    {
+        if (_particle != null)
+        {
+            var t_effect = Instantiate(
+                _particle,
+                this.transform.position,
+                _particle.transform.rotation);
+        }
+        this.battleManager.ShowText($"{GetCharacterName()}{GameStatics.GetSubjectParticle(GetCharacterName())} 방어력이 올랐다!");
+        await UniTask.Delay(TimeSpan.FromSeconds(1f));
+    }
+
+
     public async UniTask AttackTask(HitInfo _hitInfo)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
@@ -550,7 +567,7 @@ public class BattleCharacterBase : MonoBehaviour
 
     public void InitStats(BattleStatus _status)
     {
-        this.statBlock = new StatBlock(_status);
+        this.statBlock = new StatBlock(_status, this.buffSystem);
         this.maxHP = this.currentHP = this.statBlock.GetStat(StatType.Hp);
         this.maxMp = this.currentMp = this.statBlock.GetStat(StatType.Mp);
     }

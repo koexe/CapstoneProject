@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] Transform currentTarget;
+    [SerializeField] protected Transform currentTarget;
 
-    [SerializeField] Vector3 areaCenter = Vector3.zero;  // 제한 구역 중심
-    [SerializeField] Vector3 areaSize = new Vector3(20f, 10f, 10f); // 제한 구역 크기
+    [SerializeField] protected Vector3 areaCenter = Vector3.zero;  // 제한 구역 중심
+    [SerializeField] protected Vector3 areaSize = new Vector3(20f, 10f, 10f); // 제한 구역 크기
 
     public void SetAreaSize(Vector3 _areaCenter, Vector3 _areaSize)
     {
@@ -15,11 +15,11 @@ public class CameraController : MonoBehaviour
 
     float viewDistance = 10f;
 
-    [SerializeField] Vector3 offset = new Vector3(0f, 0f, -10f);
+    [SerializeField] protected Vector3 offset = new Vector3(0f, 0f, -10f);
 
-    [SerializeField] float basicOffsetY;
+    [SerializeField] protected float basicOffsetY;
 
-    [SerializeField] float followSpeed = 5f;
+    [SerializeField] protected float followSpeed = 5f;
 
     Camera cam;
 
@@ -32,7 +32,7 @@ public class CameraController : MonoBehaviour
     public void SetTarget(Transform _target) => this.currentTarget = _target;
 
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         Vector3 targetPosition = currentTarget != null ? currentTarget.position : Vector3.zero;
         targetPosition.y = this.basicOffsetY;

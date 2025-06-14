@@ -26,11 +26,17 @@ public class DialogUI : UIBase
     public float typingSpeed = 0.05f;
 
     private int originalDialogIndexForCallback = -1;
-
+    void Update()
+    {
+        #if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Hide();
+        }
+        #endif
+    }
     public override void Hide()
     {
-
-
         this.contents.SetActive(false);
         this.isShow = false;
         SaveGameManager.instance.currentSaveData.chatacterDialogs[this.dialogData.index] = true;

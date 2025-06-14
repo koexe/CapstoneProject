@@ -4155,13 +4155,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 422504902352790332}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxFactor: 0.6
-  isApplyZaxis: 1
+  parallaxFactor: 1.2
+  isApplyZaxis: 0
   initialPosition: {x: 18.519999, y: 0, z: 13.77}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &434994419437295560
@@ -10457,7 +10457,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1102358658737275353}
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 19.97, y: 0, z: 9}
+  m_LocalPosition: {x: 3.5, y: 0, z: 19.21}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_Children: []
   m_Father: {fileID: 476674823955966527}
@@ -10502,9 +10502,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 250
+  m_SortingOrder: 200
   m_Sprite: {fileID: 21300000, guid: 23e46a016649aa14ba9fe73ac1dad55a, type: 3}
-  m_Color: {r: 0.8113208, g: 0.8113208, b: 0.8113208, a: 1}
+  m_Color: {r: 0.5754717, g: 0.5754717, b: 0.5754717, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -10521,14 +10521,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1102358658737275353}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parallaxFactor: 0.5
-  isApplyZaxis: 1
-  initialPosition: {x: 22.269999, y: 0, z: 9}
+  isApplyZaxis: 0
+  initialPosition: {x: 5.8, y: 0, z: 19.21}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1104412605422524599
 GameObject:
@@ -13572,13 +13572,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1375385597789112219}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxFactor: 0.6
-  isApplyZaxis: 1
+  parallaxFactor: 1.2
+  isApplyZaxis: 0
   initialPosition: {x: -3.5600007, y: 0, z: 14.1332245}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1378569205966591794
@@ -19009,7 +19009,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1768815840952059266}
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 18.25, y: 3, z: 15.658311}
+  m_LocalPosition: {x: 18.25, y: 0, z: 16.97831}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 476674823955966527}
@@ -19073,14 +19073,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1768815840952059266}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parallaxFactor: 0.8
-  isApplyZaxis: 1
-  initialPosition: {x: 20.55, y: 3, z: 15.658311}
+  isApplyZaxis: 0
+  initialPosition: {x: 20.55, y: 0, z: 16.97831}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1773634551263805525
 GameObject:
@@ -22404,13 +22404,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2038699950605555896}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxFactor: 0.5
-  isApplyZaxis: 1
+  parallaxFactor: 1.2
+  isApplyZaxis: 0
   initialPosition: {x: 31.55, y: 0, z: 12.353225}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &2043122886689945024
@@ -37767,7 +37767,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3494982574408293203}
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 40.5, y: 3, z: 15.29}
+  m_LocalPosition: {x: 40.5, y: 0, z: 16.61}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 476674823955966527}
@@ -37831,14 +37831,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3494982574408293203}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parallaxFactor: 0.8
-  isApplyZaxis: 1
-  initialPosition: {x: 42.8, y: 3, z: 15.29}
+  isApplyZaxis: 0
+  initialPosition: {x: 42.8, y: 0, z: 16.61}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &3502915486442804366
 GameObject:
@@ -38850,7 +38850,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3556152858691754259}
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 30.98, y: 3, z: 15.758313}
+  m_LocalPosition: {x: 30.98, y: 0, z: 17.078312}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 476674823955966527}
@@ -38914,14 +38914,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3556152858691754259}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parallaxFactor: 0.8
-  isApplyZaxis: 1
-  initialPosition: {x: 33.28, y: 3, z: 15.758313}
+  isApplyZaxis: 0
+  initialPosition: {x: 33.28, y: 0, z: 17.078312}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &3566935236128846564
 GameObject:
@@ -44507,7 +44507,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4032065783735657536}
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 22.97, y: 3, z: 15.499999}
+  m_LocalPosition: {x: 22.97, y: 0, z: 16.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 476674823955966527}
@@ -44571,14 +44571,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4032065783735657536}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parallaxFactor: 0.8
-  isApplyZaxis: 1
-  initialPosition: {x: 25.269999, y: 3, z: 15.499999}
+  isApplyZaxis: 0
+  initialPosition: {x: 25.269999, y: 0, z: 16.82}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &4034558448717307897
 GameObject:
@@ -45918,7 +45918,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4151637645213716644}
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 34.08, y: 3, z: 15.248311}
+  m_LocalPosition: {x: 34.08, y: 0, z: 16.56831}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 476674823955966527}
@@ -45982,14 +45982,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4151637645213716644}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parallaxFactor: 0.8
-  isApplyZaxis: 1
-  initialPosition: {x: 36.38, y: 3, z: 15.248311}
+  isApplyZaxis: 0
+  initialPosition: {x: 36.38, y: 0, z: 16.56831}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &4185522918742079656
 GameObject:
@@ -54698,7 +54698,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4892943404744050583}
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: -0.12000084, y: 3, z: 15.658311}
+  m_LocalPosition: {x: -0.12000084, y: 0, z: 16.97831}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 476674823955966527}
@@ -54762,14 +54762,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4892943404744050583}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parallaxFactor: 0.8
-  isApplyZaxis: 1
-  initialPosition: {x: 2.179999, y: 3, z: 15.658311}
+  isApplyZaxis: 0
+  initialPosition: {x: 2.179999, y: 0, z: 16.97831}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &4926980028816791096
 GameObject:
@@ -70770,13 +70770,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912206204205130560}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxFactor: 0.6
-  isApplyZaxis: 1
+  parallaxFactor: 1.2
+  isApplyZaxis: 0
   initialPosition: {x: 37.989998, y: 0, z: 12.563225}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &5920529763940729542
@@ -73906,7 +73906,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6257436705658385360}
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 12.959999, y: 3, z: 15.229999}
+  m_LocalPosition: {x: 12.959999, y: 0, z: 16.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 476674823955966527}
@@ -73970,14 +73970,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6257436705658385360}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parallaxFactor: 0.8
-  isApplyZaxis: 1
-  initialPosition: {x: 15.259999, y: 3, z: 15.229999}
+  isApplyZaxis: 0
+  initialPosition: {x: 15.259999, y: 0, z: 16.55}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &6262584380380277227
 GameObject:
@@ -75299,13 +75299,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6405866199906942834}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxFactor: 0.6
-  isApplyZaxis: 1
+  parallaxFactor: 1.2
+  isApplyZaxis: 0
   initialPosition: {x: 11.32, y: 0, z: 12.851687}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &6419557024127322599
@@ -80505,13 +80505,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6924214094973129321}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxFactor: 0.7
-  isApplyZaxis: 1
+  parallaxFactor: 1.2
+  isApplyZaxis: 0
   initialPosition: {x: -8.2, y: 0, z: 13.77}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &6931402630494198242
@@ -90301,13 +90301,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7739446608549502522}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxFactor: 0.6
-  isApplyZaxis: 1
+  parallaxFactor: 1.2
+  isApplyZaxis: 0
   initialPosition: {x: 6.3599977, y: 0, z: 11.42}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &7740577200222087085
@@ -92813,7 +92813,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7987736516107281025}
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: -6.5699997, y: 3, z: 16.811535}
+  m_LocalPosition: {x: -6.5699997, y: 0, z: 18.131535}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 476674823955966527}
@@ -92877,14 +92877,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7987736516107281025}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parallaxFactor: 0.8
-  isApplyZaxis: 1
-  initialPosition: {x: -4.2699995, y: 3, z: 16.811535}
+  isApplyZaxis: 0
+  initialPosition: {x: -4.2699995, y: 0, z: 18.131535}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &8008028454473265511
 GameObject:
@@ -95945,13 +95945,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8290763202503415641}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxFactor: 0.6
-  isApplyZaxis: 1
+  parallaxFactor: 1.2
+  isApplyZaxis: 0
   initialPosition: {x: 5.160001, y: 0, z: 13.323225}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &8296944548446050894
@@ -96062,7 +96062,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8298845750105805853}
   m_LocalRotation: {x: 0.3420201, y: 0, z: 0, w: 0.9396927}
-  m_LocalPosition: {x: 10.889999, y: 3, z: 17.16}
+  m_LocalPosition: {x: 10.889999, y: 0, z: 18.48}
   m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 476674823955966527}
@@ -96126,14 +96126,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8298845750105805853}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3b315080f079c5459c3c3b157523988, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   parallaxFactor: 0.8
-  isApplyZaxis: 1
-  initialPosition: {x: 13.19, y: 3, z: 17.16}
+  isApplyZaxis: 0
+  initialPosition: {x: 13.19, y: 0, z: 18.48}
   initialCameraPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &8303587264122497411
 GameObject:

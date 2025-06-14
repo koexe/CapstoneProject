@@ -9,21 +9,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46bdbe954cbca7041ad43d41fb6b3214, type: 3}
+  m_Script: {fileID: 11500000, guid: bb392dadb91e3bb488d90de842855612, type: 3}
   m_Name: 2008
   m_EditorClassIdentifier: 
   character: {fileID: 0}
   target: []
-  skillIdentifier: 0
-  skillName: 
-  skillIcon: {fileID: 0}
-  attackRange: 0
+  skillIdentifier: 2008
+  skillName: "\uC18C\uC6D0\uC758 \uBCBD"
+  skillIcon: {fileID: 21300000, guid: 12516b37b83accd4da0468d2ddc1582a, type: 3}
+  attackRange: 3
   statusEffect: 0
-  attackRaceType: 0
-  requireMp: 0
-  attackParticle: {fileID: 0}
+  attackRaceType: 5
+  requireMp: 9
+  attackParticle: {fileID: 198579860418196166, guid: cafe47f42a808624fa7115b9d8f777d9, type: 3}
   hitParticle: {fileID: 0}
   attackSound: {fileID: 0}
   hitSound: {fileID: 0}
-  attackModifier: 0
-  selfPanlty: 0
+  defenseIncreasePercent: 0.2
+  duration: 3
+  hasHealEffect: 0
+  healPercent: 0.1
+  BuffParticle: {fileID: 19831716, guid: e5e71fda00b3e6e4cacc5084ebbbea23, type: 3}

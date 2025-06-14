@@ -17,7 +17,7 @@ MonoBehaviour:
   skills:
   - {fileID: 11400000, guid: f02f32c2ea5c74c49867cbc2fa1d4287, type: 2}
   - {fileID: 11400000, guid: c1446c5ac3538994aa5853723400b80a, type: 2}
-  - {fileID: 11400000, guid: 314857573e3bdd0449c02c866578ca0f, type: 2}
+  - {fileID: 11400000, guid: 73e782692089aec459469b587d3eac15, type: 2}
   characterName: "\uB9AC\uBAA8"
   status:
     level: 0

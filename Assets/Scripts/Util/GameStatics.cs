@@ -96,15 +96,36 @@ public class GameStatics
         return _name;
     }
 
+    public static string GetRaceText(RaceType _race)
+    {
+        switch (_race)
+        {
+            case RaceType.Mutation:
+                return "변이";
+            case RaceType.Shadow:
+                return "어둠";
+            case RaceType.Phantasm:
+                return "환상";
+            case RaceType.VoidBorn:
+                return "괴수";
+            case RaceType.Radiance:
+                return "빛";
+                case RaceType.None:
+                return "무속성";
+            default:
+                return "Unknown";
+        }
+    }
+
     #endregion
 
 
-    #region 한국어 조사 처리
-    /// <summary>
-    /// 단어의 받침 유무를 확인합니다.
-    /// </summary>
-    /// <param name="word">확인할 단어</param>
-    /// <returns>받침이 있으면 true, 없으면 false</returns>
+        #region 한국어 조사 처리
+        /// <summary>
+        /// 단어의 받침 유무를 확인합니다.
+        /// </summary>
+        /// <param name="word">확인할 단어</param>
+        /// <returns>받침이 있으면 true, 없으면 false</returns>
     public static bool HasFinalConsonant(string word)
     {
         if (string.IsNullOrEmpty(word)) return false;

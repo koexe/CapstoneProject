@@ -287,6 +287,26 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - CutsceneSO
+  - m_GUID: c52a2bcbcc3160c47b448d0ad5b0eda8
+    m_Address: Assets/Images/DialogCharacters/MrWhere/Profile/Mr.Where_002.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
+  - m_GUID: ded45e021925e64418fddf6bfda54832
+    m_Address: Assets/Images/DialogCharacters/Sarah/Profile/Sarah_005.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
+  - m_GUID: 1f0460fd0e9cef64abe8d1a122fbf0fe
+    m_Address: Assets/Images/DialogCharacters/lemo/Profile/Limo_004.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
+  - m_GUID: 97e5166ec3f56a741b15d2bca00d3482
+    m_Address: Assets/SO/Character/Character_Merla.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CharacterSO
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
   m_SchemaSet:

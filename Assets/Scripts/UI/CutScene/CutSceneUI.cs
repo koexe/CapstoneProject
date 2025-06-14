@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
 public class CutSceneUI : UIBase
@@ -24,6 +25,14 @@ public class CutSceneUI : UIBase
     //{
     //    StartCoroutine(PlayCutscene());
     //}
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Hide();
+        }
+    }
 
     private IEnumerator PlayCutscene()
     {

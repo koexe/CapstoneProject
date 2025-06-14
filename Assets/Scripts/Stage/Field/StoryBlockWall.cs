@@ -5,22 +5,26 @@ using UnityEngine;
 public class StoryBlockWall : MonoBehaviour
 {
     [SerializeField] int checkDialogIndex;
-    [SerializeField] int faildDialogIndex;
+    [SerializeField] int blockDialogIndex;
     [SerializeField] bool isWatch;
-    [SerializeField] Collider blockCollider;
-    [SerializeField] LayerMask blockMask;
-    [SerializeField] LayerMask defaultMask;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (SaveGameManager.instance.CheckStoryIs(this.checkDialogIndex) != this.isWatch)
+        if (other.CompareTag("Player"))
         {
-            this.gameObject.layer = this.blockMask;
-            
-        }
-        else 
-        {
-            this.gameObject.layer = this.defaultMask;
+            if (SaveGameManager.instance.CheckStoryIs(this.checkDialogIndex) != this.isWatch)
+            {
+                this.gameObject.layer = LayerMask.NameToLayer("Wall");
+                UIManager.instance.ShowUI<DialogUI>(new DialogUIData()
+                {
+                    identifier = "DialogUI",
+                    data = DataLibrary.instance.GetDialog(this.blockDialogIndex),
+                });
+            }
+            else
+            {
+                this.gameObject.layer = LayerMask.NameToLayer("Default");
+            }
         }
     }
 }

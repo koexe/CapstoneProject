@@ -104,6 +104,10 @@ public class BattleManager : MonoBehaviour
     private BattleUIManager uiManager;
 
     [SerializeField] List<BattleCharacterBase> playerDataContainer;
+    [SerializeField] List<BattleCharacterBase> enemyDataContainer;
+
+    // 배틀 종료 이벤트
+    public event Action<bool> OnBattleEnd; // bool은 보스전 여부
 
     private void Awake()
     {
@@ -199,7 +203,7 @@ public class BattleManager : MonoBehaviour
                 ally.transform.position = allyPositions[i].position;
                 characterManager.AddAlly(allyComponent);
                 playerDataContainer.Add(allyComponent);
-                allyComponent.PlayerInitialization(this, t_allys[i], i == 0 ? GameManager.instance.GetBattleSceneData().GetPlayerHp() : GameManager.instance.GetBattleSceneData().GetNpcHp());
+                allyComponent.PlayerInitialization(this, t_allys[i]);
             }
 
             for (int i = 0; i < enemyData.Length; i++)
@@ -231,6 +235,8 @@ public class BattleManager : MonoBehaviour
                     Destroy(enemy);
                     continue;
                 }
+
+                enemyDataContainer.Add(enemyComponent);
 
                 enemy.transform.position = enemyPositions[i].position;
                 characterManager.AddEnemy(enemyComponent);
@@ -459,6 +465,13 @@ public class BattleManager : MonoBehaviour
 
     public void ChangeToFieldScene()
     {
+        foreach (var t_enemy in this.enemyDataContainer)
+        {
+            if(t_enemy.GetBattleCharacter().GetCharacterName() == "Merla")
+            {
+                SaveGameManager.instance.GetCurrentSaveData().isCleardBoss = true;
+            }
+        }
 
         GameManager.instance.ChangeSceneBattleToField(this.playerDataContainer[0].GetBattleCharacter(), this.playerDataContainer[1].GetBattleCharacter());
     }
@@ -561,7 +574,7 @@ public class BattleManager : MonoBehaviour
                 SetChooseSequenceState(ChooseSequence.ChooseState.SelectEnemy);
                 break;
             case SOSkillBase.AttackRangeType.Ally:
-                ShowText("아군 선택");
+                _character.SetSelectedSkill(_skill, characterManager.GetAllies());
                 CheckAllReady();
                 break;
         }
