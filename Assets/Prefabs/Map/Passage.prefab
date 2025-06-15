@@ -107488,7 +107488,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7693308507282829680}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 15.45, y: 0, z: 0}
+  m_LocalPosition: {x: 13.47, y: 0, z: -2.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8813117665732428519}
@@ -130092,7 +130092,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: fieldSize.x
-      value: 40
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: fieldSize.z
@@ -130100,7 +130100,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: encounterChance
-      value: 1
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
+      propertyPath: initialCooldown
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: enemyPool.Array.size

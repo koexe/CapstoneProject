@@ -42,31 +42,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - TextAsset
-  - m_GUID: 17328a35dc67eb743b985d97eaad671c
-    m_Address: Assets/SO/Skill/AttackSKills/Shadow/D003.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SkillSO
-  - m_GUID: 5801aa4ef22d2a34e969f933957626e4
-    m_Address: Assets/SO/Skill/AttackSKills/Shadow/D001.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SkillSO
-  - m_GUID: 9fac57d0ef5afc14dab23b157d920bd1
-    m_Address: Assets/SO/Skill/AttackSKills/Shadow/D002.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SkillSO
-  - m_GUID: 460869358919ab741bfef33568a0dbc0
-    m_Address: Assets/SO/Skill/AttackSKills/SKill_Attack_1.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SkillSO
-  - m_GUID: 823cee0226951404d852df765dbc94cf
-    m_Address: Assets/SO/Skill/AttackSKills/Shadow/1008.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SkillSO
   - m_GUID: 06727fd8e03225f49be6f6cab81ab3c5
     m_Address: Assets/SO/Skill/AttackSKills/SKill_Attack_.asset
     m_ReadOnly: 0
@@ -152,23 +127,8 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - CharacterSO
-  - m_GUID: 36aba541b19193a44a1804d9ec06b8bb
-    m_Address: Assets/SO/Skill/AttackSKills/Shadow/1007.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SkillSO
-  - m_GUID: 6b05e36233cdc004b8c82a9d070d996a
-    m_Address: Assets/SO/Skill/AttackSKills/Shadow/1006.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SkillSO
   - m_GUID: e9ac87b43c5adea4eb1e68dd972f5fc0
     m_Address: Assets/SO/Skill/AttackSKills/Shadow/1005.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SkillSO
-  - m_GUID: 39e147217b519ad40bc814edc9691aa4
-    m_Address: Assets/SO/Skill/AttackSKills/Shadow/1004.asset
     m_ReadOnly: 0
     m_SerializedLabels:
     - SkillSO

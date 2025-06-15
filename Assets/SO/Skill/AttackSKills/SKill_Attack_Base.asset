@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   character: {fileID: 0}
   target: []
-  skillIdentifier: -1
-  skillName: "\uC804\uCCB4\uD14C\uC2A4\uD2B8"
-  skillIcon: {fileID: 21300000, guid: f09df3a430b6c1a4190da523f92c1847, type: 3}
-  attackRange: 0
-  statusEffect: 11
+  skillIdentifier: 1
+  skillName: "\uAE30\uBCF8\uACF5\uACA9"
+  skillIcon: {fileID: 21300000, guid: 013ecac7e8f77ba40b7139e71df34134, type: 3}
+  attackRange: 1
+  statusEffect: 0
   attackRaceType: 0
-  requireMp: 10
+  requireMp: 0
   attackParticle: {fileID: 0}
   hitParticle: {fileID: 0}
   attackSound: {fileID: 0}
   hitSound: {fileID: 0}
-  attackModifier: 1
+  attackModifier: 0.5
   selfPanlty: 0

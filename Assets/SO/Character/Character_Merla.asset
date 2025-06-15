@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   identifier: 6
   raceType: 2
+  baseSkill: {fileID: 11400000, guid: 06727fd8e03225f49be6f6cab81ab3c5, type: 2}
   skills:
   - {fileID: 11400000, guid: 29ad7e7bf186db4459d5748150005833, type: 2}
+  - {fileID: 11400000, guid: 469a86a10c666024eb20b56fc2de9885, type: 2}
   - {fileID: 11400000, guid: 469a86a10c666024eb20b56fc2de9885, type: 2}
   characterName: Merla
   status:
@@ -35,4 +37,5 @@ MonoBehaviour:
   isModelBasicRight: 0
   hpBarOffset: {x: -0.5, y: 6.6}
   effectOffset: {x: 0, y: 0}
+  centerOffset: {x: 0, y: 3.15}
   effectTiming: 0

@@ -196,6 +196,7 @@ public class BattleManager : MonoBehaviour
                 if (SaveGameManager.instance.GetCurrentSaveData().isMetLemo == false && t_allys[i].GetCharacterName() == "리모")
                 {
                     this.npcUIGroup.SetActive(false);
+                    
                     break;
                 }
                 else
@@ -436,7 +437,11 @@ public class BattleManager : MonoBehaviour
     {
         foreach (var t_character in characterManager.GetEnemies())
         {
+            
             var t_Skill = t_character.GetSkills()[Random.Range(0, t_character.GetSkills().Length)];
+
+
+
             if (t_Skill.attackRange == SOSkillBase.AttackRangeType.All)
             {
                 t_character.SetSelectedSkill(t_Skill, characterManager.GetAllies());
@@ -497,7 +502,13 @@ public class BattleManager : MonoBehaviour
             }
         }
 
-        GameManager.instance.ChangeSceneBattleToField(this.playerDataContainer[0].GetBattleCharacter(), this.playerDataContainer[1].GetBattleCharacter());
+        GameManager.instance.UpdatePlayerData(this.playerDataContainer[0].GetBattleCharacter());
+        if(SaveGameManager.instance.GetCurrentSaveData().isMetLemo == true)
+        {
+            GameManager.instance.UpdateNPCData(this.playerDataContainer[1].GetBattleCharacter());
+        }
+
+        GameManager.instance.ChangeSceneBattleToField();
     }
 
 
@@ -506,7 +517,7 @@ public class BattleManager : MonoBehaviour
     public void CheckAllReady()
     {
         GameManager.instance.GetCamera().SetTarget(null);
-        ShowText("대기중");
+        ShowText("아군 행동 선택");
         var t_Sequence = this.turnSystem.GetCurrentSequence() as ChooseSequence;
         if (t_Sequence != null)
         {

@@ -1608,8 +1608,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentMap: {fileID: 0}
-  startMap: {fileID: 6202327555237461339, guid: 937607e568c81db4797cb8cffbfc72e3, type: 3}
-  isDebugingMap: 0
+  startMap: {fileID: 6202327555237461339, guid: e6b169c03412dee4cbd56e179bf6643c, type: 3}
+  isDebugingMap: 1
 --- !u!4 &1958847839
 Transform:
   m_ObjectHideFlags: 0

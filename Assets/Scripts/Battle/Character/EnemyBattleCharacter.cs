@@ -75,6 +75,8 @@ public class EnemyBattleCharacter : BattleCharacterBase
         this.healthPreferences.SetCurrentHealth(currentHP);
         this.spineModelController.PlayAnimation(AnimationType.idle);
 
+        this.hitParticle.transform.localPosition = this.soBattleCharacter.GetCenterOffset();
+        this.deathParticle.transform.localPosition = this.soBattleCharacter.GetCenterOffset();
 
         return;
     }

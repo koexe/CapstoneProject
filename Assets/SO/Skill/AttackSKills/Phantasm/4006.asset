@@ -10,16 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46bdbe954cbca7041ad43d41fb6b3214, type: 3}
-  m_Name: 1004
+  m_Name: 4006
   m_EditorClassIdentifier: 
   character: {fileID: 0}
   target: []
-  skillIdentifier: 1004
-  skillName: "\uC554\uD751 \uBD88\uAE38"
+  skillIdentifier: 4006
+  skillName: "\uD658\uC601 \uAC80\uACA9"
   skillIcon: {fileID: 0}
-  attackRange: 0
+  attackRange: 1
   statusEffect: 0
-  attackRaceType: 1
+  attackRaceType: 2
   requireMp: 7
-  attackModifier: 1
+  attackParticle: {fileID: 19820634, guid: fdaca95c9e0c2fa43a449f8e8e6bca98, type: 3}
+  hitParticle: {fileID: 19845262, guid: 7446dd5c714a99346a0af1871e9946dd, type: 3}
+  attackSound: {fileID: 8300000, guid: 886136a0412467140962f92cb3fab983, type: 3}
+  hitSound: {fileID: 0}
+  attackModifier: 1.2
   selfPanlty: 0

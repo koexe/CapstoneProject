@@ -84,7 +84,6 @@ public class InitializeSequence : TurnSequence
     public override async void SequenceAction()
     {
         base.SequenceAction();
-        this.battleManager.ShowText("초기화 진행중");
         await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
         this.battleManager.NextSequence();
     }

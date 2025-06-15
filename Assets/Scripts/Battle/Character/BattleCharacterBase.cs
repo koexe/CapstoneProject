@@ -353,7 +353,7 @@ public class BattleCharacterBase : MonoBehaviour
         if (_hitInfo.hitParticle == null)
             this.hitParticle.Play();
         else
-            Instantiate(_hitInfo.hitParticle, this.transform.position, this.transform.rotation);
+            Instantiate(_hitInfo.hitParticle, this.soBattleCharacter.GetCenterOffset(), this.transform.rotation);
 
 
         await this.spineModelController.PlayAnimationAsync(AnimationType.hit);

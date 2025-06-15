@@ -89,6 +89,9 @@ public class PlayerBattleCharacter : BattleCharacterBase
         this.mpUI.text = $"{this.currentMp}/{this.maxMp}";
         this.nameUI.text = this.characterName;
 
+        this.hitParticle.transform.localPosition = this.soBattleCharacter.GetCenterOffset();
+        this.deathParticle.transform.localPosition = this.soBattleCharacter.GetCenterOffset();
+
         return;
     }
 

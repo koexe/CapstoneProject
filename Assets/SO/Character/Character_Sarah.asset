@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   identifier: 1
   raceType: 0
+  baseSkill: {fileID: 0}
   skills:
   - {fileID: 11400000, guid: 33a45b200c8fdc04baadeb7f41fb377e, type: 2}
   - {fileID: 11400000, guid: 2b7f6900594e0bb4d95215fbe9071408, type: 2}
@@ -36,4 +37,5 @@ MonoBehaviour:
   isModelBasicRight: 0
   hpBarOffset: {x: -0.5, y: 3.8}
   effectOffset: {x: -1.1, y: 1.5}
+  centerOffset: {x: 0, y: 1.5}
   effectTiming: 0.7

@@ -22,7 +22,7 @@ MonoBehaviour:
   attackRaceType: 4
   requireMp: 7
   attackParticle: {fileID: 19820634, guid: 7c006d1dbeea0ee41b3430f18a97df49, type: 3}
-  hitParticle: {fileID: 0}
+  hitParticle: {fileID: 19845262, guid: 7446dd5c714a99346a0af1871e9946dd, type: 3}
   attackSound: {fileID: 8300000, guid: 7c2f2653b9cd9334dbd2a99fb01a1580, type: 3}
   hitSound: {fileID: 0}
   attackModifier: 1.3

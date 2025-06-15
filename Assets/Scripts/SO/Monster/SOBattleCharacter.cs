@@ -8,6 +8,7 @@ public class SOBattleCharacter : ScriptableObject
 {
     [SerializeField] int identifier;
     [SerializeField] RaceType raceType;
+    [SerializeField] public SOSkillBase baseSkill;
     [SerializeField] SOSkillBase[] skills;
     [SerializeField] string characterName;
     [SerializeField] BattleStatus status;
@@ -20,6 +21,7 @@ public class SOBattleCharacter : ScriptableObject
     [SerializeField] bool isModelBasicRight;
     [SerializeField] Vector2 hpBarOffset;
     [SerializeField] Vector2 effectOffset;
+    [SerializeField] Vector2 centerOffset;
     [SerializeField] float effectTiming;
 
     public int GetIdentifier() => identifier;
@@ -31,6 +33,7 @@ public class SOBattleCharacter : ScriptableObject
     public Sprite GetBattleSprite() => battleSprite;
     public Vector2 GetEffectOffset() => this.effectOffset;
     public Vector2 GetHpBarOffset() => this.hpBarOffset;
+    public Vector2 GetCenterOffset() => this.centerOffset;
     public float GetEffectTiming() => this.effectTiming;
 
     public SkeletonDataAsset GetSkeletonDataAsset() => skeletonDataAsset;

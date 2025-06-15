@@ -21,9 +21,9 @@ MonoBehaviour:
   statusEffect: 11
   attackRaceType: 4
   requireMp: 9
-  attackParticle: {fileID: 0}
-  hitParticle: {fileID: 0}
-  attackSound: {fileID: 0}
+  attackParticle: {fileID: 19820634, guid: 7c006d1dbeea0ee41b3430f18a97df49, type: 3}
+  hitParticle: {fileID: 19845262, guid: 7446dd5c714a99346a0af1871e9946dd, type: 3}
+  attackSound: {fileID: 8300000, guid: 71cc7945325f8ad4ba8c8839bbf84c14, type: 3}
   hitSound: {fileID: 0}
   attackModifier: 1.4
   selfPanlty: 0

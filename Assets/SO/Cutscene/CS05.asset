@@ -32,7 +32,7 @@ MonoBehaviour:
     useTypewriter: 1
   - image: {fileID: 21300000, guid: 6cf9bf289180d5a43a78dab05f806828, type: 3}
     holdTime: 0
-    dialogue: "CS02-03*\uB9AC\uBAA8! \uC5C4\uB9C8\uAC00 \uB6F0\uBA70 \uC548\uB41C\uB2E4\uACE0
+    dialogue: "\uC5C4\uB9C8*\uB9AC\uBAA8! \uC5C4\uB9C8\uAC00 \uB6F0\uBA70 \uC548\uB41C\uB2E4\uACE0
       \uD588\uC796\uB2C8!\n\uD5E4\uD5E4.. \uC5C4\uB9C8!  \n\uC5C4\uB9C8*\uB9AC\uBAA8
       \uC774\uAC83\uBCF4\uB834. \uC9DC\uC794 \uC5C4\uB9C8\uAC00 \uB9AC\uBAA8\uB97C
       \uC704\uD574 \uC900\uBE44\uD55C\uAC70\uC57C!\n\uB9AC\uBAA8*\uC6B0\uC640! \uAF43\uC774

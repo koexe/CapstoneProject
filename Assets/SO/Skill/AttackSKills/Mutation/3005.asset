@@ -23,7 +23,7 @@ MonoBehaviour:
   requireMp: 7
   attackParticle: {fileID: 19820634, guid: 47e53b3b80da49e4ba19bf4939f041c6, type: 3}
   hitParticle: {fileID: 0}
-  attackSound: {fileID: 0}
+  attackSound: {fileID: 8300000, guid: 2556646ff96f7314daa86c017e5a9b19, type: 3}
   hitSound: {fileID: 0}
   attackModifier: 1.2
   selfPanlty: 0

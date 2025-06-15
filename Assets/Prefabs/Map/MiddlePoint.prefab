@@ -95087,11 +95087,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: maxLevel
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: minLevel
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: fieldSize.x
@@ -95185,11 +95185,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: maxLevel
-      value: 5
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: minLevel
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2134769914891898054, guid: 689eab86c6a5ab146b1f6b486a2c39ff, type: 3}
       propertyPath: fieldSize.x

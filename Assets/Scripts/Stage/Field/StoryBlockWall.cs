@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class StoryBlockWall : MonoBehaviour
 {
+    [SerializeField] CutsceneData checkCutsceneData;
     [SerializeField] int checkDialogIndex;
     [SerializeField] int blockDialogIndex;
     [SerializeField] bool isWatch;
@@ -12,18 +13,33 @@ public class StoryBlockWall : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            if (SaveGameManager.instance.CheckStoryIs(this.checkDialogIndex) != this.isWatch)
+            if (this.checkCutsceneData != null)
             {
-                this.gameObject.layer = LayerMask.NameToLayer("Wall");
-                UIManager.instance.ShowUI<DialogUI>(new DialogUIData()
+                if (SaveGameManager.instance.currentSaveData.cutsceneIsShow[this.checkCutsceneData.id] != this.isWatch)
                 {
-                    identifier = "DialogUI",
-                    data = DataLibrary.instance.GetDialog(this.blockDialogIndex),
-                });
+                    this.gameObject.layer = LayerMask.NameToLayer("Wall");
+                                        UIManager.instance.ShowUI<DialogUI>(new DialogUIData()
+                    {
+                        identifier = "DialogUI",
+                        data = DataLibrary.instance.GetDialog(this.blockDialogIndex),
+                    });
+                }
             }
             else
             {
-                this.gameObject.layer = LayerMask.NameToLayer("Default");
+                if (SaveGameManager.instance.CheckStoryIs(this.checkDialogIndex) != this.isWatch)
+                {
+                    this.gameObject.layer = LayerMask.NameToLayer("Wall");
+                    UIManager.instance.ShowUI<DialogUI>(new DialogUIData()
+                    {
+                        identifier = "DialogUI",
+                        data = DataLibrary.instance.GetDialog(this.blockDialogIndex),
+                    });
+                }
+                else
+                {
+                    this.gameObject.layer = LayerMask.NameToLayer("Default");
+                }
             }
         }
     }

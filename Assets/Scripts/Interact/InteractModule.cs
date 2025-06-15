@@ -15,12 +15,15 @@ public class InteractModule : MonoBehaviour
 
     void Interact()
     {
-        var t_result = Physics.OverlapBox(this.transform.position, this.interactArea, Quaternion.identity, this.interactableLayer);
-        foreach (var t_interacable in t_result)
+        if (GameManager.instance.GetGameState() == GameState.Field)
         {
-            if (t_interacable.TryGetComponent<IInteractable>(out var t_component))
+            var t_result = Physics.OverlapBox(this.transform.position, this.interactArea, Quaternion.identity, this.interactableLayer);
+            foreach (var t_interacable in t_result)
             {
-                t_component.ExecuteAction();
+                if (t_interacable.TryGetComponent<IInteractable>(out var t_component))
+                {
+                    t_component.ExecuteAction();
+                }
             }
         }
     }

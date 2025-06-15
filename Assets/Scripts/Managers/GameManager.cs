@@ -102,18 +102,26 @@ public class GameManager : MonoBehaviour
         await this.sceneLoadManager.LoadScene_Async("BattleScene");
     }
 
-    public async void ChangeSceneBattleToField(SOBattleCharacter _currentPlayer, SOBattleCharacter _currentNpc)
+    public async void ChangeSceneBattleToField()
     {
         ChangeGameState(GameState.Field);
         this.player.GetComponent<PlayerInputModule>().HideEncounterUI();
-        this.currentNPC = _currentNpc;
-        this.currentPlayer = _currentPlayer;
         await this.sceneLoadManager.LoadScene_Async("FieldScene");
         this.cameraController.SetTarget(this.player.transform);
         this.cameraController.SetPosition(this.player.transform.position);
         this.onChangeBattleSceneData.OnBattleEnd?.Invoke(true);
         this.onChangeBattleSceneData.Reset();
         MapManager.instance.OnChangeToFieldScene();
+    }
+
+    public void UpdatePlayerData(SOBattleCharacter _currentPlayer)
+    {
+        this.currentPlayer = _currentPlayer;
+    }
+
+    public void UpdateNPCData(SOBattleCharacter _currentNPC)
+    {
+        this.currentNPC = _currentNPC;
     }
 
     public async UniTask GameOver()
