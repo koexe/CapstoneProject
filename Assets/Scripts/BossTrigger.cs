@@ -42,7 +42,7 @@ public class BossTrigger : MonoBehaviour
             if (other.CompareTag("Player"))
             {
                 GameManager.instance.ChangeSceneFieldToBattle(
-                    new SOBattleCharacter[] { boss }, new int[] { 1 }, (bool _isCleard) =>
+                    new SOBattleCharacter[] { boss }, new int[] { 15 }, (bool _isCleard) =>
                     {
                         if (_isCleard)
                         {

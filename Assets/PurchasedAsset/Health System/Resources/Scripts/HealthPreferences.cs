@@ -289,25 +289,25 @@ public class HealthPreferences : MonoBehaviour
 
     private void ApplyFillDirection()
     {
-        switch (fillDirection)
-        {
-            case Health.FillDirection.LeftToRight:
-                transform.localScale = new Vector3(1, 1, 1);
-                transform.localRotation = Quaternion.identity;
-                break;
-            case Health.FillDirection.RightToLeft:
-                transform.localScale = new Vector3(-1, 1, 1);
-                transform.localRotation = Quaternion.identity;
-                break;
-            case Health.FillDirection.TopToBottom:
-                transform.localScale = new Vector3(1, 1, 1);
-                transform.localRotation = Quaternion.Euler(0, 0, 90);
-                break;
-            case Health.FillDirection.BottomToTop:
-                transform.localScale = new Vector3(1, 1, 1);
-                transform.localRotation = Quaternion.Euler(0, 0, -90);
-                break;
-        }
+        // switch (fillDirection)
+        // {
+        //     case Health.FillDirection.LeftToRight:
+        //         transform.localScale = new Vector3(1, 1, 1);
+        //         transform.localRotation = Quaternion.identity;
+        //         break;
+        //     case Health.FillDirection.RightToLeft:
+        //         transform.localScale = new Vector3(-1, 1, 1);
+        //         transform.localRotation = Quaternion.identity;
+        //         break;
+        //     case Health.FillDirection.TopToBottom:
+        //         transform.localScale = new Vector3(1, 1, 1);
+        //         transform.localRotation = Quaternion.Euler(0, 0, 90);
+        //         break;
+        //     case Health.FillDirection.BottomToTop:
+        //         transform.localScale = new Vector3(1, 1, 1);
+        //         transform.localRotation = Quaternion.Euler(0, 0, -90);
+        //         break;
+        // }
     }
 
     /// <summary>

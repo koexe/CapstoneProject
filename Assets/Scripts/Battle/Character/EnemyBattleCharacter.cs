@@ -71,8 +71,12 @@ public class EnemyBattleCharacter : BattleCharacterBase
             Debug.LogError($"[{this.name}] HealthPreferences 컴포넌트가 없습니다.");
             return;
         }
-        this.healthPreferences.transform.localPosition = this.soBattleCharacter.GetHpBarOffset();
-        this.arrow.transform.localPosition = new Vector3(0f, this.healthPreferences.transform.position.y + 0.5f, 0f);
+        var t_pos = this.soBattleCharacter.GetHpBarOffset();
+        t_pos.x *= this.spineModelController.transform.localScale.x;
+        this.healthPreferences.transform.localPosition = t_pos;
+
+        this.arrow.transform.localPosition = new Vector3(0f, this.healthPreferences.transform.position.y + 1.0f, 0f);
+        this.healthPreferences.transform.localScale = new Vector3(this.spineModelController.transform.localScale.x, 1, 1);
 
         this.healthPreferences.SetTotalHealth(maxHP);
         this.healthPreferences.SetCurrentHealth(currentHP);
