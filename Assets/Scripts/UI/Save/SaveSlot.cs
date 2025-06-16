@@ -11,7 +11,6 @@ public class SaveSlot : MonoBehaviour
     [SerializeField] Button saveButton;
     [SerializeField] Button loadButton;
     [SerializeField] Button deleteButton;
-    [SerializeField] Image selectedBorder;
 
     public int SlotNumber { get; private set; }
     
@@ -96,7 +95,7 @@ public class SaveSlot : MonoBehaviour
             float seconds = Mathf.Floor(saveData.playTime % 60);
             
             string playTimeStr = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
-            saveInfoText.text = $"플레이 시간: {playTimeStr}\n저장 시간: {saveData.saveDateTime}";
+            saveInfoText.text = $"플레이 시간: {playTimeStr}\n저장 시간: {saveData.saveDateTime} \n 스테이지: {saveData.currentMap}";
         }
         else
         {
@@ -109,7 +108,6 @@ public class SaveSlot : MonoBehaviour
 
     public void SetSelected(bool selected)
     {
-        selectedBorder.gameObject.SetActive(selected);
         saveButton.interactable = selected;
     }
 } 

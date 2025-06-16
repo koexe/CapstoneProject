@@ -47,4 +47,12 @@ public class MainScene : MonoBehaviour
         await GameManager.instance.ChangeSceneMainToField();
 
     }
+
+    public void OnClickOptionButton()
+    {
+        UIManager.instance.ShowUI<OptionUI>(new UIData()
+        {
+            identifier = "OptionUI",
+        });
+    }
 }

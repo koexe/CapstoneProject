@@ -20,10 +20,11 @@ MonoBehaviour:
   attackRange: 0
   statusEffect: 0
   attackRaceType: 3
+  skillParticlePosition: 0
   requireMp: 7
   attackParticle: {fileID: 19829286, guid: a756b16e4857c5f4e9d4ee1bd61563c2, type: 3}
   hitParticle: {fileID: 19860434, guid: 90c95d47a42131246a37f747a830b480, type: 3}
   attackSound: {fileID: 8300000, guid: 8ecc4238f9d0ad64da233972d43b9029, type: 3}
-  hitSound: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: f5008109cc72073498c6b328d2b2f32f, type: 3}
   attackModifier: 1
   selfPanlty: 0

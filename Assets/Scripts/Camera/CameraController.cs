@@ -28,7 +28,10 @@ public class CameraController : MonoBehaviour
         cam = Camera.main;
         GameManager.instance.SetCamera(this);
     }
-    public void SetPosition(Vector3 _position) => this.transform.position = new Vector3(_position.x, this.basicOffsetY, _position.z);
+    public void SetPosition(Vector3 _position)
+    {
+        this.transform.position = new Vector3(_position.x + this.offset.x, this.offset.y, _position.z + this.offset.z);
+    }
     public void SetTarget(Transform _target) => this.currentTarget = _target;
 
 

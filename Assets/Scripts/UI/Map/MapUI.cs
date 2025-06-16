@@ -11,6 +11,7 @@ public class MapUI : UIBase
     {
         this.contents.SetActive(false);
         this.isShow = false;
+        GameManager.instance.SetGameState(GameState.Field);
     }
 
     public override void Initialization(UIData data)
@@ -43,6 +44,8 @@ public class MapUI : UIBase
         {
             Debug.Log($"No such Mapping {MapManager.instance.currentMap.GetID()}");
         }
+
+        GameManager.instance.SetGameState(GameState.Pause);
     }
     private void Reset()
     {

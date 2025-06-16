@@ -116,10 +116,16 @@ public class SaveUI : UIBase
 
         InitializeSaveSlots();
         UpdateAllSlots();
+        if (GameManager.instance.GetGameState() != GameState.Main)
+        {
+            GameManager.instance.SetGameState(GameState.Pause);
+        }
     }
 
     public override void Hide()
     {
-        this.contents.SetActive(false);
+        if (this.contents != null)
+            this.contents.SetActive(false);
+        GameManager.instance.SetGameState(GameState.Field);
     }
 }

@@ -16,6 +16,7 @@ public class SOSkillBase : ScriptableObject
     public AttackRangeType attackRange;
     public StatusEffectID statusEffect;
     public RaceType attackRaceType;
+    public SkillParticlePosition skillParticlePosition;
     public int requireMp;
     public ParticleSystem attackParticle;
     public ParticleSystem hitParticle;
@@ -29,6 +30,12 @@ public class SOSkillBase : ScriptableObject
         Random,
         Ally,
         Self,
+    }
+
+    public enum SkillParticlePosition
+    {
+        Center,
+        Offset,
     }
 
     public virtual async UniTask Execute()

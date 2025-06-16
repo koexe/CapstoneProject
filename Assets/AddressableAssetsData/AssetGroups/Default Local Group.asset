@@ -267,6 +267,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - Portraits
+  - m_GUID: 4998e833e9a066743b600d3cb13461bf
+    m_Address: Assets/Prefabs/UI/OptionUI.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UIPrefab
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
   m_SchemaSet:

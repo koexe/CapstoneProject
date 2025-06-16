@@ -15,15 +15,16 @@ MonoBehaviour:
   character: {fileID: 0}
   target: []
   skillIdentifier: 1
-  skillName: "\uAE30\uBCF8\uACF5\uACA9"
+  skillName: "\uC804\uAD11\uD0C0\uACA9"
   skillIcon: {fileID: 21300000, guid: 013ecac7e8f77ba40b7139e71df34134, type: 3}
   attackRange: 1
   statusEffect: 0
   attackRaceType: 0
+  skillParticlePosition: 0
   requireMp: 0
-  attackParticle: {fileID: 0}
+  attackParticle: {fileID: 198110730807727184, guid: a8cb8cbe3ca7334489265b97ab2feef4, type: 3}
   hitParticle: {fileID: 0}
-  attackSound: {fileID: 0}
-  hitSound: {fileID: 0}
+  attackSound: {fileID: 8300000, guid: 71cc7945325f8ad4ba8c8839bbf84c14, type: 3}
+  hitSound: {fileID: 8300000, guid: c61fc99456d06374fa00efadebd8803d, type: 3}
   attackModifier: 0.7
   selfPanlty: 0

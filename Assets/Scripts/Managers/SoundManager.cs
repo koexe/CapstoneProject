@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class SoundManager : MonoBehaviour
 {
@@ -8,6 +9,10 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource bgmSource;
     [SerializeField] private AudioSource seSourcePrefab;
     [SerializeField] private Transform seContainer;
+
+    [SerializeField] float seVolume = 1f;
+
+    List<AudioSource> seSources = new List<AudioSource>();
 
     private void Awake()
     {
@@ -64,14 +69,33 @@ public class SoundManager : MonoBehaviour
         bgmSource.clip = null;
     }
 
-    public void PlaySE(AudioClip _clip)
+    public void PlaySE(AudioClip _clip , bool _isAllowMultiple = true)
     {
         if (_clip == null) return;
+        if(_isAllowMultiple == false)
+        {
+            for(int i = seSources.Count - 1; i >= 0; i--)
+            {
+                var t_source = seSources[i];
+                if(t_source == null)
+                {
+                    seSources.RemoveAt(i);
+                    continue;
+                }
+                if(t_source.clip == _clip)
+                {
+                    return;
+                }
+            }
+        }
 
         AudioSource t_SE = Instantiate(seSourcePrefab, seContainer);
         t_SE.gameObject.SetActive(true);
         t_SE.clip = _clip;
+        t_SE.volume = seVolume;
         t_SE.Play();
+        seSources.Add(t_SE);
+        
         Destroy(t_SE.gameObject, _clip.length);
     }
 
@@ -82,6 +106,7 @@ public class SoundManager : MonoBehaviour
 
     public void SetSEVolume(float _volume)
     {
+        seVolume = Mathf.Clamp01(_volume);
         foreach (Transform child in seContainer)
         {
             AudioSource source = child.GetComponent<AudioSource>();

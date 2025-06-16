@@ -130,6 +130,11 @@ public class PlayerBattleCharacter : BattleCharacterBase
             t_effect.transform.localPosition = this.soBattleCharacter.GetCenterOffset();
         }
 
+        if(_hitInfo.hitSound != null)
+        {
+            SoundManager.instance.PlaySE(_hitInfo.hitSound);
+        }
+
 
 
         await this.spineModelController.PlayAnimationAsync(AnimationType.hit);
@@ -138,13 +143,13 @@ public class PlayerBattleCharacter : BattleCharacterBase
         {
             t_text += $"치명타! ";
         }
-        t_text += $"{(int)t_finalDamage}의 데미지를 {this.name}{GameStatics.GetSubjectParticle(this.name)} 받았다!!";
+        t_text += $"{this.name}{GameStatics.GetSubjectParticle(this.name)} {(int)t_finalDamage}의 데미지를 받았다!!";
         this.battleManager.ShowText(t_text);
         this.currentHP = Mathf.Max(0f, this.currentHP - (int)t_finalDamage);
         this.hpUI.text = $"{this.currentHP}/{this.maxHP}";
         this.spineModelController.PlayAnimation(AnimationType.idle);
         if (this.currentHP <= 0f)
-            Die();
+            await Die();
     }
 
     public override void UseMp(float _amount)

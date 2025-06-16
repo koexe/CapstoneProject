@@ -23,7 +23,7 @@ public class BattleCharacterBase : MonoBehaviour
 
     [SerializeField] protected ParticleSystem hitParticle;
 
-    [SerializeField] protected ParticleSystem deathParticle; 
+    [SerializeField] protected ParticleSystem deathParticle;
 
     [Header("정보")]
     [SerializeField] protected Vector3 initialPosition;
@@ -39,7 +39,7 @@ public class BattleCharacterBase : MonoBehaviour
     [SerializeField] protected bool isDie;
     [SerializeField] protected bool isActionDisabled;
     [SerializeField] protected CharacterActionType currentAction;
-    [SerializeField] protected SOBattleCharacter soBattleCharacter;
+    [SerializeField] public SOBattleCharacter soBattleCharacter;
 
     [SerializeField] protected HealthPreferences healthPreferences;
     [SerializeField] protected Vector3 hpBarOffset = new Vector3(0f, 1.5f, 0f);
@@ -175,26 +175,26 @@ public class BattleCharacterBase : MonoBehaviour
     {
         Debug.Log($"{name} has died.");
         this.isDie = true;
-        
+
         // 점점 사라지는 효과
         float fadeTime = 3f;
         float currentTime = 0f;
         SkeletonAnimation skeletonAnimation = GetComponentInChildren<SkeletonAnimation>();
-        
+
         this.deathParticle.Play();
         while (currentTime < fadeTime)
         {
             currentTime += Time.deltaTime;
             float alpha = 1f - (currentTime / fadeTime);
-            
+
             if (skeletonAnimation != null)
             {
                 skeletonAnimation.skeleton.A = alpha;
             }
-            
+
             await UniTask.Yield();
         }
-        
+
         // 완전히 투명하게 만들기
         if (skeletonAnimation != null)
         {
@@ -247,7 +247,7 @@ public class BattleCharacterBase : MonoBehaviour
         this.transform.position = _point;
         return;
     }
-    public async UniTask AttackPosition(ParticleSystem _particle, AudioClip _sound = null)
+    public async UniTask AttackPosition(ParticleSystem _particle, AudioClip _sound = null, SOSkillBase.SkillParticlePosition _particlePosition = SOSkillBase.SkillParticlePosition.Center)
     {
         this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
         await MoveMiddlePoint();
@@ -260,7 +260,15 @@ public class BattleCharacterBase : MonoBehaviour
             {
                 if (_particle != null)
                 {
-                    Vector3 t_offset = new Vector3(this.basicRightDir ? 1 : -1 * this.soBattleCharacter.GetEffectOffset().x, this.soBattleCharacter.GetEffectOffset().y);
+                    Vector3 t_offset = Vector3.zero;
+                    if(_particlePosition == SOSkillBase.SkillParticlePosition.Offset)
+                    {
+                        t_offset = new Vector3(this.basicRightDir ? 1 : -1 * this.soBattleCharacter.GetEffectOffset().x, this.soBattleCharacter.GetEffectOffset().y);
+                    }
+                    else
+                    {
+                        t_offset = this.soBattleCharacter.GetCenterOffset();
+                    }
 
 
                     var t_effect = Instantiate(
@@ -275,7 +283,7 @@ public class BattleCharacterBase : MonoBehaviour
                     SoundManager.instance.PlaySE(_sound);
             });
     }
-    public async UniTask AttackPosition(Vector3 _position, ParticleSystem _particle, AudioClip _sound = null)
+    public async UniTask AttackPosition(Vector3 _position, ParticleSystem _particle, AudioClip _sound = null, SOSkillBase.SkillParticlePosition _particlePosition = SOSkillBase.SkillParticlePosition.Center)
     {
         this.battleManager.ShowText($"{this.name}의 {this.selectedSkill.skillName} 공격!!");
         await MovePoint(_position);
@@ -287,15 +295,22 @@ public class BattleCharacterBase : MonoBehaviour
                         {
                             if (_particle != null)
                             {
-                                Vector3 t_offset = new Vector3((this.basicRightDir ? 1 : -1) * this.soBattleCharacter.GetEffectOffset().x, this.soBattleCharacter.GetEffectOffset().y);
-
+                                Vector3 t_offset = Vector3.zero;
+                                if (_particlePosition == SOSkillBase.SkillParticlePosition.Offset)
+                                {
+                                    t_offset = new Vector3((this.basicRightDir ? 1 : -1) * this.soBattleCharacter.GetEffectOffset().x, this.soBattleCharacter.GetEffectOffset().y);
+                                }
+                                else
+                                {
+                                    t_offset = this.soBattleCharacter.GetCenterOffset();
+                                }
 
                                 var t_effect = Instantiate(
                                     _particle,
                                     this.transform.position +
                                     t_offset,
                                     _particle.transform.rotation);
-                                t_effect.transform.localScale = this.spineModelController.transform.localScale;
+                                t_effect.transform.localScale = new Vector3(this.basicRightDir ? 1 : -1,1,1);
                             }
                             if (_sound != null)
                                 SoundManager.instance.PlaySE(_sound);
@@ -357,6 +372,10 @@ public class BattleCharacterBase : MonoBehaviour
             var t_effect = Instantiate(_hitInfo.hitParticle, this.transform);
             t_effect.transform.localPosition = this.soBattleCharacter.GetCenterOffset();
         }
+        if(_hitInfo.hitSound != null)
+        {
+            SoundManager.instance.PlaySE(_hitInfo.hitSound);
+        }
 
 
 
@@ -366,7 +385,7 @@ public class BattleCharacterBase : MonoBehaviour
         {
             t_text += $"치명타! ";
         }
-        t_text += $"{this.name}{GameStatics.GetSubjectParticle(this.name)} { (int)t_finalDamage}의 데미지를 받았다!!";
+        t_text += $"{this.name}{GameStatics.GetSubjectParticle(this.name)} {(int)t_finalDamage}의 데미지를 받았다!!";
         this.battleManager.ShowText(t_text);
         this.currentHP = Mathf.Max(0f, this.currentHP - (int)t_finalDamage);
         this.healthPreferences.SetCurrentHealth(currentHP);
@@ -477,6 +496,7 @@ public class BattleCharacterBase : MonoBehaviour
         public StatusEffectID statusEffect;
         public BattleCharacterBase target;
         public ParticleSystem hitParticle;
+        public AudioClip hitSound;
     }
     public virtual void GainExp(int _exp)
     {

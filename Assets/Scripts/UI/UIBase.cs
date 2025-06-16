@@ -8,7 +8,7 @@ public abstract class UIBase : MonoBehaviour
 {
     protected UIData data;
 
-    [SerializeField] protected GameObject contents;
+   public GameObject contents;
     public abstract void Initialization(UIData data);
     public abstract void Show(UIData _data);
 

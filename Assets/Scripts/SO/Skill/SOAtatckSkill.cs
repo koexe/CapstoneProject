@@ -11,6 +11,8 @@ public class SOAtatckSkill : SOSkillBase
     public float attackModifier;
     public StatusEffectID selfPanlty;
 
+
+
     public override async UniTask Execute()
     {
         await base.Execute();
@@ -22,7 +24,7 @@ public class SOAtatckSkill : SOSkillBase
         GameManager.instance.GetCamera().SetTarget(this.character.transform);
         if (this.attackRange == AttackRangeType.All)
         {
-            await this.character.AttackPosition(this.attackParticle , this.attackSound);
+            await this.character.AttackPosition(this.attackParticle , this.attackSound, this.skillParticlePosition);
         }
 
 
@@ -37,7 +39,7 @@ public class SOAtatckSkill : SOSkillBase
                 Vector3 t_offset = new Vector3(
                     this.character.transform.position.x - t_target.transform.position.x > 0f ?
                     2.5f : -2.5f, 0, 0);
-                await this.character.AttackPosition(t_position + t_offset , this.attackParticle, this.attackSound);
+                await this.character.AttackPosition(t_position + t_offset , this.attackParticle, this.attackSound, this.skillParticlePosition);
             }
 
 
@@ -46,6 +48,7 @@ public class SOAtatckSkill : SOSkillBase
             float t_damage = this.character.GetStat(StatType.Atk) * this.attackModifier;
 
             t_hitInfo.hitParticle = this.hitParticle;
+            t_hitInfo.hitSound = this.hitSound;
 
             t_damage *= 1 - (t_target.GetStat(StatType.Def) / (t_target.GetStat(StatType.Def) + 100));
 

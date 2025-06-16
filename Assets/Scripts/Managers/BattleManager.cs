@@ -35,6 +35,7 @@ public class BattleCharacterManager
 
     public bool IsAllyAllDie()
     {
+        if (allyCharacters.Count == 0) return true;
         foreach (var ally in allyCharacters)
         {
             if (!ally.IsDie()) return false;
@@ -44,6 +45,7 @@ public class BattleCharacterManager
 
     public bool IsEnemyAllDie()
     {
+        if (enemyCharacters.Count == 0) return true;
         foreach (var enemy in enemyCharacters)
         {
             if (!enemy.IsDie()) return false;
@@ -198,7 +200,7 @@ public class BattleManager : MonoBehaviour
                 if (SaveGameManager.instance.GetCurrentSaveData().isMetLemo == false && t_allys[i].GetCharacterName() == "리모")
                 {
                     this.npcUIGroup.SetActive(false);
-                    
+
                     break;
                 }
                 else
@@ -439,9 +441,26 @@ public class BattleManager : MonoBehaviour
     {
         foreach (var t_character in characterManager.GetEnemies())
         {
-            
-            var t_Skill = t_character.GetSkills()[Random.Range(0, t_character.GetSkills().Length)];
+            // 사용 가능한 스킬 목록 생성
+            var availableSkills = t_character.GetSkills()
+                .Where(skill => t_character.GetMp() >= skill.requireMp)
+                .ToArray();
 
+            SOSkillBase t_Skill;
+            // 사용 가능한 스킬이 없으면 건너뛰기
+            if (availableSkills.Length == 0)
+            {
+                t_Skill = Instantiate(t_character.soBattleCharacter.baseSkill);
+                t_character.SetAction(CharacterActionType.Skill);
+            }
+            else
+            {
+
+                t_Skill = Instantiate(availableSkills[Random.Range(0, availableSkills.Length)]);
+            }
+
+
+            // 사용 가능한 스킬 중에서 랜덤 선택
 
 
             if (t_Skill.attackRange == SOSkillBase.AttackRangeType.All)
@@ -456,6 +475,7 @@ public class BattleManager : MonoBehaviour
             }
         }
     }
+    // ... existing code ...
 
     List<BattleCharacterBase> TurnCheck()
     {
@@ -505,7 +525,7 @@ public class BattleManager : MonoBehaviour
         }
 
         GameManager.instance.UpdatePlayerData(this.playerDataContainer[0].GetBattleCharacter());
-        if(SaveGameManager.instance.GetCurrentSaveData().isMetLemo == true)
+        if (SaveGameManager.instance.GetCurrentSaveData().isMetLemo == true)
         {
             GameManager.instance.UpdateNPCData(this.playerDataContainer[1].GetBattleCharacter());
         }

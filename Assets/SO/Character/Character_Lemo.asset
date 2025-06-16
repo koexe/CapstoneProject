@@ -28,7 +28,7 @@ MonoBehaviour:
     baseAtk: 7
     baseDef: 1
     baseSpeed: 5
-  battleSprite: {fileID: 21300000, guid: bbdb62552f7b4e349bec348b510a5b47, type: 3}
+  battleSprite: {fileID: 21300000, guid: fe84162b8a0d9404e84c2474407a3664, type: 3}
   skeletonDataAsset: {fileID: 11400000, guid: 2d6fa6cee23d30a44a7ed78d6e41d4c4, type: 2}
   basicAttackAnim: {fileID: 11400000, guid: c1bd48aea802c1440845e5ab18aba118, type: 2}
   additionalAttackAnim: {fileID: 0}
@@ -36,6 +36,6 @@ MonoBehaviour:
   idleAnim: {fileID: 11400000, guid: 1a0816c49fe317c41b13c0090f10d61a, type: 2}
   isModelBasicRight: 0
   hpBarOffset: {x: -0.5, y: 5}
-  effectOffset: {x: 0, y: 0}
+  effectOffset: {x: -2.125, y: 2}
   centerOffset: {x: 0, y: 1.65}
-  effectTiming: 0.3
+  effectTiming: 0.4

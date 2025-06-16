@@ -15,6 +15,8 @@ public class SkillUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI skillRace;
     [SerializeField] TextMeshProUGUI skillRange;
 
+    [SerializeField] GameObject mpOring;
+
     public void Initialization(BattleCharacterBase _character, SOSkillBase _skill, Action<BattleCharacterBase, SOSkillBase> _action)
     {
         this.skillName.text = _skill.skillName;
@@ -40,10 +42,12 @@ public class SkillUI : MonoBehaviour
         if (_character.GetMp() >= _skill.requireMp)
         {
             this.skillButton.interactable = true;
+            this.mpOring.SetActive(false);
         }
         else
         {
             this.skillButton.interactable = false;
+            this.mpOring.SetActive(true);
         }
         this.skillButton.onClick.AddListener(() => _action.Invoke(_character, _skill));
 
