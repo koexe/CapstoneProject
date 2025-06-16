@@ -275,7 +275,8 @@ public class ExecuteSequence : TurnSequence
         base.SequenceAction();
         await ActionTask();
         await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
-        this.battleManager.NextSequence();
+        if (!this.battleManager.isEnded)
+            this.battleManager.NextSequence();
     }
     public async UniTask ActionTask()
     {
@@ -299,7 +300,7 @@ public class ExecuteSequence : TurnSequence
 
             if (this.battleManager.IsAllyAllDie())
             {
-                await GameManager.instance.GameOver();
+                GameOverTask();
                 break;
             }
             else if (this.battleManager.IsEnemyAllDie())
@@ -309,6 +310,15 @@ public class ExecuteSequence : TurnSequence
             }
 
         }
+    }
+
+    void GameOverTask()
+    {
+        UIManager.instance.ShowUI<GameOverUI>(new UIData()
+        {
+            identifier = "GameOverUI",
+        });
+        this.battleManager.isEnded = true;
     }
 
     async UniTask EndTask()
