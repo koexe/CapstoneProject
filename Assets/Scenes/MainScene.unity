@@ -1896,7 +1896,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentMap: {fileID: 0}
   startMap: {fileID: 6202327555237461339, guid: 14812db7ce8e42a41a09eb2155d6fceb, type: 3}
-  isDebugingMap: 1
+  isDebugingMap: 0
 --- !u!4 &1958847839
 Transform:
   m_ObjectHideFlags: 0
