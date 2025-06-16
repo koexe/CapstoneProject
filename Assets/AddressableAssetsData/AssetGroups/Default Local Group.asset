@@ -277,6 +277,16 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - UIPrefab
+  - m_GUID: 3f15f06b9129bd849bdac47193a4885e
+    m_Address: Assets/SO/Cutscene/CS06.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CutsceneSO
+  - m_GUID: 441aed08c374ffb42a703aba23c7e06c
+    m_Address: Assets/SO/Cutscene/CS07.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - CutsceneSO
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
   m_SchemaSet:

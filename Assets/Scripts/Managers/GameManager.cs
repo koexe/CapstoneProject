@@ -26,6 +26,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] CameraController cameraController;
 
     [SerializeField] FieldManager fieldManager;
+
+    [SerializeField] AudioClip mainBGM;
+    [SerializeField] AudioClip fieldBGM;
+    [SerializeField] AudioClip battleBGM;
+    [SerializeField] AudioClip gameOverBGM;
+
+    public void PlayFieldBGM() => SoundManager.instance.PlayBGM(this.fieldBGM);
+    public void PlayMainBGM() => SoundManager.instance.PlayBGM(this.mainBGM);
+    public void PlayBattleBGM() => SoundManager.instance.PlayBGM(this.battleBGM);
+    public void PlayGameOverBGM() => SoundManager.instance.PlayBGM(this.gameOverBGM);
+
     public CameraController GetCamera() => this.cameraController;
     public void SetCamera(CameraController _controller) => this.cameraController = _controller;
 
@@ -72,7 +83,7 @@ public class GameManager : MonoBehaviour
         }
 
         ChangeGameState(GameState.Main);
-
+        SoundManager.instance.PlayBGM(this.mainBGM);
     }
 
     public void MapInitialization()
@@ -86,9 +97,11 @@ public class GameManager : MonoBehaviour
     {
         await this.sceneLoadManager.LoadScene_Async("FieldScene");
         this.fieldManager.Initialization();
+        SoundManager.instance.PlayBGM(this.fieldBGM);
         ChangeGameState(GameState.Field);
         MapInitialization();
         MapManager.instance.OnChangeToFieldScene();
+
     }
 
     public async void ChangeSceneFieldToBattle(SOBattleCharacter[] enemys, int[] _levels, Action<bool> _onBattleEnd = null)
@@ -100,6 +113,7 @@ public class GameManager : MonoBehaviour
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
         MapManager.instance.OnChangeToBattleScene();
         await this.sceneLoadManager.LoadScene_Async("BattleScene");
+        SoundManager.instance.PlayBGM(this.battleBGM);
     }
 
     public async void ChangeSceneBattleToField()
@@ -112,6 +126,7 @@ public class GameManager : MonoBehaviour
         this.onChangeBattleSceneData.OnBattleEnd?.Invoke(true);
         this.onChangeBattleSceneData.Reset();
         MapManager.instance.OnChangeToFieldScene();
+        SoundManager.instance.PlayBGM(this.fieldBGM);
     }
 
     public void UpdatePlayerData(SOBattleCharacter _currentPlayer)
@@ -126,9 +141,10 @@ public class GameManager : MonoBehaviour
 
     public async UniTask GameOver()
     {
-        Destroy(this.player);   
+        Destroy(this.player);
         this.mapManager.Detialization();
         await this.sceneLoadManager.LoadScene_Async("MainScene");
+        SoundManager.instance.PlayBGM(this.mainBGM);
     }
 
     public void ChangeGameState(GameState _gameState)

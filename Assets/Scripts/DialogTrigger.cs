@@ -33,7 +33,8 @@ public class DialogTrigger : MonoBehaviour
             {
                 identifier = "Cutscene",
                 step = this.cutsceneData.steps,
-                cutsceneID = this.cutsceneData.id
+                cutsceneID = this.cutsceneData.id,
+                audio = this.cutsceneData.cutsceneBGM,
             });
         }
         else

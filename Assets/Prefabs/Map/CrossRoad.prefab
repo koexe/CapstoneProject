@@ -22825,6 +22825,7 @@ Transform:
   - {fileID: 901800285173233254}
   - {fileID: 2665862615898348914}
   - {fileID: 7832177372085436039}
+  - {fileID: 3625711374327794411}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -22880,6 +22881,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cutsceneData: {fileID: 11400000, guid: b0d25c5d69245784a82f7408e09a23f8, type: 2}
+  onCutsceneEnd:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2053124636282176620
 GameObject:
   m_ObjectHideFlags: 0
@@ -77706,9 +77710,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c89d6d783a2c05c4b92e6a0d10f3c09a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkCutsceneData: {fileID: 0}
-  checkDialogIndex: 12
-  blockDialogIndex: 14
+  checkCutsceneData: {fileID: 11400000, guid: 3f15f06b9129bd849bdac47193a4885e, type: 2}
+  checkDialogIndex: -1
+  blockDialogIndex: 21
   isWatch: 1
 --- !u!65 &4091694380049322013
 BoxCollider:
@@ -95824,6 +95828,84 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &8271129685102091622
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3625711374327794411}
+  - component: {fileID: 5313768323754942879}
+  - component: {fileID: 3936997160693277603}
+  - component: {fileID: 5133179228917438510}
+  m_Layer: 7
+  m_Name: StoryBlockWall (4)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3625711374327794411
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8271129685102091622}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 13.39, y: 0, z: -0.02}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4461653974850616233}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5313768323754942879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8271129685102091622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c89d6d783a2c05c4b92e6a0d10f3c09a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkCutsceneData: {fileID: 0}
+  checkDialogIndex: 12
+  blockDialogIndex: 20
+  isWatch: 1
+--- !u!65 &3936997160693277603
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8271129685102091622}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 5.132766, y: 1, z: 8.912656}
+  m_Center: {x: 0.19038248, y: 0, z: 0.6981168}
+--- !u!54 &5133179228917438510
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8271129685102091622}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8276654818700730744
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,6 +17,7 @@ public class CutSceneTrigger : MonoBehaviour
                 isAllowMultifle = false,
                 cutsceneID = this.cutsceneData.id,
                 onHide = this.onCutsceneEnd.Invoke,
+                audio = this.cutsceneData.cutsceneBGM,
             });
     }
 }

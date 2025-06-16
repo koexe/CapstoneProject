@@ -55,4 +55,16 @@ public class MainScene : MonoBehaviour
             identifier = "OptionUI",
         });
     }
+
+    public void OnClickExitButton()
+    {
+        UIManager.instance.ShowUI<PopupUI>(new PopupUIData()
+        {
+            identifier = "PopupUI",
+            title = "게임 종료",
+            message = "게임을 종료하시겠습니까?",
+            onYesClicked = () => Application.Quit(),
+            onNoClicked = () => { },
+        });
+    }
 }

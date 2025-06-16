@@ -7,10 +7,10 @@ public class OptionUI : UIBase
     [Header("Sound Settings")]
     [SerializeField] private Slider bgmSlider;
     [SerializeField] private Slider seSlider;
-    
+
     [Header("Resolution Settings")]
     [SerializeField] private TMP_Dropdown resolutionDropdown;
-    
+
     private Resolution[] resolutions;
     private float currentBGMVolume = 1f;
     private float currentSEVolume = 1f;
@@ -67,8 +67,19 @@ public class OptionUI : UIBase
     public override void Show(UIData _data)
     {
         base.data = _data;
-        contents.SetActive(true);
-        isShow = true;
+        if (GameManager.instance.GetGameState() == GameState.Pause)
+        {
+            return;
+        }
+        else
+        {
+            InitializeResolutionDropdown();
+            InitializeSoundSliders();
+            contents.SetActive(true);
+            isShow = true;
+            if (GameManager.instance.GetGameState() == GameState.Field)
+                GameManager.instance.SetGameState(GameState.Pause);
+        }
     }
 
     public override void Hide()
@@ -76,6 +87,8 @@ public class OptionUI : UIBase
         contents.SetActive(false);
         isShow = false;
         data?.onHide?.Invoke();
+        if (GameManager.instance.GetGameState() == GameState.Pause)
+            GameManager.instance.SetGameState(GameState.Field);
     }
 
     private void OnBGMVolumeChanged(float value)
@@ -96,4 +109,4 @@ public class OptionUI : UIBase
         Resolution resolution = resolutions[index];
         Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
-} 
+}

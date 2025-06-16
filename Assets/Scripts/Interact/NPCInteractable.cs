@@ -15,6 +15,7 @@ public class NPCInteractable : MonoBehaviour, IInteractable
                 identifier = "CutSceneUI",
                 cutsceneID = this.cutsceneData.id,
                 step = this.cutsceneData.steps,
+                audio = this.cutsceneData.cutsceneBGM,
             });
         }
         else

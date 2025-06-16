@@ -28,7 +28,7 @@ public class CutSceneUI : UIBase
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             Hide();
         }
@@ -92,7 +92,7 @@ public class CutSceneUI : UIBase
             }
 
             textBox.SetActive(false);
-            nameBox.SetActive(false);   
+            nameBox.SetActive(false);
             yield return WaitForClick();
             yield return CoroutineUtil.WaitForSeconds(step.holdTime);
 
@@ -179,6 +179,7 @@ public class CutSceneUI : UIBase
             StartCoroutine(PlayCutscene());
             this.contents.SetActive(true);
             this.isShow = true;
+            SoundManager.instance.PlayBGM(cutSceneData.audio);
         }
 
 
@@ -192,6 +193,8 @@ public class CutSceneUI : UIBase
         GameManager.instance.ChangeGameState(GameState.Field);
         StopAllCoroutines();
         this.uiData.onHide?.Invoke();
+        SoundManager.instance.StopBGM();
+        GameManager.instance.PlayFieldBGM();
     }
 }
 
@@ -203,10 +206,12 @@ public class CutsceneStep
     [TextArea(3, 10)]
     public string dialogue;    // 대사 내용
     public bool useTypewriter = true; // 타이핑 효과 사용 여부
+
 }
 
 public class CutSceneUIData : UIData
 {
     public string cutsceneID;
     public List<CutsceneStep> step;
+    public AudioClip audio;
 }

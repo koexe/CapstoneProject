@@ -57940,6 +57940,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cutsceneData: {fileID: 11400000, guid: b0d25c5d69245784a82f7408e09a23f8, type: 2}
+  onCutsceneEnd:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2052936401401761375
 GameObject:
   m_ObjectHideFlags: 0
@@ -183894,7 +183897,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogIndex: -1
-  cutsceneData: {fileID: 11400000, guid: b0d25c5d69245784a82f7408e09a23f8, type: 2}
+  cutsceneData: {fileID: 11400000, guid: 3f15f06b9129bd849bdac47193a4885e, type: 2}
 --- !u!54 &8896757839805883242
 Rigidbody:
   m_ObjectHideFlags: 0

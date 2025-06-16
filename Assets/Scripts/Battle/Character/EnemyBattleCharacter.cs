@@ -84,7 +84,7 @@ public class EnemyBattleCharacter : BattleCharacterBase
 
         this.hitParticle.transform.localPosition = this.soBattleCharacter.GetCenterOffset();
         this.deathParticle.transform.localPosition = this.soBattleCharacter.GetCenterOffset();
-
+ 
         return;
     }
 
@@ -95,7 +95,7 @@ public class EnemyBattleCharacter : BattleCharacterBase
         {
             this.battleManager.ShowText($"{this.name}{GameStatics.GetSubjectParticle(this.name)} 쓰러졌다!");
             await UniTask.Delay(TimeSpan.FromSeconds(1f));
-            await this.battleManager.GainExp(1000);
+            await this.battleManager.GainExp(this.GetStatus().GetLevel() * 100);
             return;
         }
 

@@ -9830,7 +9830,19 @@ MonoBehaviour:
   cameraAreaSize: {x: 20, y: 10, z: 17}
   onMapEnter:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7280862325440028807}
+        m_TargetAssemblyTypeName: CutSceneTrigger, Assembly-CSharp
+        m_MethodName: ShowCutscene
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   onMapExit:
     m_PersistentCalls:
       m_Calls: []
@@ -9846,7 +9858,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77f36cdf09bc7cc4d905ec1aebd5e2cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cutsceneData: {fileID: 11400000, guid: a41f15c394278c347aacc9ccc5aeef0b, type: 2}
+  cutsceneData: {fileID: 11400000, guid: 441aed08c374ffb42a703aba23c7e06c, type: 2}
+  onCutsceneEnd:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2055209307439998346
 GameObject:
   m_ObjectHideFlags: 0

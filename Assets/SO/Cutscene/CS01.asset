@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9353670de53fdf343b22cc5d2ca5c37a, type: 3}
   m_Name: CS01
   m_EditorClassIdentifier: 
+  cutsceneBGM: {fileID: 8300000, guid: fc224a0cc431edc4c8c2dfa84fa7d544, type: 3}
   id: Cs01
   steps:
   - image: {fileID: 21300000, guid: 701d184c1cba2684b82ebe197216594b, type: 3}
