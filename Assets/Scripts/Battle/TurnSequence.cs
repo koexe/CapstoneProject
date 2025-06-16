@@ -300,6 +300,7 @@ public class ExecuteSequence : TurnSequence
 
             if (this.battleManager.IsAllyAllDie())
             {
+
                 GameOverTask();
                 break;
             }
@@ -314,11 +315,11 @@ public class ExecuteSequence : TurnSequence
 
     void GameOverTask()
     {
+        this.battleManager.GameOver();
         UIManager.instance.ShowUI<GameOverUI>(new UIData()
         {
             identifier = "GameOverUI",
         });
-        this.battleManager.isEnded = true;
     }
 
     async UniTask EndTask()

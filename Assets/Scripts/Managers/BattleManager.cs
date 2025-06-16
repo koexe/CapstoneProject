@@ -108,7 +108,7 @@ public class BattleManager : MonoBehaviour
     [SerializeField] List<BattleCharacterBase> playerDataContainer;
     [SerializeField] List<BattleCharacterBase> enemyDataContainer;
 
-
+    [SerializeField] GameObject TextGroup;
     [SerializeField] GameObject playerUIGroup;
     [SerializeField] GameObject npcUIGroup;
 
@@ -715,6 +715,15 @@ public class BattleManager : MonoBehaviour
             }
 
         }
+    }
+
+    public void GameOver()
+    {
+        this.isEnded = true;
+        this.uiManager.SetSelectButtonGroupActive(false);
+        this.playerUIGroup.SetActive(false);
+        this.TextGroup.SetActive(false);
+        this.npcUIGroup.SetActive(false);
     }
     #endregion
     #endregion

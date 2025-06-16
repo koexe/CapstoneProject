@@ -191,6 +191,7 @@ public class CutSceneUI : UIBase
         this.isShow = false;
         GameManager.instance.ChangeGameState(GameState.Field);
         StopAllCoroutines();
+        this.uiData.onHide?.Invoke();
     }
 }
 

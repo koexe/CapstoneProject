@@ -2,10 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 
 public class EnemyBattleCharacter : BattleCharacterBase
 {
+    [SerializeField] TextMeshPro nameText;
+    [SerializeField] TextMeshPro levelText;
     public override void EnemyInitialization(BattleManager _battleManager, SOBattleCharacter _character, int _level)
     {
         this.battleManager = _battleManager;
@@ -30,8 +33,8 @@ public class EnemyBattleCharacter : BattleCharacterBase
         this.transform.name = _character.GetCharacterName();
         this.raceType = _character.GetRaceType();
         this.characterShadow.sprite = _character.GetBattleSprite();
-
-
+        this.nameText.text = _character.GetCharacterName();
+        this.levelText.text = $"Lv.{_level}";
 
         if (this.spineModelController == null)
         {

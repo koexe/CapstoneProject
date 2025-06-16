@@ -272,6 +272,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - UIPrefab
+  - m_GUID: b534d5e939a5ec94eaa0f2c304c97e19
+    m_Address: Assets/Prefabs/UI/GameOverUI.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UIPrefab
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
   m_SchemaSet:

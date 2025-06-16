@@ -36197,8 +36197,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uC2F8\uC6B0\uAE30"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c032653f23baef94885a0e87668afb5c, type: 2}
-  m_sharedMaterial: {fileID: 6729488794658865212, guid: c032653f23baef94885a0e87668afb5c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b761c7dac8f34614590d537759a7a6ab, type: 2}
+  m_sharedMaterial: {fileID: 5562215629261136946, guid: b761c7dac8f34614590d537759a7a6ab, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -46267,8 +46267,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uB3C4\uB9DD"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c032653f23baef94885a0e87668afb5c, type: 2}
-  m_sharedMaterial: {fileID: 6729488794658865212, guid: c032653f23baef94885a0e87668afb5c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b761c7dac8f34614590d537759a7a6ab, type: 2}
+  m_sharedMaterial: {fileID: 5562215629261136946, guid: b761c7dac8f34614590d537759a7a6ab, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -63856,6 +63856,7 @@ MonoBehaviour:
   isUsedRunCommend: 0
   playerDataContainer: []
   enemyDataContainer: []
+  TextGroup: {fileID: 1471018617}
   playerUIGroup: {fileID: 742178716}
   npcUIGroup: {fileID: 2006475711}
   isEnded: 0

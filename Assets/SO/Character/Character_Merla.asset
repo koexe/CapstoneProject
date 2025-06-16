@@ -23,11 +23,11 @@ MonoBehaviour:
   status:
     level: 0
     exp: 0
-    baseHp: 220
-    baseMp: 20
-    baseAtk: 28
-    baseDef: 10
-    baseSpeed: 5
+    baseHp: 203.2
+    baseMp: 13
+    baseAtk: 16.8
+    baseDef: 4.4
+    baseSpeed: 0.8
   battleSprite: {fileID: 21300000, guid: c9f2ad03e4f2c754c969e6de4bd27016, type: 3}
   skeletonDataAsset: {fileID: 11400000, guid: d26ac1ce9530ba94392e2b07c75245fa, type: 2}
   basicAttackAnim: {fileID: 11400000, guid: e8e90b57cdcc3a443b5131a848caccf8, type: 2}

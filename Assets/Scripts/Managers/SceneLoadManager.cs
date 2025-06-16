@@ -10,7 +10,7 @@ public class SceneLoadManager : MonoBehaviour
 
     [SerializeField] private Image fadePanel;
     [SerializeField] private Canvas fadeCanvas;
-    private float fadeDuration = 0.5f;
+    [SerializeField] float fadeDuration = 1.5f;
 
     private void Awake()
     {
@@ -74,15 +74,14 @@ public class SceneLoadManager : MonoBehaviour
         t_asyncLoad.allowSceneActivation = true;
         
         await UniTask.WaitUntil(() => t_asyncLoad.isDone);
-
-        // 페이드 아웃
         t_elapsed = this.fadeDuration;
         while (t_elapsed > 0)
         {
             t_elapsed -= Time.deltaTime;
             this.fadePanel.color = new Color(0, 0, 0, t_elapsed / this.fadeDuration);
-            await UniTask.Yield();
         }
+
+        // 페이드 아웃
 
         this.fadePanel.gameObject.SetActive(false);
     }
