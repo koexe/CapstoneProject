@@ -518,7 +518,7 @@ public class BattleManager : MonoBehaviour
     {
         foreach (var t_enemy in this.enemyDataContainer)
         {
-            if (t_enemy.GetBattleCharacter().GetCharacterName() == "Merla")
+            if (t_enemy.GetBattleCharacter().GetCharacterName() == "멜라")
             {
                 SaveGameManager.instance.GetCurrentSaveData().isCleardBoss = true;
             }
