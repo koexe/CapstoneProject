@@ -315,6 +315,7 @@ public class ExecuteSequence : TurnSequence
     {
         battleManager.ShowText("승리했다! 전투 종료!");
         await UniTask.Delay(TimeSpan.FromSeconds(1f));
+        battleManager.isEnded = true;
         battleManager.ChangeToFieldScene();
     }
 }
@@ -335,7 +336,8 @@ public class SummarySequence : TurnSequence
         base.SequenceAction();
         await SummaryTask();
         await UniTask.Delay(TimeSpan.FromSeconds(0.1f));
-        this.battleManager.NextSequence();
+        if (!this.battleManager.isEnded)
+            this.battleManager.NextSequence();
     }
     async UniTask SummaryTask()
     {

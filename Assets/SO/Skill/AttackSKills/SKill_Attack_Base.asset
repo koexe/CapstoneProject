@@ -25,5 +25,5 @@ MonoBehaviour:
   hitParticle: {fileID: 0}
   attackSound: {fileID: 0}
   hitSound: {fileID: 0}
-  attackModifier: 0.5
+  attackModifier: 0.7
   selfPanlty: 0

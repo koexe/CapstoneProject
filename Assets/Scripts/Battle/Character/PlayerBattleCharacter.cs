@@ -125,7 +125,11 @@ public class PlayerBattleCharacter : BattleCharacterBase
         if (_hitInfo.hitParticle == null)
             this.hitParticle.Play();
         else
-            Instantiate(_hitInfo.hitParticle, this.transform.position, this.transform.rotation);
+        {
+            var t_effect = Instantiate(_hitInfo.hitParticle, this.transform);
+            t_effect.transform.localPosition = this.soBattleCharacter.GetCenterOffset();
+        }
+
 
 
         await this.spineModelController.PlayAnimationAsync(AnimationType.hit);

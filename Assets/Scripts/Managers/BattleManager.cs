@@ -110,6 +110,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField] GameObject playerUIGroup;
     [SerializeField] GameObject npcUIGroup;
 
+    [SerializeField] public bool isEnded = false;
+
 
     [SerializeField] TextMeshProUGUI playerHp;
     [SerializeField] TextMeshProUGUI playerMp;

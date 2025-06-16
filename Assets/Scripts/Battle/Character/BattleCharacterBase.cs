@@ -200,7 +200,7 @@ public class BattleCharacterBase : MonoBehaviour
         {
             skeletonAnimation.skeleton.A = 0f;
         }
-        
+        this.healthPreferences.gameObject.SetActive(false);
         this.deathParticle.Stop();
         this.battleManager.CharacterDie(this);
     }
@@ -353,7 +353,11 @@ public class BattleCharacterBase : MonoBehaviour
         if (_hitInfo.hitParticle == null)
             this.hitParticle.Play();
         else
-            Instantiate(_hitInfo.hitParticle, this.soBattleCharacter.GetCenterOffset(), this.transform.rotation);
+        {
+            var t_effect = Instantiate(_hitInfo.hitParticle, this.transform);
+            t_effect.transform.localPosition = this.soBattleCharacter.GetCenterOffset();
+        }
+
 
 
         await this.spineModelController.PlayAnimationAsync(AnimationType.hit);
@@ -362,7 +366,7 @@ public class BattleCharacterBase : MonoBehaviour
         {
             t_text += $"치명타! ";
         }
-        t_text += $"{(int)t_finalDamage}의 데미지를 {this.name}{GameStatics.GetSubjectParticle(this.name)} 받았다!!";
+        t_text += $"{this.name}{GameStatics.GetSubjectParticle(this.name)} { (int)t_finalDamage}의 데미지를 받았다!!";
         this.battleManager.ShowText(t_text);
         this.currentHP = Mathf.Max(0f, this.currentHP - (int)t_finalDamage);
         this.healthPreferences.SetCurrentHealth(currentHP);

@@ -69,7 +69,7 @@ public class EnemyBattleCharacter : BattleCharacterBase
             return;
         }
         this.healthPreferences.transform.localPosition = this.soBattleCharacter.GetHpBarOffset();
-        this.arrow.transform.localPosition = this.healthPreferences.transform.localPosition + new Vector3(this.basicRightDir ? 0.5f : -0.5f, 0.5f, 0f);
+        this.arrow.transform.localPosition = new Vector3(0f, this.healthPreferences.transform.position.y + 0.5f, 0f);
 
         this.healthPreferences.SetTotalHealth(maxHP);
         this.healthPreferences.SetCurrentHealth(currentHP);
