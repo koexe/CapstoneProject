@@ -228,6 +228,10 @@ public class SaveGameManager : MonoBehaviour
             }
         }
         t_saveData.currentMap = "입구";
+        t_saveData.playerLevel = 1;
+        t_saveData.playerExp = 0;
+        t_saveData.npcLevel = 1;
+        t_saveData.npcExp = 0;
         return t_saveData;
     }
 
@@ -305,6 +309,11 @@ public class SaveData
     public float playTime;        // 플레이 시간 (초 단위)
     public string saveDateTime;   // 저장 시간
 
+    public int playerLevel;
+    public int playerExp;
+    public int npcLevel;
+    public int npcExp;
+
     public SaveData()
     {
         this.items = new Dictionary<int, SaveItem>();
@@ -313,6 +322,10 @@ public class SaveData
         this.cutsceneIsShow = new Dictionary<string, bool>();
         this.playTime = 0f;
         this.saveDateTime = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        this.playerLevel = 1;
+        this.playerExp = 0;
+        this.npcLevel = 1;
+        this.npcExp = 0;
     }
 }
 

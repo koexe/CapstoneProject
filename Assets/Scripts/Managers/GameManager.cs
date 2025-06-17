@@ -89,8 +89,13 @@ public class GameManager : MonoBehaviour
     public void MapInitialization()
     {
         this.mapManager.Initialization();
-        this.currentPlayer = DataLibrary.instance.GetSOCharacter(1);
-        this.currentNPC = DataLibrary.instance.GetSOCharacter(2);
+        this.currentPlayer = Instantiate(DataLibrary.instance.GetSOCharacter(1));
+        this.currentNPC = Instantiate(DataLibrary.instance.GetSOCharacter(2));
+
+        this.currentPlayer.GetStatus().SetLevel(SaveGameManager.instance.GetCurrentSaveData().playerLevel);
+        this.currentPlayer.GetStatus().SetExp(SaveGameManager.instance.GetCurrentSaveData().playerExp);
+        this.currentNPC.GetStatus().SetLevel(SaveGameManager.instance.GetCurrentSaveData().npcLevel);
+        this.currentNPC.GetStatus().SetExp(SaveGameManager.instance.GetCurrentSaveData().npcExp);
     }
 
     public async UniTask ChangeSceneMainToField()

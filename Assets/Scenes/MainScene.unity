@@ -522,6 +522,10 @@ MonoBehaviour:
     isMetLemo: 0
     playTime: 0
     saveDateTime: 2025-05-22 13:14:06
+    playerLevel: 1
+    playerExp: 0
+    npcLevel: 1
+    npcExp: 0
   isSaveDebug: 1
   currentSlot: 1
 --- !u!4 &343493114
@@ -2109,8 +2113,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentMap: {fileID: 0}
-  startMap: {fileID: 6202327555237461339, guid: 7406dfb807e8e7c4a9fa1b56099a3a14, type: 3}
-  isDebugingMap: 0
+  startMap: {fileID: 6202327555237461339, guid: 937607e568c81db4797cb8cffbfc72e3, type: 3}
+  isDebugingMap: 1
 --- !u!4 &1958847839
 Transform:
   m_ObjectHideFlags: 0

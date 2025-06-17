@@ -530,6 +530,14 @@ public class BattleManager : MonoBehaviour
             GameManager.instance.UpdateNPCData(this.playerDataContainer[1].GetBattleCharacter());
         }
 
+        SaveGameManager.instance.GetCurrentSaveData().playerLevel = this.playerDataContainer[0].GetStatus().GetLevel();
+        SaveGameManager.instance.GetCurrentSaveData().playerExp = this.playerDataContainer[0].GetStatus().GetExp();
+        if (SaveGameManager.instance.GetCurrentSaveData().isMetLemo == true)
+        {
+            SaveGameManager.instance.GetCurrentSaveData().npcLevel = this.playerDataContainer[1].GetStatus().GetLevel();
+            SaveGameManager.instance.GetCurrentSaveData().npcExp = this.playerDataContainer[1].GetStatus().GetExp();
+        }
+
         GameManager.instance.ChangeSceneBattleToField();
     }
 

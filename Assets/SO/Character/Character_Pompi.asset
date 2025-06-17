@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   identifier: 3
   raceType: 4
-  baseSkill: {fileID: 11400000, guid: 06727fd8e03225f49be6f6cab81ab3c5, type: 2}
+  baseSkill: {fileID: 11400000, guid: 460869358919ab741bfef33568a0dbc0, type: 2}
   skills:
   - {fileID: 11400000, guid: e424a6086dc529543ba118850be4082a, type: 2}
   - {fileID: 11400000, guid: b03cd3fa8f9db374684ac945c7b9a18e, type: 2}

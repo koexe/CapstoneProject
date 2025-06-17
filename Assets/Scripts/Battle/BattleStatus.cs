@@ -57,6 +57,8 @@ public class BattleStatus
 
     public int GetLevel() => this.level;
 
+    public int GetExp() => this.exp;
+
     public bool CheckLevelup()
     {
         bool t_levelUpOccurred = false;
@@ -83,6 +85,10 @@ public class BattleStatus
     public void SetLevel(int _level)
     {
         this.level = _level;
+    }
+    public void SetExp(int _exp)
+    {
+        this.exp = _exp;
     }
     public void GainExp(int _exp)
     {

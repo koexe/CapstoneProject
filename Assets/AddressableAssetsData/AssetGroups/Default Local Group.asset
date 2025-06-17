@@ -27,16 +27,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - TextAsset
-  - m_GUID: f23ea175e16178c4b983b39bb2e761c5
-    m_Address: "Assets/Images/DialogCharacters/temp/MongYo/\uBABD\uC694_001.png"
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Portraits
-  - m_GUID: 7c5410e0b088be94d84ef3df73dafd69
-    m_Address: "Assets/Images/DialogCharacters/temp/Na/\uB098_001.png"
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Portraits
   - m_GUID: ee7e7ecb25ca59e4ab6f3a702a7d3edf
     m_Address: Assets/TextAssets/StatusTable.csv
     m_ReadOnly: 0
@@ -252,21 +242,6 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - CharacterSO
-  - m_GUID: 06727fd8e03225f49be6f6cab81ab3c5
-    m_Address: Assets/SO/Skill/AttackSKills/SKill_Attack_Base.asset
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - SkillSO
-  - m_GUID: c964d2ff438bbaa41b073a7fba0be666
-    m_Address: Assets/Images/DialogCharacters/lemo/Profile/Limo_003.png
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Portraits
-  - m_GUID: dd6e37a61c4db0a46b050c6f15077a6e
-    m_Address: Assets/Images/DialogCharacters/MrWhere/Profile/Mr.Where_001.png
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Portraits
   - m_GUID: 4998e833e9a066743b600d3cb13461bf
     m_Address: Assets/Prefabs/UI/OptionUI.prefab
     m_ReadOnly: 0
@@ -287,6 +262,21 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - CutsceneSO
+  - m_GUID: 460869358919ab741bfef33568a0dbc0
+    m_Address: Assets/SO/Skill/AttackSKills/SKill_Attack_Base.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - SkillSO
+  - m_GUID: 97b010e1d9b521f469361640c1e3dca7
+    m_Address: Assets/Images/DialogCharacters/MrWhere/Profile/Mr.Where_001.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
+  - m_GUID: 625246924904e3e4dbefd5134df888ee
+    m_Address: Assets/Images/DialogCharacters/lemo/Profile/Limo_001.png
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Portraits
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: ea05ae22a77a5fc40a3b30cef36e9f78, type: 2}
   m_SchemaSet:
